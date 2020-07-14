@@ -3,6 +3,10 @@ This was created as an empty repository for Cloud Tracking Senior Design group p
 
 Initial Commit (no express yet) displays an html of a google map onto localhost:8000
 
+7/14 Commit: adds express framework.
+
 Make sure you have node js installed and set up
+
+npm start to run express
 
 node server.js
