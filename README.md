@@ -5,6 +5,8 @@ Initial Commit (no express yet) displays an html of a google map onto localhost:
 
 7/14 Commit: adds express framework.
 
+7/21 Commit: Added Navbar and moved Map code to javascript file
+
 Make sure you have node js installed and set up
 
 npm start to run express
