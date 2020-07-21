@@ -1,18 +1,14 @@
 doctype html
 html
+  include ./navbar.jade
   head
     style(type='text/css').
       html { height: 100% }
       body { height: 100%; margin: 0px; padding: 0px }
       #map { height: 100% }
   body
+    div#nav
     //div map places a map over whole screen
     div#map
-    script(src="//maps.googleapis.com/maps/api/js?key=AIzaSyCn55lIh6mJ4GnR00jjgGeWUEii5R183xA",type="text/javascript",charset="UTF-8")
-    script.
-      new google.maps.Map(document.getElementById("map"), {
-        zoom: 15, //street level zoom
-        mapTypeId: 'satellite', //satellite style map
-        center: new google.maps.LatLng(28.6024, -81.2), //currently hardcoded over ucf should be able to pass variable to this
-        scaleControl: true
-      });
+     script(src="//maps.googleapis.com/maps/api/js?key=AIzaSyCn55lIh6mJ4GnR00jjgGeWUEii5R183xA",type="text/javascript",charset="UTF-8")
+     script(src='javascripts/Home_Map.js')
