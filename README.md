@@ -9,6 +9,8 @@ Initial Commit (no express yet) displays an html of a google map onto localhost:
 
 7/23 Commit: Migrated from Jade to Pug. (essentially the same thing)
 
+7/24 Commit: Cleaned up index.pug and moved navbar to layout.pug
+
 Make sure you have node js installed and set up
 
-To run type `npm start` in OUCSeniorDesignv2 directory. To view page type localhost:3000 in web browser.
+To run type `npm start` in OUCSeniorDesignv2 directory. To view page type `localhost:3000` in web browser.
