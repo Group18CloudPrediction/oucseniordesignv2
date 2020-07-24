@@ -1,0 +1,10 @@
+extends layout
+
+block scripts
+    script(src='javascripts/Archive_Map.js')
+
+block content
+  ol.breadcrumb
+    li.breadcrumb-item Select System to View History
+  div#map
+    script(src="//maps.googleapis.com/maps/api/js?key=AIzaSyCn55lIh6mJ4GnR00jjgGeWUEii5R183xA",type="text/javascript",charset="UTF-8")

@@ -2,9 +2,11 @@ doctype html
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='shortcut icon', href='images/cloud.ico', type='image/x-icon')
+    link(rel='stylesheet', href='/stylesheets/bootstrap.css')
   body
     block navbar
       div#nav
         include ./navbar.pug
+    block scripts
     block content
