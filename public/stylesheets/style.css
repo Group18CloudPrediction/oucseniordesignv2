@@ -15,4 +15,10 @@ a {
 
 #map {
   height: 100%;
+  width:75%;
+}
+
+#selection-menu
+{
+  width: 25%;
 }
