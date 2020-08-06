@@ -7,6 +7,7 @@ var logger = require('morgan');
 // import routing scripts
 var routes = require('./routes/index');
 var archiveRoutes = require('./routes/archiveRoutes');
+var livestreamRoutes = require('./routes/livestreamRoutes');
 
 var app = express();
 
@@ -23,6 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // set route scripts to their equivalent URL
 app.use('/', routes);
 app.use('/archive', archiveRoutes);
+app.use('/livestream', livestreamRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
