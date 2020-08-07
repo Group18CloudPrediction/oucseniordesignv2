@@ -22,3 +22,8 @@ a {
 {
   width: 25%;
 }
+
+#livestream {
+  height: 100%
+  width:auto;
+}
