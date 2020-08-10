@@ -7,4 +7,14 @@ router.get('/', function(req, res, next) {
   res.render('livestream', { title: 'Livestream Test' });
 });
 
-module.exports = router;
+/* POST livestream page. */
+
+module.exports = (socketServer) => {
+  router.route('/').post((request, response) => {
+    console.log("Camera connected")
+    request.on('data', function (data) {
+      socketServer.broadcast(data);
+    });
+  });
+  return router
+};

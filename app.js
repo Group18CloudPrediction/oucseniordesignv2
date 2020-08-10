@@ -3,13 +3,19 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var webSocket = require('ws');
+var socketIO = require('socket.io');
+var http = require('http');
+
+var app = express();
+var streamServer = http.createServer(app);
+var socketio = socketIO(streamServer);
+var socketServer = new webSocket.Server({server: streamServer, path:'/livestream'})
 
 // import routing scripts
 var routes = require('./routes/index');
 var archiveRoutes = require('./routes/archiveRoutes');
-var livestreamRoutes = require('./routes/livestreamRoutes');
-
-var app = express();
+var livestreamRoutes = require('./routes/livestreamRoutes')(socketServer);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -30,6 +36,18 @@ app.use('/livestream', livestreamRoutes);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+function init() {
+  socketServer.broadcast = function (data) {
+    socketServer.clients.forEach(function each(client) {
+      if (client.readyState === webSocket.OPEN) {
+        client.send(data);
+      }
+    });
+  };
+}
+
+init();
 
 // error handler
 app.use(function(err, req, res, next) {

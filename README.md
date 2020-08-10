@@ -15,6 +15,8 @@ Initial Commit (no express yet) displays an html of a google map onto localhost:
 
 8/7 Commit: Add required node modules for livestream
 
+8/8 - 8/10 Commit: Add player to livestream page with sample video
+
 Make sure you have node js installed and set up
 
 To run type `npm start` in OUCSeniorDesignv2 directory. To view page type `localhost:3000` in web browser.
