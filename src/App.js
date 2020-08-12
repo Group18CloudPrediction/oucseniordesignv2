@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch} from 'react-router-dom';
 
 import Home from './components/javascripts/Home';
-import About from './components/javascripts/About';
-import Contact from './components/javascripts/Contact';
 import Error from './components/javascripts/Error';
 import Navigation from './components/javascripts/Navigation';
+import Archive from './components/javascripts/Archive';
+import Livestream from './components/javascripts/Livestream';
 
 import './components/stylesheets/App.css';
 
@@ -17,8 +17,8 @@ class App extends Component {
           <Navigation />
             <Switch>
               <Route path = "/" component={Home} exact/>
-              <Route path = "/about" component={About}/>
-              <Route path = "/contact" component={Contact}/>
+              <Route path = "/archive" component={Archive}/>
+              <Route path = "/livestream" component={Livestream}/>
               <Route component={Error}/>
             </Switch>
           </div>
