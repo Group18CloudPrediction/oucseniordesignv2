@@ -72,19 +72,40 @@ This was created as an empty repository for Cloud Tracking Senior Design group p
 
 Initial Commit (no express yet) displays an html of a google map onto localhost:8000
 
-7/14 Commit: adds express framework.
+# 7/14 Commit:
 
-7/21 Commit: Added Navbar and moved Map code to javascript file
+Adds express framework.
 
-7/23 Commit: Migrated from Jade to Pug. (essentially the same thing)
+# 7/21 Commit:
 
-7/24 Commit: Cleaned up index.pug and moved navbar to layout.pug
+Added Navbar and moved Map code to javascript file
 
-8/6 Commit: Add files for livestream testing
+# 7/23 Commit:
 
-8/7 Commit: Add required node modules for livestream
+Migrated from Jade to Pug. (essentially the same thing)
 
-8/8 - 8/10 Commit: Add player to livestream page with sample video
+# 7/24 Commit:
+
+Cleaned up index.pug and moved navbar to layout.pug
+
+# 8/6 Commit:
+
+Add files for livestream testing
+
+# 8/7 Commit:
+
+Add required node modules for livestream
+
+# 8/8 - 8/10 Commit:
+
+Add player to livestream page with sample video
+
+# 8/11 - 8/14 Commit:
+
+Begun working with React for front end and express for back end. To run react and express at the same time
+1st: go to the Front_End directory and type 'npm start'
+2nd: in a new command prompt go to the oucseniordesignv2 directory and type 'npm start'
+
 
 Make sure you have node js installed and set up
 
