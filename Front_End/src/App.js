@@ -7,7 +7,7 @@ import Navigation from './components/javascripts/Navigation';
 import Archive from './components/javascripts/Archive';
 import Livestream from './components/javascripts/Livestream';
 
-import './components/stylesheets/App.css';
+import './components/stylesheets/bootstrap.css';
 
 class App extends Component {
   render() {
