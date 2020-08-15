@@ -3,7 +3,7 @@ import Map from './Map.js'
 
 const Home = () => {
   return (
-    <div>
+    <div id="Home">
       <Map />
     </div>
   );

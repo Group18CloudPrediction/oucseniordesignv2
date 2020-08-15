@@ -3,10 +3,10 @@ import React, { Component } from 'react';
 class Archive extends Component {
   render() {
     return (
-      <div>
-      <h1>Archive page</h1>
+      <div id="Archive">
+        <h1>Archive page</h1>
       </div>
-    );  
+    );
   }
 }
 
