@@ -106,6 +106,10 @@ Begun working with React for front end and express for back end. To run react an
 1st: go to the Front_End directory and type 'npm start'
 2nd: in a new command prompt go to the oucseniordesignv2 directory and type 'npm start'
 
+# 8/15 Commit:
+
+Made Adjustments to div placement on app. Added Player to livestream page.
+
 
 Make sure you have node js installed and set up
 

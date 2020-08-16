@@ -6,7 +6,7 @@ import icon from '../media/cloud.ico'
 class Navigation extends Component {
   render () {
     return (
-      <div>
+      <div id="nav">
         <div className="row">
           <div className="col-md-12">
             <Navbar bg="primary" variant="dark" expand="lg">

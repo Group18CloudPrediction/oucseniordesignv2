@@ -14,9 +14,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <div id="App">
-          <div id="nav">
-            <Navigation />
-          </div>
+          <Navigation />
             <Switch>
               <Route path = "/" component={Home} exact/>
               <Route path = "/archive" component={Archive}/>
