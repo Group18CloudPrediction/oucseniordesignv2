@@ -109,8 +109,3 @@ Begun working with React for front end and express for back end. To run react an
 # 8/15 Commit:
 
 Made Adjustments to div placement on app. Added Player to livestream page.
-
-
-Make sure you have node js installed and set up
-
-To run type `npm start` in OUCSeniorDesignv2 directory. To view page type `localhost:3000` in web browser.
