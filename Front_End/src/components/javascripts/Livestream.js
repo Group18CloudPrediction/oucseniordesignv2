@@ -14,7 +14,7 @@ class Livestream extends Component {
       <div id="Livestream">
         <JsmpegPlayer
           wrapperClassName="video-wrapper"
-          videoUrl=""
+          videoUrl="ws://localhost:3000/stream1"
           options={videoOptions}
           overlayOptions={overlayOptions}
         />
