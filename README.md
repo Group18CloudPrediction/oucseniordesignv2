@@ -103,8 +103,6 @@ Add player to livestream page with sample video
 # 8/11 - 8/14 Commit:
 
 Begun working with React for front end and express for back end. To run react and express at the same time
-1st: go to the Front_End directory and type 'npm start'
-2nd: in a new command prompt go to the oucseniordesignv2 directory and type 'npm start'
 
 # 8/15 Commit:
 
@@ -113,3 +111,8 @@ Made Adjustments to div placement on app. Added Player to livestream page.
 # 8/24 Commit:
 
 Added code for setting foundation of API calls.
+
+### How to run
+
+If working with purely web user interface type `npm start` in /Front_End to view any changes. To view type `localhost:3001` in web browser.
+If working with api and web user interface first go to /Front_End and type `npm run build` then in the main directory type `npm start`. To view type `localhost:3000` in web browser.
