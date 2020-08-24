@@ -109,3 +109,7 @@ Begun working with React for front end and express for back end. To run react an
 # 8/15 Commit:
 
 Made Adjustments to div placement on app. Added Player to livestream page.
+
+# 8/24 Commit:
+
+Added code for setting foundation of API calls.
