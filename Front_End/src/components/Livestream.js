@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import JsmpegPlayer from './LivestreamPlayer.js';
-import icon from '../media/cloud.png';
+import React, { Component } from "react";
+import JsmpegPlayer from "./LivestreamPlayer.js";
+import icon from "../media/cloud.png";
 
 const videoOptions = {
-  poster: icon
+  poster: icon,
 };
 
 const overlayOptions = {};
 
 class Livestream extends Component {
-  render () {
+  render() {
     return (
       <div id="Livestream">
         <JsmpegPlayer
