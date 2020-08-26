@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import JSMpeg from '@cycjimmy/jsmpeg-player';
+import React, { Component } from "react";
+import JSMpeg from "@cycjimmy/jsmpeg-player";
 
 class JsmpegPlayer extends Component {
   constructor(props) {
