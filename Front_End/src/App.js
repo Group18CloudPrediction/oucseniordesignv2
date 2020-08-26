@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch} from 'react-router-dom';
+import React, { Component } from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
-import Home from './components/javascripts/Home';
-import Error from './components/javascripts/Error';
-import Navigation from './components/javascripts/Navigation';
-import Archive from './components/javascripts/Archive';
-import Livestream from './components/javascripts/Livestream';
+import Home from "./components/Home";
+import Error from "./components/Error";
+import Navigation from "./components/Navigation";
+import Archive from "./components/Archive";
+import Livestream from "./components/Livestream";
 
-import './components/stylesheets/bootstrap.css';
+import "./stylesheets/bootstrap.css";
 
 class App extends Component {
   render() {
@@ -15,14 +15,14 @@ class App extends Component {
       <BrowserRouter>
         <div id="App">
           <Navigation />
-            <Switch>
-              <Route path = "/" component={Home} exact/>
-              <Route path = "/archive" component={Archive}/>
-              <Route path = "/livestream" component={Livestream}/>
-              <Route component={Error}/>
-            </Switch>
-          </div>
-        </BrowserRouter>
+          <Switch>
+            <Route path="/" component={Home} exact />
+            <Route path="/archive" component={Archive} />
+            <Route path="/livestream" component={Livestream} />
+            <Route component={Error} />
+          </Switch>
+        </div>
+      </BrowserRouter>
     );
   }
 }
