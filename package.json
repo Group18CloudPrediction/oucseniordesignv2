@@ -1,7 +1,7 @@
 {
   "name": "oucseniordesignv2",
   "version": "1.0.0",
-  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "description": "",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/goodguytim1/OUCSeniorDesignv2.git"
+    "url": "git+https://github.com/goodguytim1/oucseniorDesignv2.git"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +19,9 @@
   },
   "homepage": "https://github.com/goodguytim1/OUCSeniorDesignv2#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "dependencies": "0.0.1",
+    "express": "^4.17.1",
+    "mongoose": "^5.10.0",
+    "socket.io": "^2.3.0"
   }
 }
