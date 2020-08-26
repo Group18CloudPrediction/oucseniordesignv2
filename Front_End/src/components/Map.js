@@ -12,7 +12,7 @@ class Map extends Component {
 
   render () {
     return (
-      //Always explicitly set container height.
+      //Always explicitly set container height. Making slight change to test
       <div id="Map" style= {{ height: "92vh", width: "100%" }}>
         <GoogleMapReact
           bootstrapURLKeys={{ key: "AIzaSyCn55lIh6mJ4GnR00jjgGeWUEii5R183xA" }}
