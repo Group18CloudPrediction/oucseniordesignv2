@@ -1,5 +1,5 @@
-import React from 'react';
-import Map from './Map.js'
+import React from "react";
+import Map from "./Map.js";
 
 const Home = () => {
   return (
