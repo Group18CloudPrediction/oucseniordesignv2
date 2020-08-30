@@ -14,11 +14,30 @@ class Livestream extends Component {
       <div id="Livestream">
         <JsmpegPlayer
           wrapperClassName="video-wrapper"
-          videoUrl="ws://localhost:3000/stream1"
+          videoUrl="ws://oucseniordesignv2.herokuapp.com/stream1"
+          options={videoOptions}
+          overlayOptions={overlayOptions}
+        />
+        <JsmpegPlayer
+          wrapperClassName="video-wrapper"
+          videoUrl="ws://oucseniordesignv2.herokuapp.com/stream2"
+          options={videoOptions}
+          overlayOptions={overlayOptions}
+        />
+        <JsmpegPlayer
+          wrapperClassName="video-wrapper"
+          videoUrl="ws://oucseniordesignv2.herokuapp.com/stream3"
+          options={videoOptions}
+          overlayOptions={overlayOptions}
+        />
+        <JsmpegPlayer
+          wrapperClassName="video-wrapper"
+          videoUrl="ws://oucseniordesignv2.herokuapp.com/stream4"
           options={videoOptions}
           overlayOptions={overlayOptions}
         />
       </div>
+
     );
   }
 }
