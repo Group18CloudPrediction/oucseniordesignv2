@@ -8,17 +8,22 @@ class Map extends Component {
       lat: 28.2389,
       lng: -81.2312
     },
-    zoom: 13
+    zoom: 15,
+    options: {
+      streetViewControl: true,
+      mapTypeControl: true,
+    }
   }
 
   render () {
     return (
-      //Always explicitly set container height. Making slight change to test
-      <div id="Map" style= {{ height: "92vh", width: "100%" }}>
+      //Always explicitly set container height.
+      <div id="Map" style= {{ height: '92.5vh', width: '100%' }}>
         <GoogleMapReact
           bootstrapURLKeys={{ key: "AIzaSyCn55lIh6mJ4GnR00jjgGeWUEii5R183xA" }}
           defaultCenter={this.props.center}
           defaultZoom={this.props.zoom}
+          options={this.props.options}
         >
         <Marker
             key={"top-right"}
