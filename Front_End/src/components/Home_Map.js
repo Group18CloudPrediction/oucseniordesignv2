@@ -8,7 +8,7 @@ class Map extends Component {
       lat: 28.2389,
       lng: -81.2312
     },
-    zoom: 15,
+    zoom: 13,
     options: {
       streetViewControl: true,
       mapTypeControl: true,
