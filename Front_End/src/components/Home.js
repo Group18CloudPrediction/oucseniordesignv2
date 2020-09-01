@@ -1,12 +1,15 @@
-import React from "react";
-import Map from "./Map.js";
+import React, { Component } from "react";
+import Map from "./Home_Map.js";
 
-const Home = () => {
-  return (
-    <div id="Home">
-      <Map />
-    </div>
-  );
+class Home extends Component {
+
+  render() {
+    return(
+      <div id="Home">
+        <Map />
+      </div>
+    );
+  }
 }
 
 export default Home;

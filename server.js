@@ -9,10 +9,20 @@ var express = require('express'),
 var app = express(),
   streamServer = http.createServer(app),
   socketio = socketIO(streamServer),
-  socketServer = new webSocket.Server({ server: streamServer, path: '/stream'}),
+  viewerServer1 = new webSocket.Server({ server: streamServer, path: '/stream1'}),
+  viewerServer2 = new webSocket.Server({ server: streamServer, path: '/stream2'}),
+  viewerServer3 = new webSocket.Server({ server: streamServer, path: '/stream3'}),
+  viewerServer4 = new webSocket.Server({ server: streamServer, path: '/stream4'}),
   port = process.env.PORT || 3000,
   mongodb = process.env.MONGODB_URI || 'mongodb://localhost/cloudtracking';
 
+  function init_routes() {
+    var livestreamRoute = require('./api/routes/livestreamRoutes')
+    (viewerServer1, viewerServer2, viewerServer3, viewerServer4);
+
+    app.use('/cloudtrackinglivestream', livestreamRoute)
+  }
+  init_routes();
 // Serve the static files from the React app
 app.use(express.static(path.join(__dirname, 'Front_End/build')));
 // Handles any requests that don't match the ones above
