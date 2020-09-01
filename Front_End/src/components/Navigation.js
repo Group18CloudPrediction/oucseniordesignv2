@@ -18,11 +18,12 @@ class Navigation extends Component {
                 alt="Cloud Icon"
               />
             </Navbar.Brand>
-              <Nav>
-                <Nav.Link as={NavLink} href="/" to="/" exact>Home</Nav.Link>
-                <Nav.Link as={NavLink} href="/archive" to="/archive">Archive</Nav.Link>
-                <Nav.Link as={NavLink} href="/livestream" to="/livestream">Livestream</Nav.Link>
-              </Nav>
+            <Nav>
+              <Nav.Link as={NavLink} href="/" to="/" exact>Home</Nav.Link>
+              <Nav.Link as={NavLink} href="/archive" to="/archive">Archive</Nav.Link>
+              <Nav.Link as={NavLink} href="/livestream" to="/livestream">Livestream</Nav.Link>
+              <Nav.Link as={NavLink} href="/powerprediction" to="/powerprediction">Power Prediction</Nav.Link>
+            </Nav>
           </Navbar>
         </div>
       </div>
