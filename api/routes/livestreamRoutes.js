@@ -23,11 +23,11 @@ module.exports = (viewerServer1, viewerServer2, viewerServer3, viewerServer4) =>
     return router
 };
 */
-module.exports = (socketServer) => {
+module.exports = (viewerServer1) => {
     router.route('/').post((request, response) => {
         console.log("Camera connected")
         request.on('data', function (data) {
-            socketServer.broadcast(data);
+            viewerServer1.broadcast(data);
         });
     });
     return router
