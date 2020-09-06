@@ -41,7 +41,7 @@ function route(viewerServer) {
     var locationID = request.params.id;
     console.log("location " + locationID + " connected");
     request.on("data", function (data) {
-      viewerServer.pushData(locationID, data);
+      pushData(locationID, data);
     });
   });
   return router;
@@ -52,22 +52,25 @@ function init_routes() {
   app.use("/cloudtrackinglivestream", viewer);
 }
 
+function pushData (toWho, data) {
+  if viewers[toWho] == null
+    return
+  viewers[toWho].foreach(function each(client) {
+    if (client.readyState === webSocket.OPEN) {
+      client.send(data);
+    }
+  });
+};
+
 function init() {
   /// todo: viewers = { }
-  viewerServer.pushData = (toWho, data) => {
-    viewers[toWho].foreach(function each(client) {
-      if (client.readyState === webSocket.OPEN) {
-        client.send(data);
-      }
-    });
-  };
 
   // viewerServer.on("connection", function connection(ws, req) {
   //   const location = url.parse(req.url, true);
   //   addValueToList(location.pathname.substring(1), ws);
   // });
 
-  viewerServer.on("upgrade", (req, socket, head) => {
+  streamServer.on("upgrade", (req, socket, head) => {
     const pathname = url.parse(req.url).pathname;
     viewSrv = channels[pathname]; // local scope pls
     if (!viewSrv)
