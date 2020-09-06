@@ -14,7 +14,7 @@ class Livestream extends Component {
       <div id="Livestream">
         <JsmpegPlayer
           wrapperClassName="video-wrapper"
-          videoUrl="ws://cloudtracking-v2.herokuapp.com/stream1"
+          videoUrl="ws://cloudtracking-v2.herokuapp.com/livestream/stream1"
           options={videoOptions}
           overlayOptions={overlayOptions}
         />
