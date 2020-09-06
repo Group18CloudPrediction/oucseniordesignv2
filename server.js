@@ -58,7 +58,6 @@ var app = express(),
     const location = url.parse(req.url, true);
     console.log(location)
     addValueToList(location.pathname.substring(1), ws)
-    }
   });
 
     init_routes();
