@@ -45,16 +45,19 @@ var app = express(),
       })
     };
 
-  let viewerList = new Map()
+  var map = {};
+
+  function addValueToList(key, value) {
+      //if the list is already created for the "key", then uses it
+      //else creates new list for the "key" to store multiple values in it.
+      map[key] = map[key] || [];
+      map[key].push(value);
+  }
 
   viewerServer.on('connection', function connection(ws, req) {
     const location = url.parse(req.url, true);
     console.log(location)
-    if (viewerList.has(location))
-        viewerList.get(location).add(ws)
-    else {
-        viewerList.set(location, [])
-        viewerList.get(location).add(ws)
+    addValueToList(location.pathname.substring(1), ws)
     }
   });
 
