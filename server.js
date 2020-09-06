@@ -9,39 +9,32 @@ var express = require('express'),
 var app = express(),
   streamServer = http.createServer(app),
   //socketio = socketIO(streamServer),
-  viewerServer1 = new webSocket.Server({ server: streamServer, path: '/stream1'}),
-  viewerServer2 = new webSocket.Server({ server: streamServer, path: '/stream2'}),
-  //viewerServer3 = new webSocket.Server({ server: streamServer, path: '/stream3'}),
-  //viewerServer4 = new webSocket.Server({ server: streamServer, path: '/stream4'}),
+  viewerServer = new webSocket.Server({ server: streamServer, path: '/stream'}),
   port = process.env.PORT || 3000,
   mongodb = process.env.MONGODB_URI || 'mongodb://localhost/cloudtracking';
 
   function init_routes() {
     var livestreamRoute = require('./api/routes/livestreamRoutes')
-    (viewerServer1);
-
-    var livestreamRoute1 = require('./api/routes/livestreamRoutes1')
-    (viewerServer2);
+    (viewerServer);
 
     app.use('/cloudtrackinglivestream', livestreamRoute)
-    app.use('/cloudtrackinglivestream1', livestreamRoute1)
   }
 
   function init () {
-    viewerServer1.broadcast = function (data) {
-      viewerServer1.clients.forEach(function each(client) {
+    viewerServer.broadcast = function (data) {
+      viewerServer.clients.forEach(function each(client) {
         if (client.readyState === webSocket.OPEN) {
           client.send(data);
         }
       });
     };
-    viewerServer2.broadcast = function (data) {
-      viewerServer2.clients.forEach(function each(client) {
-        if (client.readyState === webSocket.OPEN) {
-          client.send(data);
-        }
-      });
-    };
+
+    viewerServer.on('connection', function connection(ws, req) {
+      const location = url.parse(req.url, true);
+      console.log("This is the parsed location: " + location);
+      // branch your code here based on location.pathname
+    });
+
     init_routes();
   // Serve the static files from the React app
   app.use(express.static(path.join(__dirname, 'Front_End/build')));
