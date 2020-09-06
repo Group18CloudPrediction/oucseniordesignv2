@@ -57,7 +57,7 @@ function pushData (toWho, data) {
   if (!viewers[toWho]) {
     return
   }
-  viewers[toWho].foreach(function each(client) {
+  viewers[toWho].forEach(function each(client) {
     if (client.readyState === webSocket.OPEN) {
       client.send(data);
     }
