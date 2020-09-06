@@ -9,7 +9,7 @@ var express = require('express'),
 var app = express(),
   streamServer = http.createServer(app),
   //socketio = socketIO(streamServer),
-  viewerServer = new webSocket.Server({ server: streamServer, path: '/stream'}),
+  viewerServer = new webSocket.Server({ server: streamServer}),
   port = process.env.PORT || 3000,
   mongodb = process.env.MONGODB_URI || 'mongodb://localhost/cloudtracking';
 
