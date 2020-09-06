@@ -22,15 +22,26 @@ var app = express(),
 
     app.use('/cloudtrackinglivestream', livestreamRoute)
   }
-  init_routes();
-// Serve the static files from the React app
-app.use(express.static(path.join(__dirname, 'Front_End/build')));
-// Handles any requests that don't match the ones above
-app.get('*', (req,res) =>{
-    res.sendFile(path.join(__dirname+'/Front_End/build/index.html'));
-});
 
-//const port = process.env.PORT || 3000;
-app.listen(port);
+  function init () {
+    socketServer.broadcast = function (data) {
+      socketServer.clients.forEach(function each(client) {
+        if (client.readyState === webSocket.OPEN) {
+          client.send(data);
+        }
+      });
+    };
+    init_routes();
+  // Serve the static files from the React app
+  app.use(express.static(path.join(__dirname, 'Front_End/build')));
+  // Handles any requests that don't match the ones above
+  app.get('*', (req,res) =>{
+      res.sendFile(path.join(__dirname+'/Front_End/build/index.html'));
+  });
 
-console.log('App is listening on port ' + port);
+  //const port = process.env.PORT || 3000;
+  app.listen(port);
+
+  console.log('App is listening on port ' + port);
+}
+init();
