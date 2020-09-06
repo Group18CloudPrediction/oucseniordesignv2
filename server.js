@@ -23,6 +23,8 @@ var app = express(),
   }
 
   function route (viewerServer) {
+    var router = express.Router();
+
         router.route('/:id').post((request, response) => {
             var locationID = request.params.id
             console.log("location " + locationID + " connected")
@@ -46,6 +48,7 @@ var app = express(),
 
   viewerServer.on('connection', function connection(ws, req) {
     const location = url.parse(req.url, true);
+    console.log(location)
     if (viewerList.has(location))
         viewerList.get(location).add(ws)
     else {
