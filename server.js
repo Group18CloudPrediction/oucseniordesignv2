@@ -17,7 +17,7 @@ var app = express(),
   mongodb = process.env.MONGODB_URI || 'mongodb://localhost/cloudtracking';
 
   function init_routes() {
-    var liveStreamRoute = require('./api/routes/liveStreamRoute'),
+    var liveStreamRoute = require('./api/routes/livestreamRoute'),
     viewerRouteOne = liveStreamRoute(viewerServer1),
     viewerRouteTwo = liveStreamRoute(viewerServer2);
 
