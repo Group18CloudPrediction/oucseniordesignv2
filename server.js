@@ -24,8 +24,8 @@ var app = express(),
   }
 
   function init () {
-    socketServer.broadcast = function (data) {
-      socketServer.clients.forEach(function each(client) {
+    viewerServer1.broadcast = function (data) {
+      viewerServer1.clients.forEach(function each(client) {
         if (client.readyState === webSocket.OPEN) {
           client.send(data);
         }
