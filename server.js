@@ -31,6 +31,13 @@ var app = express(),
         }
       });
     };
+    viewerServer2.broadcast = function (data) {
+      viewerServer2.clients.forEach(function each(client) {
+        if (client.readyState === webSocket.OPEN) {
+          client.send(data);
+        }
+      });
+    };
     init_routes();
   // Serve the static files from the React app
   app.use(express.static(path.join(__dirname, 'Front_End/build')));
