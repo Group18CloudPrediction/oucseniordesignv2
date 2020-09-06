@@ -4,7 +4,8 @@ var express = require('express'),
     path = require('path'),
     http = require('http'),
     webSocket = require('ws'),
-    socketIO = require('socket.io');
+    socketIO = require('socket.io'),
+    url = require('url');
 
 var app = express(),
   streamServer = http.createServer(app),
@@ -36,8 +37,6 @@ var app = express(),
   }
 
   function init () {
-    var URL = require('url').URL;
-    
     viewerServer.pushData = (toWho, data) => {
       viewerList.get(toWho).foreach(function each(client) {
         if (client.readyState === webSocket.OPEN) {
