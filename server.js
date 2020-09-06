@@ -10,31 +10,22 @@ var app = express(),
   streamServer = http.createServer(app),
   //socketio = socketIO(streamServer),
   viewerServer1 = new webSocket.Server({ server: streamServer, path: '/stream1'}),
-  viewerServer2 = new webSocket.Server({ server: streamServer, path: '/stream2'}),
+  //viewerServer2 = new webSocket.Server({ server: streamServer, path: '/stream2'}),
   //viewerServer3 = new webSocket.Server({ server: streamServer, path: '/stream3'}),
   //viewerServer4 = new webSocket.Server({ server: streamServer, path: '/stream4'}),
   port = process.env.PORT || 3000,
   mongodb = process.env.MONGODB_URI || 'mongodb://localhost/cloudtracking';
 
   function init_routes() {
-    var liveStreamRoute = require('./api/routes/livestreamRoutes'),
-    viewerRouteOne = liveStreamRoute(viewerServer1),
-    viewerRouteTwo = liveStreamRoute(viewerServer2);
+    var livestreamRoute = require('./api/routes/livestreamRoutes')
+    (viewerServer1/*, viewerServer2, viewerServer3, viewerServer4*/);
 
-    app.use('/viewerRouteOne', viewerRouteOne);
-    app.use('/viewerRouteTwo', viewerRouteTwo);
+    app.use('/cloudtrackinglivestream', livestreamRoute)
   }
 
   function init () {
     viewerServer1.broadcast = function (data) {
       viewerServer1.clients.forEach(function each(client) {
-        if (client.readyState === webSocket.OPEN) {
-          client.send(data);
-        }
-      });
-    };
-    viewerServer2.broadcast = function (data) {
-      viewerServer2.clients.forEach(function each(client) {
         if (client.readyState === webSocket.OPEN) {
           client.send(data);
         }
