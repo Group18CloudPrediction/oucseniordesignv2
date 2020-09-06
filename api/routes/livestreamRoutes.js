@@ -2,8 +2,7 @@
 var express = require('express');
 
 var router = express.Router();
-/*
-module.exports = (viewerServer1, viewerServer2, viewerServer3, viewerServer4) => {
+module.exports = (viewerServer1, viewerServer2/*, viewerServer3, viewerServer4*/) => {
     router.route('/:id').post((request, response) => {
         var cameraId = request.params.id
         console.log("Camera " + cameraId +"connected")
@@ -22,7 +21,7 @@ module.exports = (viewerServer1, viewerServer2, viewerServer3, viewerServer4) =>
     });
     return router
 };
-*/
+/*
 module.exports = (viewerServer1) => {
     router.route('/').post((request, response) => {
         console.log("Camera connected")
@@ -32,3 +31,4 @@ module.exports = (viewerServer1) => {
     });
     return router
 };
+*/
