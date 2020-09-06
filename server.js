@@ -23,10 +23,11 @@ function addValueToList(map, key, value) {
 //sanity check
 
 function createChannel(path) {
-  addValueToList(channels, path, new webSocket.Server({ noServer: true }));
-  channels[path].on("connection", function connection(ws) {
-    addValueToList(viewers, path, ws);
+  tmpServer = new webSocket.Server({ noServer: true });
+    tmpServer.on("connection", function connection(ws) {
+      addValueToList(viewers, path, ws);
   });
+  channels[path] = tmpServer
 }
 
 function initChannels() {
