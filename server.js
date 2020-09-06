@@ -17,10 +17,12 @@ var app = express(),
   mongodb = process.env.MONGODB_URI || 'mongodb://localhost/cloudtracking';
 
   function init_routes() {
-    var livestreamRoute = require('./api/routes/livestreamRoutes')
-    (viewerServer1, viewerServer2/*, viewerServer3, viewerServer4*/);
+    var liveStreamRoute = require('./api/routes/liveStreamRoute'),
+    viewerRouteOne = liveStreamRoute(viewerServer1),
+    viewerRouteTwo = liveStreamRoute(viewerServer2);
 
-    app.use('/cloudtrackinglivestream', livestreamRoute)
+    app.use('/viewerRouteOne', viewerRouteOne);
+    app.use('/viewerRouteTwo', viewerRouteTwo);
   }
 
   function init () {
