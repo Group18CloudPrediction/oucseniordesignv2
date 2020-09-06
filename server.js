@@ -8,7 +8,7 @@ var express = require('express'),
 
 var app = express(),
   streamServer = http.createServer(app),
-  socketio = socketIO(streamServer),
+  //socketio = socketIO(streamServer),
   viewerServer1 = new webSocket.Server({ server: streamServer, path: '/stream1'}),
   //viewerServer2 = new webSocket.Server({ server: streamServer, path: '/stream2'}),
   //viewerServer3 = new webSocket.Server({ server: streamServer, path: '/stream3'}),
@@ -41,6 +41,8 @@ var app = express(),
 
   //const port = process.env.PORT || 3000;
   //app.listen(port);
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
   streamServer.listen(port);
   console.log('App is listening on port ' + port);
 }
