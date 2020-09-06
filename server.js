@@ -35,6 +35,7 @@ function initChannels() {
   createChannel("/stream2");
 }
 
+//todo: Try to move route() back to livestreamRoutes.js
 function route() {
   var router = express.Router();
 
