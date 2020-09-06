@@ -14,26 +14,45 @@ var app = express(),
   mongodb = process.env.MONGODB_URI || 'mongodb://localhost/cloudtracking';
 
   function init_routes() {
+    /*
     var livestreamRoute = require('./api/routes/livestreamRoutes')
     (viewerServer);
+    */
+    viewer = route(viewerServer);
+    app.use('/cloudtrackinglivestream', viewer)
+  }
 
-    app.use('/cloudtrackinglivestream', livestreamRoute)
+  function route (viewerServer) {
+        router.route('/:id').post((request, response) => {
+            var locationID = request.params.id
+            console.log("location " + locationID + " connected")
+            request.on('data', function (data) {
+                viewerServer.pushData(locationID, data);
+            });
+        });
+        return router
   }
 
   function init () {
-    viewerServer.broadcast = function (data) {
-      viewerServer.clients.forEach(function each(client) {
+    viewerServer.pushData = (toWho, data) => {
+      viewerList.get(toWho).foreach(function each(client) {
         if (client.readyState === webSocket.OPEN) {
-          client.send(data);
+          client.send(data)
         }
-      });
+      })
     };
 
-    viewerServer.on('connection', function connection(ws, req) {
-      const location = url.parse(req.url, true);
-      console.log("This is the parsed location: " + location);
-      // branch your code here based on location.pathname
-    });
+  let viewerList = new Map()
+
+  viewerServer.on('connection', function connection(ws, req) {
+    const location = url.parse(req.url, true);
+    if (viewerList.has(location))
+        viewerList.get(location).add(ws)
+    else {
+        viewerList.set(location, [])
+        viewerList.get(location).add(ws)
+    }
+  });
 
     init_routes();
   // Serve the static files from the React app
