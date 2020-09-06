@@ -10,9 +10,9 @@ var app = express(),
   streamServer = http.createServer(app),
   socketio = socketIO(streamServer),
   viewerServer1 = new webSocket.Server({ server: streamServer, path: '/stream1'}),
-  viewerServer2 = new webSocket.Server({ server: streamServer, path: '/stream2'}),
-  viewerServer3 = new webSocket.Server({ server: streamServer, path: '/stream3'}),
-  viewerServer4 = new webSocket.Server({ server: streamServer, path: '/stream4'}),
+  //viewerServer2 = new webSocket.Server({ server: streamServer, path: '/stream2'}),
+  //viewerServer3 = new webSocket.Server({ server: streamServer, path: '/stream3'}),
+  //viewerServer4 = new webSocket.Server({ server: streamServer, path: '/stream4'}),
   port = process.env.PORT || 3000,
   mongodb = process.env.MONGODB_URI || 'mongodb://localhost/cloudtracking';
 

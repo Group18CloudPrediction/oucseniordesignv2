@@ -2,7 +2,7 @@
 var express = require('express');
 
 var router = express.Router();
-
+/*
 module.exports = (viewerServer1, viewerServer2, viewerServer3, viewerServer4) => {
     router.route('/:id').post((request, response) => {
         var cameraId = request.params.id
@@ -18,6 +18,16 @@ module.exports = (viewerServer1, viewerServer2, viewerServer3, viewerServer4) =>
             viewerServer4.broadcast(data);
           else
             console.log(cameraId + " is not handled")
+        });
+    });
+    return router
+};
+*/
+module.exports = (socketServer) => {
+    router.route('/').post((request, response) => {
+        console.log("Camera connected")
+        request.on('data', function (data) {
+            socketServer.broadcast(data);
         });
     });
     return router
