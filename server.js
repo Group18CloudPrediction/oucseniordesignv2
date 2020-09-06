@@ -65,6 +65,8 @@ function pushData (toWho, data) {
 };
 
 function init() {
+  initChannels();
+  init_routes();
   /// todo: viewers = { }
 
   // viewerServer.on("connection", function connection(ws, req) {
@@ -75,18 +77,15 @@ function init() {
   streamServer.on("upgrade", (req, socket, head) => {
     const pathname = url.parse(req.url).pathname;
     viewSrv = channels[pathname]; // local scope pls
-    if (!viewSrv)
-      console.log(
-        "[error] viewer tried to access invalid strm path " + pathname
-      );
-
+    if (!viewSrv) {
+      console.log("[error] viewer tried to access invalid strm path " + pathname);
+      return
+    }
     viewSrv.handleUpgrade(req, socket, head, function done(ws) {
       viewSrv.emit("connection", ws, req);
     });
   });
 
-  initChannels();
-  init_routes();
   // Serve the static files from the React app
   app.use(express.static(path.join(__dirname, "Front_End/build")));
   // Handles any requests that don't match the ones above
