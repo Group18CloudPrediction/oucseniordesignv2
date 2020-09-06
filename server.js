@@ -36,6 +36,8 @@ var app = express(),
   }
 
   function init () {
+    var URL = require('url').URL;
+    
     viewerServer.pushData = (toWho, data) => {
       viewerList.get(toWho).foreach(function each(client) {
         if (client.readyState === webSocket.OPEN) {
