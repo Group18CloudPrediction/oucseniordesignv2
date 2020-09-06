@@ -10,11 +10,11 @@ module.exports = (viewerServer1, viewerServer2/*, viewerServer3, viewerServer4*/
           if (cameraId == 1)
             viewerServer1.broadcast(data);
           else if (cameraId == 2)
-            viewerServer2.broadcast(data);
+            viewerServer2.broadcast(data);/*
           else if (cameraId == 3)
             viewerServer3.broadcast(data);
           else if (cameraId == 4)
-            viewerServer4.broadcast(data);
+            viewerServer4.broadcast(data);*/
           else
             console.log(cameraId + " is not handled")
         });

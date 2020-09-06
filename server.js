@@ -18,7 +18,7 @@ var app = express(),
 
   function init_routes() {
     var livestreamRoute = require('./api/routes/livestreamRoutes')
-    (viewerServer1/*, viewerServer2, viewerServer3, viewerServer4*/);
+    (viewerServer1, viewerServer2/*, viewerServer3, viewerServer4*/);
 
     app.use('/cloudtrackinglivestream', livestreamRoute)
   }
