@@ -57,6 +57,7 @@ var app = express(),
   viewerServer.on('connection', function connection(ws, req) {
     const location = url.parse(req.url, true);
     console.log(location)
+    console.log(ws)
     addValueToList(location.pathname.substring(1), ws)
   });
 
