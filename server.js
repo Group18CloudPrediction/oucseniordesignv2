@@ -81,7 +81,7 @@ function init() {
       );
 
     viewSrv.handleUpgrade(req, socket, head, function done(ws) {
-      viewSrv.emit("connection", ws, request);
+      viewSrv.emit("connection", ws, req);
     });
   });
 
