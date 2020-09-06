@@ -42,7 +42,7 @@ function route(viewerServer) {
     var locationID = request.params.id;
     console.log("location " + locationID + " connected");
     request.on("data", function (data) {
-      pushData(locationID, data);
+      pushData("/" + locationID, data);
     });
   });
   return router;
