@@ -5,7 +5,7 @@ var router = express.Router();
 module.exports = (viewerServer1, viewerServer2/*, viewerServer3, viewerServer4*/) => {
     router.route('/:id').post((request, response) => {
         var cameraId = request.params.id
-        console.log("Camera " + cameraId +"connected")
+        console.log("Camera " + cameraId + " connected")
         request.on('data', function (data) {
           if (cameraId == 1)
             viewerServer1.broadcast(data);

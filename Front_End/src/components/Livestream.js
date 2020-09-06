@@ -20,22 +20,10 @@ class Livestream extends Component {
         />
         <JsmpegPlayer
           wrapperClassName="video-wrapper"
-          videoUrl="wss://cloudtracking-v2.herokuapp.com/stream2"
+          videoUrl="ws://cloudtracking-v2.herokuapp.com/stream2"
           options={videoOptions}
           overlayOptions={overlayOptions}
         />
-        {/*<JsmpegPlayer
-          wrapperClassName="video-wrapper"
-          videoUrl="wss://cloudtracking-v2.herokuapp.com/stream3"
-          options={videoOptions}
-          overlayOptions={overlayOptions}
-        />
-        <JsmpegPlayer
-          wrapperClassName="video-wrapper"
-          videoUrl="wss://cloudtracking-v2.herokuapp.com/stream4"
-          options={videoOptions}
-          overlayOptions={overlayOptions}
-        />*/}
       </div>
 
     );
