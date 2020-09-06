@@ -35,7 +35,7 @@ function initChannels() {
   createChannel("/stream2");
 }
 
-function route(viewerServer) {
+function route() {
   var router = express.Router();
 
   router.route("/:id").post((request, response) => {
@@ -49,7 +49,7 @@ function route(viewerServer) {
 }
 
 function init_routes() {
-  viewer = route(viewerServer);
+  viewer = route();
   app.use("/cloudtrackinglivestream", viewer);
 }
 
