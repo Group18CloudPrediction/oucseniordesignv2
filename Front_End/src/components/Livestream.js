@@ -19,7 +19,6 @@ class Livestream extends Component {
           overlayOptions={overlayOptions}
         />
       </div>
-
     );
   }
 }
