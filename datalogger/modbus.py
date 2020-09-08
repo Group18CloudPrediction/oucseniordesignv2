@@ -3,6 +3,7 @@ import serial
 import threading
 import time
 import pymongo
+import creds
 from datetime import datetime
 from pymongo.son_manipulator import SONManipulator
 
@@ -72,7 +73,9 @@ class WeatherDataDBRunner(threading.Thread):
 		threading.Thread.__init__(self)
 		#setup db here
 		print("setup db here")
-		self.client = pymongo.MongoClient("mongodb+srv://mainuser:63qRsDFul7udpNDy@cluster0.lgezy.mongodb.net/<dbname>?retryWrites=true&w=majority")
+
+		#creds will need to be created on each system
+		self.client = pymongo.MongoClient("mongodb+srv://" + creds.username + ":" + creds.password + "@cluster0.lgezy.mongodb.net/<dbname>?retryWrites=true&w=majority")
 		self.db = self.client.cloudTrackingData
 		self.datalogger = Datalogger('/dev/ttyS5') #path will need to change per system
 		self.sleep_time = 60 #60 seconds
@@ -106,7 +109,8 @@ class WeatherDataDBRunner(threading.Thread):
 				"tiltWE_deg": self.datalogger.weather_data.tiltWE_deg,
 				"tags": ["weather_data", "datalogger", "weather", "weather_station", "verified_data"],
 				"date": the_date,
-				"date_mins_only": the_date.replace(second=0, microsecond=0)}
+				"date_mins_only": the_date.replace(second=0, microsecond=0),
+				"system_num": "PLACEHOLDER_REPLACE"}
 		
 		posts = self.db.WeatherData
 		post_id = posts.insert_one(post).inserted_id
