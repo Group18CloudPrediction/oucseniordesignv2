@@ -5,7 +5,8 @@ var express = require("express"),
   http = require("http"),
   webSocket = require("ws"),
   socketIO = require("socket.io"),
-  url = require("url");
+  url = require("url"),
+  cors = require("cors");
 
 var app = express(),
   streamServer = http.createServer(app),
@@ -50,8 +51,11 @@ function route() {
 }
 
 function init_routes() {
+  var testAPIRouter = require("./api/routes/testAPI");
+  
   viewer = route();
   app.use("/cloudtrackinglivestream", viewer);
+  app.use("/testAPI", testAPIRouter);
 }
 
 function pushData (toWho, data) {
@@ -66,6 +70,7 @@ function pushData (toWho, data) {
 };
 
 function init() {
+  app.use(cors());
   initChannels();
   init_routes();
   /// todo: viewers = { }
