@@ -5,4 +5,21 @@ router.get("/", function(req, res, next) {
     res.send("API is working properly");
 });
 
+// router.get("/mongo", function(req, res, next) {
+//     const MongoClient = require('mongodb').MongoClient;
+//     const uri = require("../../credentials/mongodbCredentials");
+//     const client = new MongoClient(uri, { useNewUrlParser: true });
+//     client.connect(err => {
+//     const collection = client.db("test").collection("devices");
+//         // perform actions on the collection object
+//         client.close();
+//         res.send("success 1");
+//     });
+//     res.send("success 2");
+// });
+
+
+
+
+
 module.exports = router;
