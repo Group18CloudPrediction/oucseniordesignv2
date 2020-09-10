@@ -1,13 +1,15 @@
 import React, {Component} from "react";
 import RetrieveWeatherData from "./apiCallers/RetrieveWeatherData.js";
-import testApiCall from "./apiCallers/TestAPICall";
+import TestAPICall from "./apiCallers/TestAPICall";
+import TestMongodbAPICall from "./apiCallers/TestMongodbAPICall";
 
 class Archive extends Component {
     render() {
         return ( 
             <div id="Archive">
                 <h1> Archive page </h1> 
-                <RetrieveWeatherData/>
+                <TestAPICall/>
+                <TestMongodbAPICall/>
             </div>
         );
     }
