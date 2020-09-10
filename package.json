@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/goodguytim1/OUCSeniorDesignv2#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "dependencies": "0.0.1",
     "express": "^4.17.1",
     "mongoose": "^5.10.0",
