@@ -28,26 +28,26 @@ class Map extends Component {
         <Marker
             key={"top-right"}
             text={"txt"}
-            lat={28.29}
-            lng={-81.1912}
+            lat={28.29172}
+            lng={-81.19373}
           />
         <Marker
             key={"top-left"}
             text={"txt"}
-            lat={28.2489}
-            lng={-81.2812}
+            lat={28.24917}
+            lng={-81.28942}
           />
         <Marker
             key={"bot-right"}
             text={"txt"}
-            lat={28.2189}
-            lng={-81.1762}
+            lat={28.22465}
+            lng={-81.17819}
           />
         <Marker
             key={"bot-left"}
             text={"txt"}
-            lat={28.1919}
-            lng={-81.2712}
+            lat={28.18127}
+            lng={-81.27366}
           />
         </GoogleMapReact>
       </div>
