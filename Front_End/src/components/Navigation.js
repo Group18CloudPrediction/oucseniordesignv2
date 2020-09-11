@@ -23,6 +23,8 @@ class Navigation extends Component {
                 <Nav.Link as={NavLink} href="/archive" to="/archive">Archive</Nav.Link>
                 <Nav.Link as={NavLink} href="/livestream" to="/livestream">Livestream</Nav.Link>
                 <Nav.Link as={NavLink} href="/livestream1" to="/livestream1">Livestream 1</Nav.Link>
+                <Nav.Link as={NavLink} href="/livestream2" to="/livestream2">Livestream 1</Nav.Link>
+                <Nav.Link as={NavLink} href="/livestream3" to="/livestream3">Livestream 1</Nav.Link>
               </Nav>
           </Navbar>
         </div>
