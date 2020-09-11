@@ -7,7 +7,7 @@ const TestEntry = mongoose.Schema(
         testfield3: { type: Date, required: false, default: Date.now},
         testfield4: { type: [String], required: false }
     },
-    { timestamps: true },
+    { timestamps: true, collection: "test" },
 );
 
 module.exports = mongoose.model('testEntries', TestEntry);
