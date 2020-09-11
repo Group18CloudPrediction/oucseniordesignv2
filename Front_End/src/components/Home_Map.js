@@ -26,25 +26,25 @@ class Map extends Component {
           options={this.props.options}
         >
         <Marker
-            key={"top-right"}
+            key={"sub-28"}
             text={"txt"}
             lat={28.29172}
             lng={-81.19373}
           />
         <Marker
-            key={"top-left"}
+            key={"sub-27"}
             text={"txt"}
             lat={28.24917}
             lng={-81.28942}
           />
         <Marker
-            key={"bot-right"}
+            key={"sub-29"}
             text={"txt"}
             lat={28.22465}
             lng={-81.17819}
           />
         <Marker
-            key={"bot-left"}
+            key={"sub-33"}
             text={"txt"}
             lat={28.18127}
             lng={-81.27366}
