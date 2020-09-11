@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import RetrieveWeatherData from "./apiCallers/RetrieveWeatherData.js";
-import TestAPICall from "./apiCallers/TestAPICall";
+// import TestAPICall from "./apiCallers/TestAPICall";
 
 class Archive extends Component {
     render() {

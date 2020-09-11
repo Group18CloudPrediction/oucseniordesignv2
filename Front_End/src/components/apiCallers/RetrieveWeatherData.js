@@ -51,6 +51,7 @@ class RetrieveWeatherData extends Component {
                         <tr class="dataTableHeaderRow">
                             <th class="dataTableHeaderCell">_id</th>
                             <th class="dataTableHeaderCell">author</th>
+                            <th class="dataTableHeaderCell">system_num</th>
                             <th class="dataTableHeaderCell">slrFD_W</th>
                             <th class="dataTableHeaderCell">rain_mm</th>
                             <th class="dataTableHeaderCell">strikes</th>
@@ -67,7 +68,6 @@ class RetrieveWeatherData extends Component {
                             <th class="dataTableHeaderCell">tiltWE_deg</th>
                             <th class="dataTableHeaderCell">date</th>
                             <th class="dataTableHeaderCell">date_mins_only</th>
-                            <th class="dataTableHeaderCell">system_num</th>
                         </tr>
                     </thead>
                     <tbody class="dataTableBody">
@@ -84,6 +84,7 @@ class RetrieveWeatherData extends Component {
                 <tr key={dataPoint._id} class="dataTableRow">
                     <td class="dataTableCell">{dataPoint._id}</td>
                     <td class="dataTableCell">{dataPoint.author}</td>
+                    <td class="dataTableCell">{dataPoint.system_num}</td>
                     <td class="dataTableCell">{dataPoint.slrFD_W}</td>
                     <td class="dataTableCell">{dataPoint.rain_mm}</td>
                     <td class="dataTableCell">{dataPoint.strikes}</td>
@@ -100,7 +101,6 @@ class RetrieveWeatherData extends Component {
                     <td class="dataTableCell">{dataPoint.tiltWE_deg}</td>
                     <td class="dataTableCell">{dataPoint.date}</td>
                     <td class="dataTableCell">{dataPoint.date_mins_only}</td>
-                    <td class="dataTableCell">{dataPoint.system_num}</td>
                 </tr>
             );
         })

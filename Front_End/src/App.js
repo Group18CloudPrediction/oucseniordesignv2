@@ -7,6 +7,7 @@ import Navigation from "./components/Navigation";
 import Archive from "./components/Archive";
 import Livestream from "./components/Livestream";
 import Livestream1 from "./components/Livestream1";
+import PowerPredictionsDashboard from "./components/PowerPredictionsDashboard";
 
 import "./stylesheets/bootstrap.css";
 
@@ -21,6 +22,7 @@ class App extends Component {
             <Route path="/archive" component={Archive} />
             <Route path="/livestream" component={Livestream} />
             <Route path="/livestream1" component={Livestream1} />
+            <Route path="/PowerPredictionsDashboard" component={PowerPredictionsDashboard} />
             <Route component={Error} />
           </Switch>
         </div>
