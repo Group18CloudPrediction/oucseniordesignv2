@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import GoogleMapReact from "google-map-react";
 import Marker from './Marker';
+import { useHistory } from "react-router-dom";
+import Sub_27_Livestream from "./components/Sub_27_Livestream";
+import Sub_28_Livestream from "./components/Sub_28_Livestream";
+import Sub_29_Livestream from "./components/Sub_29_Livestream";
+import Sub_33_Livestream from "./components/Sub_33_Livestream";
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
@@ -17,8 +22,28 @@ class Map extends Component {
     }
   }
 
+
   handleClick(key) {
+    const history = useHistory();
     console.log(key);
+    let path = "/";
+    if(key === 'sub-28') {
+      path = "/Sub_28_Livestream";
+      history.push(path);
+    }
+    else if(key === 'sub-27') {
+      path = "/Sub_27_Livestream";
+      history.push(path);
+    }
+    else if(key === 'sub-29') {
+      path = "/Sub_29_Livestream";
+      history.push(path);
+    }
+    else if(key === 'sub-33') {
+      path = "/Sub_33_Livestream";
+      history.push(path);
+    }
+
   }
   render () {
     return (
