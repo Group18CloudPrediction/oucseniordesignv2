@@ -8,13 +8,13 @@ const videoOptions = {
 
 const overlayOptions = {};
 
-class Livestream2 extends Component {
+class Sub_29_Livestream extends Component {
   render() {
     return (
       <div id="Livestream">
         <JsmpegPlayer
           wrapperClassName="video-wrapper"
-          videoUrl="ws://cloudtracking-v2.herokuapp.com/stream3"
+          videoUrl="ws://cloudtracking-v2.herokuapp.com/sub-29"
           options={videoOptions}
           overlayOptions={overlayOptions}
         />
@@ -24,4 +24,4 @@ class Livestream2 extends Component {
   }
 }
 
-export default Livestream2;
+export default Sub_29_Livestream;

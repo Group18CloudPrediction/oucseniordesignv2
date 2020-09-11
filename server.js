@@ -32,10 +32,10 @@ function createChannel(path) {
 }
 
 function initChannels() {
-  createChannel("/stream1");
-  createChannel("/stream2");
-  createChannel("/stream3");
-  createChannel("/stream4");
+  createChannel("/sub-27");
+  createChannel("/sub-28");
+  createChannel("/sub-29");
+  createChannel("/sub-33");
 }
 
 //todo: Try to move route() back to livestreamRoutes.js
