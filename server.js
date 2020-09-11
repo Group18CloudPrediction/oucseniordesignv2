@@ -51,7 +51,7 @@ function route() {
 }
 
 function init_routes() {
-  var testAPIRouter = require("./api/routes/testAPI");
+  var testAPIRouter = require("./api/routes/testAPIRouter");
   
   viewer = route();
   app.use("/cloudtrackinglivestream", viewer);
@@ -71,6 +71,7 @@ function pushData (toWho, data) {
 
 function init() {
   app.use(cors());
+  require('./databaseConnection');
   initChannels();
   init_routes();
   /// todo: viewers = { }

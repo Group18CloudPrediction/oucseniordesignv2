@@ -1,6 +1,8 @@
 var express = require("express");
 var router = express.Router();
 const mongoose = require("mongoose");
+const testAPIController = require("../controllers/testAPIController");
+
 
 router.get("/", function(req, res, next) {
     res.send("API is working properly");
@@ -21,21 +23,21 @@ router.get("/", function(req, res, next) {
 //     res.send("success 2");
 // });
 
-router.get("/mongoose", function(req, res, next) {
-    const uri = require("../../credentials/mongodbCredentials");
-    mongoose.connect(
-        uri, 
-        {  useNewUrlParser: true,  useUnifiedTopology: true}
-    )
-    .then(
-        () => {  
-            console.log('MongoDB Connected…')
-        }
-    )
-    .catch(err => console.log(err));
-    
-    res.send("hi");
-});
+// router.get("/mongoose", function(req, res, next) {
+//     const uri = require("../../credentials/mongodbCredentials");
+//     mongoose.connect(
+//         uri, 
+//         {  useNewUrlParser: true,  useUnifiedTopology: true}
+//     )
+//     .then(
+//         () => {  
+//             console.log('MongoDB Connected…')
+//         }
+//     )
+//     .catch(err => console.log(err));
+//     
+//     res.send("hi");
+// });
 
 // const MovieCtrl = require('../controllers/testAPIController')
 // 
@@ -49,5 +51,8 @@ router.get("/mongoose", function(req, res, next) {
 router.get("/test", function(req, res, next) {
     res.send("API really is working properly and I mean it");
 });
+
+router.route("/mongoose/getall")
+    .get(testAPIController.getAll);
 
 module.exports = router;
