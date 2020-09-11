@@ -8,16 +8,21 @@ const Wrapper = styled.div`
   left: 50%;
   width: 18px;
   height: 18px;
-  background-color: #000;
-  border: 2px solid #fff;
+  background-color: red;
+  border: 2px solid black;
   border-radius: 100%;
   user-select: none;
   transform: translate(-50%, -50%);
   cursor: ${(props) => (props.onClick ? 'pointer' : 'default')};
   &:hover {
+    cursor: pointer;
+    width: 26px;
+    height: 26px;
     z-index: 1;
   }
 `;
+
+
 
 const Marker = ({ text, onClick }) => (
   <Wrapper
@@ -34,5 +39,6 @@ Marker.propTypes = {
   onClick: PropTypes.func,
   text: PropTypes.string.isRequired,
 };
+
 
 export default Marker;
