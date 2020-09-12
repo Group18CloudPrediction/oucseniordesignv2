@@ -8,7 +8,7 @@ const videoOptions = {
 
 const overlayOptions = {};
 
-class Sub_28_Livestream extends Component {
+class Sub_28 extends Component {
   render() {
     return (
       <div id="Livestream">
@@ -18,10 +18,11 @@ class Sub_28_Livestream extends Component {
           options={videoOptions}
           overlayOptions={overlayOptions}
         />
+        <h1>Sub_28</h1>
       </div>
 
     );
   }
 }
 
-export default Sub_28_Livestream;
+export default Sub_28;

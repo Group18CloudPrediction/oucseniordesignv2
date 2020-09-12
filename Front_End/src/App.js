@@ -5,10 +5,10 @@ import Home from "./components/Home";
 import Error from "./components/Error";
 import Navigation from "./components/Navigation";
 import Archive from "./components/Archive";
-import Sub_27_Livestream from "./components/Sub_27_Livestream";
-import Sub_28_Livestream from "./components/Sub_28_Livestream";
-import Sub_29_Livestream from "./components/Sub_29_Livestream";
-import Sub_33_Livestream from "./components/Sub_33_Livestream";
+import Sub_27 from "./components/Sub_27";
+import Sub_28 from "./components/Sub_28";
+import Sub_29 from "./components/Sub_29";
+import Sub_33 from "./components/Sub_33";
 
 import "./stylesheets/bootstrap.css";
 
@@ -21,10 +21,10 @@ class App extends Component {
           <Switch>
             <Route path="/" component={Home} exact />
             <Route path="/archive" component={Archive} />
-            <Route path="/Sub_27_Livestream" component={Sub_27_Livestream} />
-            <Route path="/Sub_28_Livestream" component={Sub_28_Livestream} />
-            <Route path="/Sub_29_Livestream" component={Sub_29_Livestream} />
-            <Route path="/Sub_33_Livestream" component={Sub_33_Livestream} />
+            <Route path="/Sub_27" component={Sub_27} />
+            <Route path="/Sub_28" component={Sub_28} />
+            <Route path="/Sub_29" component={Sub_29} />
+            <Route path="/Sub_33" component={Sub_33} />
             <Route component={Error} />
           </Switch>
         </div>
