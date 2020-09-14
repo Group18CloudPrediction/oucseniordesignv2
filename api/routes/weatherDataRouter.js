@@ -11,4 +11,6 @@ router.get("/", function(req, res, next) {
 router.get("/getall", weatherDataController.getAll);
 // router.get("/getday/:?", weatherDataController.getDay); // gets the data for the day posted
 
+router.get("/:stationID/getall", weatherDataController.getAllForStation);
+
 module.exports = router;

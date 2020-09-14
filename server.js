@@ -53,11 +53,13 @@ function route() {
 function init_routes() {
   var testAPIRouter     = require("./api/routes/testAPIRouter");
   var weatherDataRouter = require("./api/routes/weatherDataRouter");
+  var powerPredictionsRouter = require("./api/routes/powerPredictionsRouter");
   
   viewer = route();
   app.use("/cloudtrackinglivestream", viewer);
   app.use("/testAPI",     testAPIRouter);
   app.use("/weatherData", weatherDataRouter);
+  app.use("/powerPredictions", powerPredictionsRouter);
 }
 
 function pushData (toWho, data) {

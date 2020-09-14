@@ -12,6 +12,17 @@ function getAll(req, res) {
         })
 }
 
+function getAllForStation(req, res) {
+    WeatherDataModel
+        .find({"system_num": req.params.stationID})
+        .exec((error, data) => {
+            if (error) {
+                return res.json({'success':false,'message':error});
+            }
+            return res.json({'success':true,'message':'Data fetched successfully',data});
+        })
+}
+
 // function getDay(req, res) {
 //     TestModel
 //         .find()
@@ -25,6 +36,6 @@ function getAll(req, res) {
 
 
 module.exports = {
-    getAll//,
-//     getDay
+    getAll,
+    getAllForStation
 }
