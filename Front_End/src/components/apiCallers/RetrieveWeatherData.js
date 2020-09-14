@@ -20,7 +20,10 @@ class RetrieveWeatherData extends Component {
     callAPI() {
         this.setState({isLoading: true});
         
-        fetch("http://localhost:3000/weatherData/getall")
+        // this component works whether a station id is passed or not
+        const params = (!this.props.stationID ? "" : ":" + this.props.stationID) + "getall";
+        
+        fetch("http://localhost:3000/weatherData/" + params)
             .then(response => response.json())
             .then(res => this.setState({apiResponse: res, isLoading: false}))
             .catch(err => this.setState({hasError:true, error:err}));

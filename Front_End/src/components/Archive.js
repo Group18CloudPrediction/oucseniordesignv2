@@ -4,6 +4,9 @@ import RetrieveWeatherData from "./apiCallers/RetrieveWeatherData.js";
 
 class Archive extends Component {
     render() {
+        
+        // <RetrieveWeatherData stationID="PLACEHOLDER_REPLACE"/>
+        
         return ( 
             <div id="Archive">
                 <h1> Archive page </h1> 
