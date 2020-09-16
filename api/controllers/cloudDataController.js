@@ -13,7 +13,15 @@ const getAll = (req, res) => {
 }
 
 const getMostRecent = (req, res) => {
-    return res.json({'success':false,'message':'Not yet implemented'});
+    //return res.json({'success':false,'message':'Not yet implemented'});
+
+    CloudDataModel.findOne({}, {}, { sort: { 'created_at' : 1 } }, function(error, data) {
+        //console.log( post );
+        if (error) {
+            return res.json({'success':false,'message':'Some Error'});
+        }
+        return res.json({'success':true,'message':'Data fetched successfully',data});
+    });
 } 
 
 
