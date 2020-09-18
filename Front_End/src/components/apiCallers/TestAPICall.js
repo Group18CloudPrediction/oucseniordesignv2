@@ -13,8 +13,9 @@ class TestAPICall extends Component {
     
     componentDidMount() {
         this.setState({isLoading: true});
+        const baseURL = require("./_apiRootAddress");
         
-        fetch("http://localhost:3000/testAPI")
+        fetch(baseURL+"/testAPI")
             .then(res => res.text())
             .then(res => this.setState({apiResponse: res, isLoading: false}))
             .catch(err => this.setState({hasError:true, error:err}));

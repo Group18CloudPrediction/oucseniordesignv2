@@ -3,7 +3,7 @@ import React, {Component} from "react";
 // I had some great help making this component from these two links
 // https://www.robinwieruch.de/react-fetching-data
 
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
+import { AreaChart, Area, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 
 class Upcoming15MinutesLineGraph extends Component {
     constructor(props) {
@@ -19,7 +19,9 @@ class Upcoming15MinutesLineGraph extends Component {
     callAPI() {
         this.setState({isLoading: true});
         
-        const baseURI = "http://localhost:3000/powerPredictions/getNow/";
+        const server = require("./_apiRootAddress");
+        
+        const baseURI = server+"/powerPredictions/getNow/";
         
         // this component REQUIRES the below props
         const params = 
@@ -56,8 +58,13 @@ class Upcoming15MinutesLineGraph extends Component {
             return <p>Recieved bad response</p>;
         }
         
-        console.log(this.state.apiResponse);
-        console.log(this.state.apiResponse.data[0]);
+        if (!this.state.apiResponse.data[0]) {
+            return <p>No data for the given timestamp: {this.props.year +"/"+this.props.month+"/"+this.props.day+" "+this.props.hour+":"+this.props.minute}</p>;
+        }
+        
+        
+        //console.log(this.state.apiResponse);
+        //console.log(this.state.apiResponse.data[0]);
         
         const data = this.state.apiResponse.data[0];
         
@@ -79,18 +86,28 @@ class Upcoming15MinutesLineGraph extends Component {
             thisMinute = thisMinute % 60;
             
             const thisName = thisHour + ":" + (thisMinute < 10? "0" : "") + thisMinute;
-            displayData.push({time: thisName, uv:data.powerPredictionsMade[i]});
+            displayData.push({time: thisName, "uv":data.powerPredictionsMade[i]});
         }
         
         return (
-            <LineChart width={400} height={400} data={displayData}>
-                <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-                <Line type="monotone" dataKey="pv" stroke="#82ca9d" />
+            <AreaChart width={400} height={400} data={displayData}>
+                <defs>
+                    <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
+                    </linearGradient>
+//                     <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+//                         <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
+//                         <stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
+//                     </linearGradient>
+                </defs>
+                <Area type="monotone" dataKey="uv" stroke="#8884d8" fillOpacity={1} fill="url(#colorUv)"/>
+//                 <Line type="monotone" dataKey="pv" stroke="#82ca9d" fillOpacity={1} fill="url(#colorPv)" />
                 <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
                 <XAxis dataKey="time" />
-                <YAxis />
+                <YAxis dataKey="uv"/>
                 <Tooltip />
-            </LineChart>
+            </AreaChart>
         );
         
         return ( 
