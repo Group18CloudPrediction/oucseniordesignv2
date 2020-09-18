@@ -25,10 +25,10 @@ function addValueToList(map, key, value) {
 
 function createChannel(path) {
   tmpServer = new webSocket.Server({ noServer: true });
-    tmpServer.on("connection", function connection(ws) {
-      addValueToList(viewers, path, ws);
+  tmpServer.on("connection", function connection(ws) {
+    addValueToList(viewers, path, ws);
   });
-  channels[path] = tmpServer
+  channels[path] = tmpServer;
 }
 
 function initChannels() {
@@ -53,28 +53,29 @@ function route() {
 }
 
 function init_routes() {
-  var testAPIRouter = require("./api/routes/testAPI");
+  var testAPIRouter = require("./api/routes/testAPI"),
+    cloudCoverageRoute = require("./api/routes/cloudCoverageRoutes"),
+    cloudMotionRoute = require("./api/routes/cloudMotionRoutes");
 
   viewer = route();
   app.use("/cloudtrackinglivestream", viewer);
   app.use("/testAPI", testAPIRouter);
+  app.use("/cloudCoverage", cloudCoverageRoute);
+  app.use("/cloudMotion", cloudMotionRoute);
 }
 
-function pushData (toWho, data) {
+function pushData(toWho, data) {
   if (!viewers[toWho]) {
-    return
+    return;
   }
   viewers[toWho].forEach(function each(client) {
     if (client.readyState === webSocket.OPEN) {
       client.send(data);
     }
   });
-};
+}
 
 function init() {
-  app.use(cors());
-  initChannels();
-  init_routes();
   /// todo: viewers = { }
 
   // viewerServer.on("connection", function connection(ws, req) {
@@ -86,8 +87,10 @@ function init() {
     const pathname = url.parse(req.url).pathname;
     viewSrv = channels[pathname]; // local scope pls
     if (!viewSrv) {
-      console.log("[error] viewer tried to access invalid strm path " + pathname);
-      return
+      console.log(
+        "[error] viewer tried to access invalid strm path " + pathname
+      );
+      return;
     }
     viewSrv.handleUpgrade(req, socket, head, function done(ws) {
       viewSrv.emit("connection", ws, req);
@@ -100,6 +103,46 @@ function init() {
   app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname + "/Front_End/build/index.html"));
   });
+
+  socketio.on("connection", (client) => {
+    client.on("predi", (data) => {
+      require("./api/controllers/cloudMotionController").create(data);
+      client.broadcast.emit("predi", data.cloudPrediction);
+    });
+
+    client.on("data", (data) => {
+      require("./api/controllers/weatherDataController").create(data);
+      client.broadcast.emit("data", data);
+    });
+
+    client.on("coverage_data", (data) => {
+      require("./api/controllers/cloudCoverageController").create(data);
+      client.broadcast.emit("coverage_data", data);
+    });
+
+    client.on("coverage", (frame) => {
+      client.broadcast.emit(
+        "coverage",
+        "data:image/png;base64," + frame.toString("base64")
+      );
+    });
+
+    client.on("shadow", (frame) => {
+      client.broadcast.emit(
+        "shadow",
+        "data:image/png;base64," + frame.toString("base64")
+      );
+    });
+
+    client.on("error", (err) => {
+      console.log("Error from client: ", client.id);
+      console.log(err);
+    });
+  });
+
+  app.use(cors());
+  initChannels();
+  init_routes();
 
   //const port = process.env.PORT || 3000;
   //app.listen(port);

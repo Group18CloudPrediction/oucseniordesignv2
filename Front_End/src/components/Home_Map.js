@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import GoogleMapReact from "google-map-react";
-import Marker from './Marker';
+import Marker from "./Marker";
 import { useHistory } from "react-router-dom";
 
 function Map(props) {
@@ -9,54 +9,51 @@ function Map(props) {
   const handleClick = (key) => {
     console.log(key);
     let path = "/";
-    if(key === 'sub-28') {
+    if (key === "sub-28") {
       path = "/Sub_28";
       history.push(path);
-    }
-    else if(key === 'sub-27') {
+    } else if (key === "sub-27") {
       path = "/Sub_27";
       history.push(path);
-    }
-    else if(key === 'sub-29') {
+    } else if (key === "sub-29") {
       path = "/Sub_29";
-     history.push(path);
-    }
-    else if(key === 'sub-33') {
+      history.push(path);
+    } else if (key === "sub-33") {
       path = "/Sub_33";
       history.push(path);
     }
-  }
+  };
 
   return (
-    <div id="Map" style= {{ height: '92.5vh', width: '100%' }}>
+    <div id="Map" style={{ height: "92.5vh", width: "100%" }}>
       <GoogleMapReact
         bootstrapURLKeys={{ key: "AIzaSyCn55lIh6mJ4GnR00jjgGeWUEii5R183xA" }}
         defaultCenter={props.center}
         defaultZoom={props.zoom}
         options={props.options}
       >
-      <Marker
+        <Marker
           key={"sub-28"}
           text={"txt"}
           lat={28.29172}
           lng={-81.19373}
           onClick={() => handleClick("sub-28")}
         />
-      <Marker
+        <Marker
           key={"sub-27"}
           text={"txt"}
           lat={28.24917}
           lng={-81.28942}
           onClick={() => handleClick("sub-27")}
         />
-      <Marker
+        <Marker
           key={"sub-29"}
           text={"txt"}
           lat={28.22465}
           lng={-81.17819}
           onClick={() => handleClick("sub-29")}
         />
-      <Marker
+        <Marker
           key={"sub-33"}
           text={"txt"}
           lat={28.18127}
@@ -66,6 +63,6 @@ function Map(props) {
       </GoogleMapReact>
     </div>
   );
-};
+}
 
 export default Map;
