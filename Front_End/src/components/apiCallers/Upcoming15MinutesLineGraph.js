@@ -23,13 +23,17 @@ class Upcoming15MinutesLineGraph extends Component {
         
         const baseURI = server+"/powerPredictions/getNow/";
         
+        var hourOffset = 0;
+        if (this.props.isEST && this.props.useUTC)
+            hourOffset = 4;
+        
         // this component REQUIRES the below props
         const params = 
                  this.props.stationID + "/" 
                + this.props.year + "/" 
                + this.props.month + "/" 
                + this.props.day + "/" 
-               + this.props.hour + "/" 
+               + (this.props.hour+hourOffset) + "/" 
                + this.props.minute;
         
         console.log(baseURI + params);
