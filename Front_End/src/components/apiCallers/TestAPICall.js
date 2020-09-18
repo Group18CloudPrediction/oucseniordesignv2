@@ -3,24 +3,37 @@ import React, {Component} from "react";
 class TestAPICall extends Component {
     constructor(props) {
         super(props);
-        this.state = { apiResponse: "" };
+        this.state = { 
+            apiResponse: "", 
+            isLoading: true,
+            hasError: false,
+            error: null
+        };
     }
     
-    callAPI() {
+    componentDidMount() {
+        this.setState({isLoading: true});
+        
         fetch("http://localhost:3000/testAPI")
             .then(res => res.text())
-            .then(res => this.setState({apiResponse: res}))
-            .catch(err => err);
-    }
-    
-    componentWillMount() {
-        this.callAPI();
+            .then(res => this.setState({apiResponse: res, isLoading: false}))
+            .catch(err => this.setState({hasError:true, error:err}));
     }
     
     render() {
+        const { apiResponse, isLoading, hasError, error } = this.state;
+        
+        if (hasError) {
+            return <p>Error: <p>{error}</p></p>;
+        }
+        
+        if (isLoading) {
+            return <p>Loading Test...</p>;
+        }
+        
         return ( 
             <div id="TestAPICall">
-                {this.state.apiResponse}
+                Test Results: {apiResponse}
             </div>
         );
     }

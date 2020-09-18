@@ -53,11 +53,17 @@ function route() {
 }
 
 function init_routes() {
-  var testAPIRouter = require("./api/routes/testAPI");
+  var testAPIRouter          = require("./api/routes/testAPIRouter");
+  var weatherDataRouter      = require("./api/routes/weatherDataRouter");
+  var powerPredictionsRouter = require("./api/routes/powerPredictionsRouter");
+  var cloudDataRouter        = require("./api/routes/cloudDataRouter");
 
   viewer = route();
   app.use("/cloudtrackinglivestream", viewer);
-  app.use("/testAPI", testAPIRouter);
+  app.use("/testAPI",     testAPIRouter);
+  app.use("/weatherData", weatherDataRouter);
+  app.use("/powerPredictions", powerPredictionsRouter);
+  app.use("/cloudData", cloudDataRouter);
 }
 
 function pushData (toWho, data) {
@@ -73,6 +79,7 @@ function pushData (toWho, data) {
 
 function init() {
   app.use(cors());
+  require('./databaseConnection');
   initChannels();
   init_routes();
   /// todo: viewers = { }
