@@ -20,7 +20,6 @@ class Sub_29 extends Component {
         />
         <h1>Sub_29</h1>
       </div>
-
     );
   }
 }
