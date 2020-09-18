@@ -9,45 +9,45 @@ import "../../stylesheets/dataTables.css";
 class RetrieveWeatherData extends Component {
     constructor(props) {
         super(props);
-        this.state = { 
-            apiResponse: "", 
+        this.state = {
+            apiResponse: "",
             isLoading:true,
             hasError: false,
             error: null
         };
     }
-    
+
     callAPI() {
         this.setState({isLoading: true});
-        
+
         // this component works whether a station id is passed or not
         const params = (!this.props.stationID ? "" : ":" + this.props.stationID + "/") + "getall";
-        
-        fetch("http://localhost:3000/weatherData/" + params)
+
+        fetch("https://cloudtracking-v2.herokuapp.com/weatherData/" + params)
             .then(response => response.json())
             .then(res => this.setState({apiResponse: res, isLoading: false}))
             .catch(err => this.setState({hasError:true, error:err}));
-    
+
     }
-    
+
     componentDidMount() {
         this.callAPI();
     }
-    
-    render() {    
+
+    render() {
         if (this.state.hasError) {
             return <p>Error: <p>{this.state.error}</p></p>;
         }
-        
+
         if (this.state.isLoading) {
             return <p>Loading Weather Data...</p>;
         }
-        
+
         if (!this.state.apiResponse.data) {
             return <p>Recieved bad response</p>;
         }
-        
-        return ( 
+
+        return (
             <div id="RetrievedWeatherData">
                 <table class="dataTable" id="weatherDataTable">
                     <thead class="dataTableHeader">
@@ -80,7 +80,7 @@ class RetrieveWeatherData extends Component {
             </div>
         );
     }
-    
+
     renderTable(data) {
         return data.map((dataPoint, index) => {
             return(
