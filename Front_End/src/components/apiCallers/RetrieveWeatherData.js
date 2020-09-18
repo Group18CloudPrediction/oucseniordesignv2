@@ -9,45 +9,45 @@ import "../../stylesheets/dataTables.css";
 class RetrieveWeatherData extends Component {
     constructor(props) {
         super(props);
-        this.state = { 
-            apiResponse: "", 
+        this.state = {
+            apiResponse: "",
             isLoading:true,
             hasError: false,
             error: null
         };
     }
-    
+
     callAPI() {
         this.setState({isLoading: true});
-        
+
         // this component works whether a station id is passed or not
         const params = (!this.props.stationID ? "" : ":" + this.props.stationID + "/") + "getall";
-        
+
         fetch("http://localhost:3000/weatherData/" + params)
             .then(response => response.json())
             .then(res => this.setState({apiResponse: res, isLoading: false}))
             .catch(err => this.setState({hasError:true, error:err}));
-    
+
     }
-    
+
     componentDidMount() {
         this.callAPI();
     }
-    
-    render() {    
+
+    render() {
         if (this.state.hasError) {
             return <p>Error: <p>{this.state.error}</p></p>;
         }
-        
+
         if (this.state.isLoading) {
             return <p>Loading Weather Data...</p>;
         }
-        
+
         if (!this.state.apiResponse.data) {
             return <p>Recieved bad response</p>;
         }
-        
-        return ( 
+
+        return (
             <div id="RetrievedWeatherData">
                 <table class="dataTable" id="weatherDataTable">
                     <thead class="dataTableHeader">
@@ -80,8 +80,12 @@ class RetrieveWeatherData extends Component {
             </div>
         );
     }
-    
+
     renderTable(data) {
+      const round = (number, decimalPlaces) => {
+        const factorOfTen = Math.pow(10, decimalPlaces)
+        return (Math.round(number * factorOfTen) / factorOfTen)
+      }
         return data.map((dataPoint, index) => {
             return(
                 <tr key={dataPoint._id} class="dataTableRow">
@@ -92,16 +96,16 @@ class RetrieveWeatherData extends Component {
                     <td class="dataTableCell">{dataPoint.rain_mm}</td>
                     <td class="dataTableCell">{dataPoint.strikes}</td>
                     <td class="dataTableCell">{dataPoint.dist_km}</td>
-                    <td class="dataTableCell">{dataPoint.ws_ms}</td>
-                    <td class="dataTableCell">{dataPoint.windDir}</td>
-                    <td class="dataTableCell">{dataPoint.maxWS_ms}</td>
-                    <td class="dataTableCell">{dataPoint.airT_C}</td>
-                    <td class="dataTableCell">{dataPoint.vp_mmHg}</td>
-                    <td class="dataTableCell">{dataPoint.bp_mmHg}</td>
-                    <td class="dataTableCell">{dataPoint.rh}</td>
-                    <td class="dataTableCell">{dataPoint.rht_c}</td>
-                    <td class="dataTableCell">{dataPoint.tiltNS_deg}</td>
-                    <td class="dataTableCell">{dataPoint.tiltWE_deg}</td>
+                    <td class="dataTableCell">{round(dataPoint.ws_ms, 3)}</td>
+                    <td class="dataTableCell">{round(dataPoint.windDir, 3)}</td>
+                    <td class="dataTableCell">{round(dataPoint.maxWS_ms, 3)}</td>
+                    <td class="dataTableCell">{round(dataPoint.airT_C, 3)}</td>
+                    <td class="dataTableCell">{round(dataPoint.vp_mmHg, 3)}</td>
+                    <td class="dataTableCell">{round(dataPoint.bp_mmHg, 3)}</td>
+                    <td class="dataTableCell">{round(dataPoint.rh, 3)}</td>
+                    <td class="dataTableCell">{round(dataPoint.rht_c, 3)}</td>
+                    <td class="dataTableCell">{round(dataPoint.tiltNS_deg, 3)}</td>
+                    <td class="dataTableCell">{round(dataPoint.tiltWE_deg, 3)}</td>
                     <td class="dataTableCell">{dataPoint.date}</td>
                     <td class="dataTableCell">{dataPoint.date_mins_only}</td>
                 </tr>
