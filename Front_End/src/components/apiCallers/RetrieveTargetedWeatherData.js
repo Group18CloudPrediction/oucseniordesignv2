@@ -11,14 +11,16 @@ class RetrieveTargetedWeatherData extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            apiResponse: "", 
-            hasSubmitted: false,
-            request_stationID: this.props.stationID,
+            utcOffset: this.props.isEST? -4, 0,
+            
+            request_stationID: this.props.stationID || null,
             request_startDate: null,
             request_startTime: null,
             request_endDate: null,
             request_endTime: null,
             
+            apiResponse: "", 
+            hasSubmitted: false,
             isLoading: true,
             hasError: false,
             error: null
@@ -66,9 +68,9 @@ class RetrieveTargetedWeatherData extends Component {
                 },
                 body: JSON.stringify(postReqParams)
             })
-            .then(response => {console.log(response); response.json()})
-            .then(res => {console.log(res); this.setState({apiResponse: res, isLoading: false})})
-            .catch(err => this.setState({hasError:true, error:err}));
+            .then (response => response.json()                                     )
+            .then (res      => this.setState({apiResponse: res, isLoading: false}) )
+            .catch(err      => this.setState({hasError:true, error:err})           );
         
         this.setState({hasSubmitted: true});
     }

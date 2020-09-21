@@ -12,7 +12,6 @@ class Archive extends Component {
             <div id="Archive">
                 <h1> Archive page </h1> 
                 <RetrieveTargetedWeatherData/>
-                <RetrieveWeatherData/>
             </div>
         );
     }

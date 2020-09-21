@@ -81,6 +81,8 @@ function pushData (toWho, data) {
 
 function init() {
   app.use(cors());
+  app.use(bodyParser.json());
+  
   require('./databaseConnection');
   initChannels();
   init_routes();
