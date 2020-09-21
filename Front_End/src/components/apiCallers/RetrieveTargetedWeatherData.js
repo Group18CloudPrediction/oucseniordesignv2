@@ -40,10 +40,10 @@ class RetrieveTargetedWeatherData extends Component {
         this.setState({isLoading: true});
         
         // this component works whether a station id is passed or not
-        if (this.state.stationID == "")
+        if (this.state.stationID === "")
             this.setState({staionID: null});
         
-        const params = (!this.state.stationID ? ":ALL_STATIONS" : ":" + this.props.stationID);
+        const params = (!this.state.request_stationID ? "" : ":" + this.state.request_stationID);
         const baseURL = require("./_apiRootAddress");
         
         var postReqParams = {
@@ -53,16 +53,24 @@ class RetrieveTargetedWeatherData extends Component {
             endDate: this.state.request_endDate,
             endTime: this.state.request_endTime
         }
-        console.log(postReqParams);    
+        var postReqURL = baseURL + "/weatherData/" + params;
+        
+        console.log(postReqParams); 
+        console.log("posting to: " + postReqURL);
             
-        fetch(baseURL + "/weatherData/" + params, {
-            method: 'post',
-            body: JSON.stringify(postReqParams)
-        })
-            .then(response => response.json())
-            .then(res => this.setState({apiResponse: res, isLoading: false}))
+        fetch(postReqURL, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(postReqParams)
+            })
+            .then(response => {console.log(response); response.json()})
+            .then(res => {console.log(res); this.setState({apiResponse: res, isLoading: false})})
             .catch(err => this.setState({hasError:true, error:err}));
-    
+        
+        this.setState({hasSubmitted: true});
     }
     
     //componentDidMount() {
@@ -71,7 +79,7 @@ class RetrieveTargetedWeatherData extends Component {
     
     render() {    
         if (this.state.hasError) {
-            return <p>Error: <p>{this.state.error}</p></p>;
+            return <p>Error: <p>{this.state.error.message}</p></p>;
         }
         
         if (!this.state.hasSubmitted) {
@@ -79,35 +87,39 @@ class RetrieveTargetedWeatherData extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <label>
                         Station ID: <br/>
-                        <input type="text" value={this.state.request_stationID} onChange={this.setStationID} />        
+                        <input type="text" value={this.state.request_stationID || ""} onChange={this.setStationID} />        
                         <br/>
                     </label>
                     
                     <br/>
                     
                     <table>
-                        <tr>
-                            <td>Start Date</td> <td>End Date</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="date" value={this.state.request_startDate} onChange={e => this.setState({ request_startDate: e.target.value })} />        
-                            </td>
-                            <td>
-                                <input type="date" value={this.state.request_endDate}   onChange={e => this.setState({ request_endDate:   e.target.value })} />        
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Start Time</td> <td>End Time</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="time" value={this.state.request_startTime} onChange={e => this.setState({ request_startTime: e.target.value })} />        
-                            </td>
-                            <td>
-                                <input type="time" value={this.state.request_endTime}   onChange={e => this.setState({ request_endTime:   e.target.value })} />        
-                            </td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <td>Start Date</td>
+                                <td>End Date</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="date" value={this.state.request_startDate || ""} onChange={e => this.setState({ request_startDate: e.target.value })} />        
+                                </td>
+                                <td>
+                                    <input type="date" value={this.state.request_endDate || ""}   onChange={e => this.setState({ request_endDate:   e.target.value })} />        
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Start Time</td>
+                                <td>End Time</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="time" value={this.state.request_startTime || ""} onChange={e => this.setState({ request_startTime: e.target.value })} />        
+                                </td>
+                                <td>
+                                    <input type="time" value={this.state.request_endTime || ""}   onChange={e => this.setState({ request_endTime:   e.target.value })} />        
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                     
                     <br/>
@@ -117,6 +129,10 @@ class RetrieveTargetedWeatherData extends Component {
         
         if (this.state.isLoading) {
             return <p>Loading Weather Data...</p>;
+        }
+        
+        if (!this.state.apiResponse) {
+            return <p>Internal Error: API Response was not recorded</p>;
         }
         
         if (!this.state.apiResponse.data) {
