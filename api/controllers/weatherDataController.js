@@ -46,7 +46,7 @@ function getTargeted(req, res) {
         
         startDate = new Date(
             parseInt(reqParams.startDate.substring(0,4)), 
-            parseInt(reqParams.startDate.substring(5,7)), 
+            parseInt(reqParams.startDate.substring(5,7))-1, 
             parseInt(reqParams.startDate.substring(8,10)), 
             0, 0, 0
         );
@@ -54,7 +54,7 @@ function getTargeted(req, res) {
         if (reqParams.endDate) {
             endDate = new Date(
                 parseInt(reqParams.endDate.substring(0,4)), 
-                parseInt(reqParams.endDate.substring(5,7)), 
+                parseInt(reqParams.endDate.substring(5,7))-1, 
                 parseInt(reqParams.endDate.substring(8,10)), 
                 23, 59, 59
             );
@@ -76,16 +76,16 @@ function getTargeted(req, res) {
         var startTime = 
             new Date (
                 1970,
-                1,
-                1,
+                0,
+                0,
                 startTimeHour,
                 startTimeMinute
             );
         var endTime = 
             new Date (
                 1970,
-                1,
-                1,
+                0,
+                0,
                 endTimeHour,
                 endTimeMinute
             );

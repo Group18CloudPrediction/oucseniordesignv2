@@ -11,7 +11,7 @@ class RetrieveTargetedWeatherData extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            utcOffset: this.props.isEST? -4, 0,
+            utcOffset: this.props.isEST? -4: 0,
             
             request_stationID: this.props.stationID || null,
             request_startDate: null,
@@ -53,7 +53,9 @@ class RetrieveTargetedWeatherData extends Component {
             startDate: this.state.request_startDate,
             startTime: this.state.request_startTime,
             endDate: this.state.request_endDate,
-            endTime: this.state.request_endTime
+            endTime: this.state.request_endTime,
+            
+            isEST: true
         }
         var postReqURL = baseURL + "/weatherData/" + params;
         
