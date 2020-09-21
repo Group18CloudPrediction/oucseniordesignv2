@@ -3,7 +3,7 @@ import React, {Component} from "react";
 // I had some great help making this component from these two links
 // https://www.robinwieruch.de/react-fetching-data
 
-import { AreaChart, Area, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
+import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 
 class Upcoming15MinutesLineGraph extends Component {
     constructor(props) {
@@ -100,24 +100,22 @@ class Upcoming15MinutesLineGraph extends Component {
                         <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
                         <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
                     </linearGradient>
+                    {
 //                     <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
 //                         <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
 //                         <stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
 //                     </linearGradient>
+                    }
                 </defs>
                 <Area type="monotone" dataKey="uv" stroke="#8884d8" fillOpacity={1} fill="url(#colorUv)"/>
+                {
 //                 <Line type="monotone" dataKey="pv" stroke="#82ca9d" fillOpacity={1} fill="url(#colorPv)" />
+                }
                 <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
                 <XAxis dataKey="time" />
                 <YAxis dataKey="uv"/>
                 <Tooltip />
             </AreaChart>
-        );
-        
-        return ( 
-            <div id="RetrievedPredictions">
-                
-            </div>
         );
     }
 }
