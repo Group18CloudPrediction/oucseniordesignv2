@@ -8,9 +8,12 @@ router.get("/", function(req, res, next) {
     res.send("Welcome to the weather data router!");
 });
 
-router.get("/getall", weatherDataController.getAll);
-// router.get("/getday/:?", weatherDataController.getDay); // gets the data for the day posted
-
+router.route("/getall")
+      .get(weatherDataController.getAll)
+      
 router.get("/:stationID/getall", weatherDataController.getAllForStation);
+
+router.route("/:stationID")
+    .post(weatherDataController.getTargeted);
 
 module.exports = router;

@@ -6,38 +6,118 @@ import React, {Component} from "react";
 
 import "../../stylesheets/dataTables.css";
 
-class RetrieveWeatherData extends Component {
+class RetrieveTargetedWeatherData extends Component {
     constructor(props) {
         super(props);
         this.state = { 
             apiResponse: "", 
-            isLoading:true,
+            hasSubmitted: false,
+            request_stationID: this.props.stationID,
+            request_startDate: null,
+            request_startTime: null,
+            request_endDate: null,
+            request_endTime: null,
+            
+            isLoading: true,
             hasError: false,
             error: null
         };
+        
+        this.setStationID = event => {
+            if (!this.props.stationID)
+                this.setState({ request_stationID: event.target.value })
+        }
+        
+        this.handleSubmit = (event) => {
+//             alert('A name was submitted: ' + this.state.request_stationID);
+            event.preventDefault();
+            this.callAPI();
+        }
     }
     
     callAPI() {
         this.setState({isLoading: true});
         
         // this component works whether a station id is passed or not
-        const params = (!this.props.stationID ? "" : ":" + this.props.stationID + "/") + "getall";
+        if (this.state.stationID == "")
+            this.setState({staionID: null});
+        
+        const params = (!this.state.stationID ? ":ALL_STATIONS" : ":" + this.props.stationID);
         const baseURL = require("./_apiRootAddress");
         
-        fetch(baseURL + "/weatherData/" + params)
+//         fetch(baseURL + "/weatherData/" + params)
+//             .then(response => response.json())
+//             .then(res => this.setState({apiResponse: res, isLoading: false}))
+//             .catch(err => this.setState({hasError:true, error:err}));
+//         
+        
+        var postReqParams = {
+            stationID: this.state.request_stationID,
+            startDate: this.state.request_startDate,
+            startTime: this.state.request_startTime,
+            endDate: this.state.request_endDate,
+            endTime: this.state.request_endTime
+        }
+        console.log(postReqParams);    
+            
+        fetch(baseURL + "/weatherData/" + params, {
+            method: 'post',
+            body: JSON.stringify(postReqParams)
+        })
             .then(response => response.json())
             .then(res => this.setState({apiResponse: res, isLoading: false}))
             .catch(err => this.setState({hasError:true, error:err}));
     
     }
     
-    componentDidMount() {
-        this.callAPI();
-    }
+    //componentDidMount() {
+        //this.callAPI();
+    //}
     
     render() {    
         if (this.state.hasError) {
-            return <div>Error: <p>{this.state.error.message}</p></div>;
+            return <p>Error: <p>{this.state.error}</p></p>;
+        }
+        
+        if (!this.state.hasSubmitted) {
+            return ( 
+                <form onSubmit={this.handleSubmit}>
+                    <label>
+                        Station ID: <br/>
+                        <input type="text" value={this.state.request_stationID} onChange={this.setStationID} />        
+                        <br/>
+                    </label>
+                    
+                    <br/>
+                    
+                    <table>
+                        <tr>
+                            <td>Start Date</td> <td>End Date</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="date" value={this.state.request_startDate} onChange={e => this.setState({ request_startDate: e.target.value })} />        
+                            </td>
+                            <td>
+                                <input type="date" value={this.state.request_endDate}   onChange={e => this.setState({ request_endDate:   e.target.value })} />        
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Start Time</td> <td>End Time</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="time" value={this.state.request_startTime} onChange={e => this.setState({ request_startTime: e.target.value })} />        
+                            </td>
+                            <td>
+                                <input type="time" value={this.state.request_endTime}   onChange={e => this.setState({ request_endTime:   e.target.value })} />        
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <br/>
+                    <input type="submit" value="Submit" />
+                </form>);
         }
         
         if (this.state.isLoading) {
@@ -111,4 +191,4 @@ class RetrieveWeatherData extends Component {
     }
 }
 
-export default RetrieveWeatherData;
+export default RetrieveTargetedWeatherData;
