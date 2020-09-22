@@ -34,6 +34,28 @@ class RetrieveTargetedWeatherData extends Component {
         this.handleSubmit = (event) => {
 //             alert('A name was submitted: ' + this.state.request_stationID);
             event.preventDefault();
+            var proceed = true;
+            const msPerDay = (1000*60*60*24)
+            const minutesPerDay = 1440
+            var dayRange = 0
+            
+            if (!this.state.request_startDate) {
+                proceed = window.confirm("You didn't enter a date range. THIS WILL REQUEST A LARGE AMOUNT OF DATA. Are you sure?") 
+            } else if (!this.state.request_endDate) {
+                dayRange = Math.floor((new Date() - new Date(this.state.request_startDate)) / msPerDay);
+            } else if (this.state.request_endDate >= this.state.request_startDate) {
+                dayRange = Math.floor((new Date(this.state.request_endDate) - new Date(this.state.request_startDate)) / msPerDay);
+            } else {
+                alert('Invalid date range: The start date is after the end date.');
+                return;
+            }
+            
+            if (proceed && dayRange > 1) {
+                proceed = window.confirm("You requested "+dayRange+" days of data. This will request ~"+(minutesPerDay*dayRange)+" rows of data. Are you sure?") 
+            }
+                
+            if(!proceed) return;
+            
             this.callAPI();
         }
     }
@@ -45,7 +67,7 @@ class RetrieveTargetedWeatherData extends Component {
         if (this.state.stationID === "")
             this.setState({staionID: null});
         
-        const params = (!this.state.request_stationID ? "" : ":" + this.state.request_stationID);
+        const params = (!this.state.request_stationID ? "" : this.state.request_stationID);
         const baseURL = require("./_apiRootAddress");
         
         var postReqParams = {
@@ -58,9 +80,6 @@ class RetrieveTargetedWeatherData extends Component {
             isEST: true
         }
         var postReqURL = baseURL + "/weatherData/" + params;
-        
-        console.log(postReqParams); 
-        console.log("posting to: " + postReqURL);
             
         fetch(postReqURL, {
                 method: 'post',
@@ -88,47 +107,53 @@ class RetrieveTargetedWeatherData extends Component {
         
         if (!this.state.hasSubmitted) {
             return ( 
-                <form onSubmit={this.handleSubmit}>
-                    <label>
-                        Station ID: <br/>
-                        <input type="text" value={this.state.request_stationID || ""} onChange={this.setStationID} />        
+                <div>
+                    {"Note: you can leave a field empty if you don't want to select against it."}
+                    <br/>
+                    {"Warning: Leaving the date fields empty will request a very large amount of data and may cause longer loading times"}
+                    <br/>
+                    <form onSubmit={this.handleSubmit}>
+                        <label>
+                            Station ID: <br/>
+                            <input type="text" value={this.state.request_stationID || ""} onChange={this.setStationID} />        
+                            <br/>
+                        </label>
+                        
                         <br/>
-                    </label>
-                    
-                    <br/>
-                    
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td>Start Date</td>
-                                <td>End Date</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="date" value={this.state.request_startDate || ""} onChange={e => this.setState({ request_startDate: e.target.value })} />        
-                                </td>
-                                <td>
-                                    <input type="date" value={this.state.request_endDate || ""}   onChange={e => this.setState({ request_endDate:   e.target.value })} />        
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Start Time</td>
-                                <td>End Time</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="time" value={this.state.request_startTime || ""} onChange={e => this.setState({ request_startTime: e.target.value })} />        
-                                </td>
-                                <td>
-                                    <input type="time" value={this.state.request_endTime || ""}   onChange={e => this.setState({ request_endTime:   e.target.value })} />        
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    
-                    <br/>
-                    <input type="submit" value="Submit" />
-                </form>);
+                        
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>Start Date</td>
+                                    <td>End Date</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="date" value={this.state.request_startDate || ""} onChange={e => this.setState({ request_startDate: e.target.value })} />        
+                                    </td>
+                                    <td>
+                                        <input type="date" value={this.state.request_endDate || ""}   onChange={e => this.setState({ request_endDate:   e.target.value })} />        
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Start Time</td>
+                                    <td>End Time</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="time" value={this.state.request_startTime || ""} onChange={e => this.setState({ request_startTime: e.target.value })} />        
+                                    </td>
+                                    <td>
+                                        <input type="time" value={this.state.request_endTime || ""}   onChange={e => this.setState({ request_endTime:   e.target.value })} />        
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <br/>
+                        <input type="submit" value="Submit" />
+                    </form>
+                </div>);
         }
         
         if (this.state.isLoading) {
