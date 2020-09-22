@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import RetrieveWeatherData from "./apiCallers/RetrieveWeatherData.js";
+// import RetrieveWeatherData from "./apiCallers/RetrieveWeatherData.js";
 import RetrieveTargetedWeatherData from "./apiCallers/RetrieveTargetedWeatherData.js";
 // import TestAPICall from "./apiCallers/TestAPICall";
 
