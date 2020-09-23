@@ -21,16 +21,11 @@ class Navigation extends Component {
               <Nav>
                 <Nav.Link as={NavLink} href="/" to="/" exact>Home</Nav.Link>
                 <Nav.Link as={NavLink} href="/archive" to="/archive">Archive</Nav.Link>
-<<<<<<< HEAD
-                <Nav.Link as={NavLink} href="/livestream" to="/livestream">Livestream</Nav.Link>
-                <Nav.Link as={NavLink} href="/livestream1" to="/livestream1">Livestream 1</Nav.Link>
                 <Nav.Link as={NavLink} href="/PowerPredictionsDashboard" to="/PowerPredictionsDashboard">Power Predictions Dashboard</Nav.Link>
-=======
                 <Nav.Link as={NavLink} href="/Sub_27" to="/Sub_27">Sub 27</Nav.Link>
                 <Nav.Link as={NavLink} href="/Sub_28" to="/Sub_28">Sub 28</Nav.Link>
                 <Nav.Link as={NavLink} href="/Sub_29" to="/Sub_29">Sub 29</Nav.Link>
                 <Nav.Link as={NavLink} href="/Sub_33" to="/Sub_33">Sub 33</Nav.Link>
->>>>>>> 88c512fc2aaa9abf81c329591249d2abc12742c9
               </Nav>
           </Navbar>
         </div>

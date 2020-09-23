@@ -59,11 +59,9 @@ function init_routes() {
   //var cloudDataRouter        = require("./api/routes/cloudDataRouter");
   var legacyCloudCoverageRouter = require("./api/routes/legacyCloudCoverageRouter");
   var legacyCloudMotionRouter   = require("./api/routes/legacyCloudMotionRouter");
-  var testAPIRouter = require("./api/routes/testAPI");
 
   viewer = route();
   app.use("/cloudtrackinglivestream", viewer);
-  app.use("/testAPI",     testAPIRouter);
   app.use("/weatherData", weatherDataRouter);
   app.use("/powerPredictions", powerPredictionsRouter);
   //app.use("/cloudData", cloudDataRouter);
