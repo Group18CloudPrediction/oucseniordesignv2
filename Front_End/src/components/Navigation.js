@@ -26,6 +26,11 @@ class Navigation extends Component {
                 <Nav.Link as={NavLink} href="/Sub_28" to="/Sub_28">Sub 28</Nav.Link>
                 <Nav.Link as={NavLink} href="/Sub_29" to="/Sub_29">Sub 29</Nav.Link>
                 <Nav.Link as={NavLink} href="/Sub_33" to="/Sub_33">Sub 33</Nav.Link>
+                
+                
+                <Nav.Link as={NavLink} href="/Sub/33" to="/Sub/33">(Sub 33 New Component Example)</Nav.Link>
+                
+                <Nav.Link as={NavLink} href="/Sub/PLACEHOLDER_REPLACE" to="/Sub/PLACEHOLDER_REPLACE">(Test Data Station)</Nav.Link>
               </Nav>
           </Navbar>
         </div>

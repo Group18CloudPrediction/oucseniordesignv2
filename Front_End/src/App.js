@@ -10,7 +10,8 @@ import Sub_27 from "./components/Sub_27";
 import Sub_28 from "./components/Sub_28";
 import Sub_29 from "./components/Sub_29";
 import Sub_33 from "./components/Sub_33";
-
+import SubstationHomepageWrapper from "./components/SubstationHomepageWrapper";
+            
 import "./stylesheets/bootstrap.css";
 
 class App extends Component {
@@ -27,6 +28,9 @@ class App extends Component {
             <Route path="/Sub_28" component={Sub_28} />
             <Route path="/Sub_29" component={Sub_29} />
             <Route path="/Sub_33" component={Sub_33} />
+            
+            <Route path="/Sub/:stationID" component={SubstationHomepageWrapper} />
+            
             <Route component={Error} />
           </Switch>
         </div>
