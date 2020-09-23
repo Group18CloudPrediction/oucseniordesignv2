@@ -88,6 +88,9 @@ class RetrieveTargetedWeatherData extends Component {
             
             isEST: true
         }
+        
+        console.log(postReqParams);
+        
         var postReqURL = baseURL + "/weatherData/" + params;
             
         fetch(postReqURL, {
@@ -125,10 +128,19 @@ class RetrieveTargetedWeatherData extends Component {
     
     render() {    
         if (this.state.hasError) {
-            return <p>Error: <p>{this.state.error.message}</p></p>;
+            return <div>Error: <p>{this.state.error.message}</p></div>;
         }
         
         if (!this.state.hasSubmitted) {
+            // I have to make a function for this because I can't put an if statement inside a jsx () object
+            var makeStationInputField = () => {
+                if (this.props.stationID == null)
+                    return (<input type="text" value={this.state.request_stationID || ""} onChange={this.setStationID}/>)
+                else
+                    return (<input type="text" value={this.state.request_stationID || ""} onChange={this.setStationID} readonly="true"/>)
+            }
+            
+            // the actual jsx for the form
             return ( 
                 <div>
                     {this.showDataLimitNotice() }
@@ -139,7 +151,7 @@ class RetrieveTargetedWeatherData extends Component {
                     <form onSubmit={this.handleSubmit}>
                         <label>
                             Station ID: <br/>
-                            <input type="text" value={this.state.request_stationID || ""} onChange={this.setStationID}/>        
+                            {makeStationInputField()}
                             <br/>
                         </label>
                         
