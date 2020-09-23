@@ -56,14 +56,18 @@ function init_routes() {
   var testAPIRouter          = require("./api/routes/testAPIRouter");
   var weatherDataRouter      = require("./api/routes/weatherDataRouter");
   var powerPredictionsRouter = require("./api/routes/powerPredictionsRouter");
-  var cloudDataRouter        = require("./api/routes/cloudDataRouter");
+  //var cloudDataRouter        = require("./api/routes/cloudDataRouter");
+  var legacyCloudCoverageRouter = require("./api/routes/legacyCloudCoverageRouter");
+  var legacyCloudMotionRouter   = require("./api/routes/legacyCloudMotionRouter");
 
   viewer = route();
   app.use("/cloudtrackinglivestream", viewer);
   app.use("/testAPI",     testAPIRouter);
   app.use("/weatherData", weatherDataRouter);
   app.use("/powerPredictions", powerPredictionsRouter);
-  app.use("/cloudData", cloudDataRouter);
+  //app.use("/cloudData", cloudDataRouter);
+  app.use("/cloudCoverage", legacyCloudCoverageRouter);
+  app.use("/cloudMotion", legacyCloudMotionRouter);
 }
 
 function pushData (toWho, data) {
@@ -79,6 +83,8 @@ function pushData (toWho, data) {
 
 function init() {
   app.use(cors());
+  app.use(bodyParser.json());
+
   require('./databaseConnection');
   initChannels();
   init_routes();
