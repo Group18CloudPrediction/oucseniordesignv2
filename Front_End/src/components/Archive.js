@@ -6,7 +6,7 @@ import RetrieveTargetedWeatherData from "./apiCallers/RetrieveTargetedWeatherDat
 class Archive extends Component {
     render() {
         
-        // <RetrieveWeatherData stationID="PLACEHOLDER_REPLACE"/>
+        // <RetrieveWeatherData stationID="PLACEHOLDER_REPLACE" onlyMostRecent={5}/>
         
         return ( 
             <div id="Archive">

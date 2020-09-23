@@ -57,9 +57,23 @@ const getNowForStation = (req, res) => {
         })
 }
 
+const getMostRecentForStation = (req, res) => {
+    PowerPredictionsModel
+        .find({"dateAndTime": date, "stationID": req.params.stationID})
+        .sort('-date')
+        .limit(1)
+        .exec((error, data) => {
+            if (error) {
+                return res.json({'success':false,'message':'Some Error'});
+            }
+            return res.json({'success':true,'message':'Data fetched successfully',data});
+        })
+}
+
 
 module.exports = {
     getAll,
     getTimeLocal,
-    getNowForStation
+    getNowForStation,
+    getMostRecentForStation
 }

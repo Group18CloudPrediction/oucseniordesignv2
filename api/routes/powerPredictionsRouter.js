@@ -9,6 +9,9 @@ router.route("/get15pastAndFuture/:year/:month/:day/:hour/:minute")
     .get(PowerPredictionsController.getTimeLocal);
 router.route("/getNow/:stationID/:year/:month/:day/:hour/:minute")
     .get(PowerPredictionsController.getNowForStation);
+router.route("/getMostRecent/:stationID/:year/:month/:day/:hour/:minute")
+    .get(PowerPredictionsController.getMostRecentForStation);
+
 
 //router.route("/get15pastAndFuture/:year/:month/:day/:hour/:minute");
 

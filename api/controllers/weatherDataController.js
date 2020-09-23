@@ -33,29 +33,29 @@ function getTargeted(req, res) {
     if(req.body == undefined)
         res.json({'success':false,'message':"no body recieved in post request"});
     
-    var reqParams = req.body;//JSON.parse(req.body);
+    var reqBody = req.body;//JSON.parse(req.body);
     var query = {};
     
     
     
     if (req.params.stationID)
         query.system_num = req.params.stationID;
-    if (reqParams.startDate) {
+    if (reqBody.startDate) {
         var startDate;
         var endDate;
         
         startDate = new Date(
-            parseInt(reqParams.startDate.substring(0,4)), 
-            parseInt(reqParams.startDate.substring(5,7))-1, 
-            parseInt(reqParams.startDate.substring(8,10)), 
+            parseInt(reqBody.startDate.substring(0,4)), 
+            parseInt(reqBody.startDate.substring(5,7))-1, 
+            parseInt(reqBody.startDate.substring(8,10)), 
             0, 0, 0
         );
         
-        if (reqParams.endDate) {
+        if (reqBody.endDate) {
             endDate = new Date(
-                parseInt(reqParams.endDate.substring(0,4)), 
-                parseInt(reqParams.endDate.substring(5,7))-1, 
-                parseInt(reqParams.endDate.substring(8,10)), 
+                parseInt(reqBody.endDate.substring(0,4)), 
+                parseInt(reqBody.endDate.substring(5,7))-1, 
+                parseInt(reqBody.endDate.substring(8,10)), 
                 23, 59, 59
             );
         }
@@ -65,12 +65,12 @@ function getTargeted(req, res) {
         
         query.date = {"$gte": startDate, "$lte": endDate};
     }
-    if (reqParams.startTime && reqParams.endTime)
+    if (reqBody.startTime && reqBody.endTime)
     {
-        var startTimeHour   = parseInt(reqParams.startTime.substring(0, 2));
-        var startTimeMinute = parseInt(reqParams.startTime.substring(3, 5));
-        var endTimeHour     = parseInt(reqParams.endTime.  substring(0, 2));
-        var endTimeMinute   = parseInt(reqParams.endTime.  substring(3, 5));
+        var startTimeHour   = parseInt(reqBody.startTime.substring(0, 2));
+        var startTimeMinute = parseInt(reqBody.startTime.substring(3, 5));
+        var endTimeHour     = parseInt(reqBody.endTime.  substring(0, 2));
+        var endTimeMinute   = parseInt(reqBody.endTime.  substring(3, 5));
         
         console.log("start hour "+ startTimeHour + " minute " + startTimeMinute);
         var startTime = 
@@ -95,17 +95,26 @@ function getTargeted(req, res) {
     
     console.log(query);
     
-    WeatherDataModel
-        .find(query)
-        .exec((error, data) => {
-            if (error) {
-                console.log("request failed");
-                return res.json({'success':false,'message':error});
-            }
-            console.log("success!");
-            console.log("found " + data.length + " responses");
-            return res.json({'success':true,'message':'Data fetched successfully',data});
-        })
+    execute = (error, data) => {
+        if (error) {
+            console.log("request failed");
+            return res.json({'success':false,'message':error});
+        }
+        console.log("success!");
+        console.log("found " + data.length + " responses");
+        return res.json({'success':true,'message':'Data fetched successfully',data});
+    }
+    
+    if (reqBody.onlyMostRecent)
+        WeatherDataModel
+            .find(query)
+            .sort('-date')
+            .limit(reqBody.onlyMostRecent)
+            .exec(execute)
+    else
+        WeatherDataModel
+            .find(query)
+            .exec(execute)
 }
 
 module.exports = {
