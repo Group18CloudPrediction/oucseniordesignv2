@@ -20,7 +20,7 @@ class RetrieveTargetedWeatherData extends Component {
             request_endTime: null,
             
             apiResponse: "", 
-            hasSubmitted: false,
+            hasSubmitted: (this.props.skipForm? true : false),
             isLoading: true,
             hasError: false,
             error: null
@@ -32,32 +32,40 @@ class RetrieveTargetedWeatherData extends Component {
         }
         
         this.handleSubmit = (event) => {
-            event.preventDefault();
-            var proceed = true;
-            const msPerDay = (1000*60*60*24)
-            const minutesPerDay = 1440
-            var dayRange = 0
-            const unlimited = this.props.onlyMostRecent == null;
+            if (event)
+                event.preventDefault();
             
-            if (unlimited && !this.state.request_startDate) {
-                proceed = window.confirm("You didn't enter a date range. THIS MAY REQUEST A LARGE AMOUNT OF DATA. Are you sure?") 
-            } else if (!this.state.request_endDate) {
-                dayRange = Math.floor((new Date() - new Date(this.state.request_startDate)) / msPerDay);
-            } else if (this.state.request_endDate >= this.state.request_startDate) {
-                dayRange = Math.floor((new Date(this.state.request_endDate) - new Date(this.state.request_startDate)) / msPerDay);
-            } else {
-                alert('Invalid date range: The start date is after the end date.');
-                return;
-            }
-            
-            if (unlimited && proceed && dayRange > 1) {
-                proceed = window.confirm("You requested "+dayRange+" days of data. This will request ~"+(minutesPerDay*dayRange)+" rows of data. Are you sure?") 
-            }
+            if (!this.props.skipForm) {
                 
-            if(!proceed) return;
+                var proceed = true;
+                const msPerDay = (1000*60*60*24)
+                const minutesPerDay = 1440
+                var dayRange = 0
+                const unlimited = this.props.onlyMostRecent == null;
+                
+                if (unlimited && !this.state.request_startDate) {
+                    proceed = window.confirm("You didn't enter a date range. THIS MAY REQUEST A LARGE AMOUNT OF DATA. Are you sure?") 
+                } else if (!this.state.request_endDate) {
+                    dayRange = Math.floor((new Date() - new Date(this.state.request_startDate)) / msPerDay);
+                } else if (this.state.request_endDate >= this.state.request_startDate) {
+                    dayRange = Math.floor((new Date(this.state.request_endDate) - new Date(this.state.request_startDate)) / msPerDay);
+                } else {
+                    alert('Invalid date range: The start date is after the end date.');
+                    return;
+                }
+                
+                if (unlimited && proceed && dayRange > 1) {
+                    proceed = window.confirm("You requested "+dayRange+" days of data. This will request ~"+(minutesPerDay*dayRange)+" rows of data. Are you sure?") 
+                }
+                    
+                if(!proceed) return;
+            }
             
             this.callAPI();
         }
+        
+        if (this.props.skipForm)
+            this.handleSubmit();
     }
     
     callAPI() {
