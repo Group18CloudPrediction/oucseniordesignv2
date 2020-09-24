@@ -6,7 +6,6 @@ import Error from "./components/Error";
 import Navigation from "./components/Navigation";
 import Archive from "./components/Archive";
 
-import PowerPredictionsDashboard from "./components/PowerPredictionsDashboard";
 import SubstationHomepageWrapper from "./components/SubstationHomepageWrapper";
 
 import "./stylesheets/bootstrap.css";
@@ -20,9 +19,8 @@ class App extends Component {
           <Switch>
             <Route path="/" component={Home} exact />
             <Route path="/archive" component={Archive} />
-            
             <Route path="/Sub/:stationID" component={SubstationHomepageWrapper} />
-            
+
             <Route component={Error} />
           </Switch>
         </div>

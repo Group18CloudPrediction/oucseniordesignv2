@@ -15,7 +15,7 @@ class PowerPredictionsDashboard extends Component {
 
             <div id="PowerPredictionsDashboard">
                 <h1> Power Prediction Graph {this.props.stationID}</h1>
-                <Upcoming15MinutesLineGraph useUTC={IS_HEROUKU_BUILD} stationID={this.props.stationID} year={2020} month={9} day={14} hour={13} minute={0} isEST={true}/>
+                <Upcoming15MinutesLineGraph useUTC={IS_HEROUKU_BUILD} stationID="TEST_MANUAL_ENTRY" year={2020} month={9} day={14} hour={13} minute={0} isEST={true}/>
             </div>
         );
     }

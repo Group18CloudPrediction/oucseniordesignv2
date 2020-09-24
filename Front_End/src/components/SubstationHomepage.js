@@ -5,9 +5,7 @@ import GoogleMapReact from "google-map-react";
 import Upcoming15MinutesLineGraph from "./apiCallers/Upcoming15MinutesLineGraph"
 import RetrieveTargetedWeatherData from "./apiCallers/RetrieveTargetedWeatherData"
 import SubstationLivestream from "./SubstationLivestream"
-import PowerPredictionsDashboard from "./PowerPredictionsDashboard";
 
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 const IS_HEROUKU_BUILD = false;
 
@@ -28,8 +26,8 @@ class SubstationHomepage extends Component {
         }
       };
     render() {
-        
-        return ( 
+
+        return (
         <div className="SubstationHomepage">
             <h1>Substation {this.props.stationID}</h1>
             <div className="topdisplay">
@@ -42,7 +40,7 @@ class SubstationHomepage extends Component {
                 options={this.props.options}
             ></GoogleMapReact>
             </div>
-            
+
             </div>
             <RetrieveTargetedWeatherData stationID={this.props.stationID} onlyMostRecent={5} skipForm={true}/>
             <Upcoming15MinutesLineGraph useUTC={IS_HEROUKU_BUILD} stationID={this.props.stationID} year={2020} month={9} day={14} hour={13} minute={0} isEST={true}/>
