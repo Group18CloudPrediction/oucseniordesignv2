@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import JsmpegPlayer from "./LivestreamPlayer.js";
 import icon from "../media/cloud.png";
+import PowerPredictionsDashboard from "./PowerPredictionsDashboard.js";
 
 const videoOptions = {
   poster: icon,
@@ -16,13 +17,14 @@ class SubstationLivestream extends Component {
     
     return (
       <div id="Livestream">
+        <h1> Livestream </h1>
         <JsmpegPlayer
           wrapperClassName="video-wrapper"
           videoUrl={url}
           options={videoOptions}
           overlayOptions={overlayOptions}
         />
-        <h1>Sub_{this.props.stationID}</h1>
+        <PowerPredictionsDashboard />
       </div>
     );
   }

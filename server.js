@@ -36,6 +36,7 @@ function initChannels() {
   createChannel("/sub-28");
   createChannel("/sub-29");
   createChannel("/sub-33");
+  createChannel("/substation");
 }
 
 //todo: Try to move route() back to livestreamRoutes.js

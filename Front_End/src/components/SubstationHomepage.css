@@ -1,0 +1,28 @@
+.SubstationHomepage {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.SubstationHomepage > div {
+    display: flex;
+    flex-direction: row;
+}
+
+.SubstationHomepage > div > div {
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.SubstationHomepage > div > div > h1 {
+    display: flex;
+    justify-content: center;
+}
+.SubstationHomepage > h1 {
+    display: flex;
+    justify-content: center;
+    background-color: #605F5E;
+    color: #E2E2E2;
+}

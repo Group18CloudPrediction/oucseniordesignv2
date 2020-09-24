@@ -23,14 +23,11 @@ class Navigation extends Component {
                 <Nav.Link as={NavLink} href="/archive" to="/archive">Archive</Nav.Link>
                 <Nav.Link as={NavLink} href="/PowerPredictionsDashboard" to="/PowerPredictionsDashboard">Power Predictions Dashboard</Nav.Link>
                                 
-                <Nav.Link as={NavLink} href="/Sub_27" to="/Sub_27">Sub 27</Nav.Link>
-                <Nav.Link as={NavLink} href="/Sub_28" to="/Sub_28">Sub 28</Nav.Link>
-                <Nav.Link as={NavLink} href="/Sub_29" to="/Sub_29">Sub 29</Nav.Link>
-                <Nav.Link as={NavLink} href="/Sub_33" to="/Sub_33">Sub 33</Nav.Link>
-
-
-
-                <Nav.Link as={NavLink} href="/Sub/33" to="/Sub/33">(Sub 33 New Component Example)</Nav.Link>
+                <Nav.Link as={NavLink} href="/Sub/27" to="/Sub/27">Sub 27</Nav.Link>
+                <Nav.Link as={NavLink} href="/Sub/28" to="/Sub/28">Sub 28</Nav.Link>      
+                <Nav.Link as={NavLink} href="/Sub/29" to="/Sub/29">Sub 29</Nav.Link>
+                <Nav.Link as={NavLink} href="/Sub/33" to="/Sub/33">Sub 33</Nav.Link>
+                
                 <Nav.Link as={NavLink} href="/Sub/PLACEHOLDER_REPLACE" to="/Sub/PLACEHOLDER_REPLACE">(Test Data Station)</Nav.Link>
 
               </Nav>
