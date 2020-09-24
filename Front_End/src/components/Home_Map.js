@@ -10,19 +10,19 @@ function Map(props) {
     console.log(key);
     let path = "/";
     if(key === 'sub-28') {
-      path = "/Sub_28";
+      path = "/Sub/28";
       history.push(path);
     }
     else if(key === 'sub-27') {
-      path = "/Sub_27";
+      path = "/Sub/27";
       history.push(path);
     }
     else if(key === 'sub-29') {
-      path = "/Sub_29";
+      path = "/Sub/29";
      history.push(path);
     }
     else if(key === 'sub-33') {
-      path = "/Sub_33";
+      path = "/Sub/33";
       history.push(path);
     }
   }
