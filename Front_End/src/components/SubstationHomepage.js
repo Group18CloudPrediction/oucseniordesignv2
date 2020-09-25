@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import "./SubstationHomepage.css";
+import "../stylesheets/SubstationHomepage.css";
 import GoogleMapReact from "google-map-react";
 
 import Upcoming15MinutesLineGraph from "./apiCallers/Upcoming15MinutesLineGraph"
