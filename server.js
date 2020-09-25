@@ -62,7 +62,6 @@ function init_routes() {
 
   viewer = route();
   app.use("/cloudtrackinglivestream", viewer);
-  app.use("/testAPI",     testAPIRouter);
   app.use("/weatherData", weatherDataRouter);
   app.use("/powerPredictions", powerPredictionsRouter);
   //app.use("/cloudData", cloudDataRouter);

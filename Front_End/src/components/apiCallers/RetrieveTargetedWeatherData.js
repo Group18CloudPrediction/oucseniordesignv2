@@ -20,7 +20,7 @@ class RetrieveTargetedWeatherData extends Component {
             request_endTime: null,
             
             apiResponse: "", 
-            hasSubmitted: false,
+            hasSubmitted: (this.props.skipForm? true : false),
             isLoading: true,
             hasError: false,
             error: null
@@ -32,32 +32,40 @@ class RetrieveTargetedWeatherData extends Component {
         }
         
         this.handleSubmit = (event) => {
-//             alert('A name was submitted: ' + this.state.request_stationID);
-            event.preventDefault();
-            var proceed = true;
-            const msPerDay = (1000*60*60*24)
-            const minutesPerDay = 1440
-            var dayRange = 0
+            if (event)
+                event.preventDefault();
             
-            if (!this.state.request_startDate) {
-                proceed = window.confirm("You didn't enter a date range. THIS WILL REQUEST A LARGE AMOUNT OF DATA. Are you sure?") 
-            } else if (!this.state.request_endDate) {
-                dayRange = Math.floor((new Date() - new Date(this.state.request_startDate)) / msPerDay);
-            } else if (this.state.request_endDate >= this.state.request_startDate) {
-                dayRange = Math.floor((new Date(this.state.request_endDate) - new Date(this.state.request_startDate)) / msPerDay);
-            } else {
-                alert('Invalid date range: The start date is after the end date.');
-                return;
-            }
-            
-            if (proceed && dayRange > 1) {
-                proceed = window.confirm("You requested "+dayRange+" days of data. This will request ~"+(minutesPerDay*dayRange)+" rows of data. Are you sure?") 
-            }
+            if (!this.props.skipForm) {
                 
-            if(!proceed) return;
+                var proceed = true;
+                const msPerDay = (1000*60*60*24)
+                const minutesPerDay = 1440
+                var dayRange = 0
+                const unlimited = this.props.onlyMostRecent == null;
+                
+                if (unlimited && !this.state.request_startDate) {
+                    proceed = window.confirm("You didn't enter a date range. THIS MAY REQUEST A LARGE AMOUNT OF DATA. Are you sure?") 
+                } else if (!this.state.request_endDate) {
+                    dayRange = Math.floor((new Date() - new Date(this.state.request_startDate)) / msPerDay);
+                } else if (this.state.request_endDate >= this.state.request_startDate) {
+                    dayRange = Math.floor((new Date(this.state.request_endDate) - new Date(this.state.request_startDate)) / msPerDay);
+                } else {
+                    alert('Invalid date range: The start date is after the end date.');
+                    return;
+                }
+                
+                if (unlimited && proceed && dayRange > 1) {
+                    proceed = window.confirm("You requested "+dayRange+" days of data. This will request ~"+(minutesPerDay*dayRange)+" rows of data. Are you sure?") 
+                }
+                    
+                if(!proceed) return;
+            }
             
             this.callAPI();
         }
+        
+        if (this.props.skipForm)
+            this.handleSubmit();
     }
     
     callAPI() {
@@ -76,9 +84,13 @@ class RetrieveTargetedWeatherData extends Component {
             startTime: this.state.request_startTime,
             endDate: this.state.request_endDate,
             endTime: this.state.request_endTime,
+            onlyMostRecent: this.props.onlyMostRecent,
             
             isEST: true
         }
+        
+        console.log(postReqParams);
+        
         var postReqURL = baseURL + "/weatherData/" + params;
             
         fetch(postReqURL, {
@@ -100,14 +112,38 @@ class RetrieveTargetedWeatherData extends Component {
         //this.callAPI();
     //}
     
+    showDataLimitNotice() {
+        if (this.props.onlyMostRecent) {
+            return (
+                <h4 className="dataLimitNotice">
+                    {"This component is set up to only display the "} 
+                    {this.props.onlyMostRecent}
+                    {" most recent entries."}
+                </h4>
+            );
+        }
+        
+        return ("");
+    }
+    
     render() {    
         if (this.state.hasError) {
-            return <p>Error: <p>{this.state.error.message}</p></p>;
+            return <div>Error: <p>{this.state.error.message}</p></div>;
         }
         
         if (!this.state.hasSubmitted) {
+            // I have to make a function for this because I can't put an if statement inside a jsx () object
+            var makeStationInputField = () => {
+                if (this.props.stationID == null)
+                    return (<input type="text" value={this.state.request_stationID || ""} onChange={this.setStationID}/>)
+                else
+                    return (<input type="text" value={this.state.request_stationID || ""} onChange={this.setStationID} readonly="true"/>)
+            }
+            
+            // the actual jsx for the form
             return ( 
                 <div>
+                    {this.showDataLimitNotice() }
                     {"Note: you can leave a field empty if you don't want to select against it."}
                     <br/>
                     {"Warning: Leaving the date fields empty will request a very large amount of data and may cause longer loading times"}
@@ -115,7 +151,7 @@ class RetrieveTargetedWeatherData extends Component {
                     <form onSubmit={this.handleSubmit}>
                         <label>
                             Station ID: <br/>
-                            <input type="text" value={this.state.request_stationID || ""} onChange={this.setStationID} />        
+                            {makeStationInputField()}
                             <br/>
                         </label>
                         

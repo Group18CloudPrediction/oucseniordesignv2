@@ -1,12 +1,12 @@
 import React, {Component} from "react";
-import RetrieveWeatherData from "./apiCallers/RetrieveWeatherData.js";
+// import RetrieveWeatherData from "./apiCallers/RetrieveWeatherData.js";
 import RetrieveTargetedWeatherData from "./apiCallers/RetrieveTargetedWeatherData.js";
 // import TestAPICall from "./apiCallers/TestAPICall";
 
 class Archive extends Component {
     render() {
         
-        // <RetrieveWeatherData stationID="PLACEHOLDER_REPLACE"/>
+        // <RetrieveTargetedWeatherData stationID="PLACEHOLDER_REPLACE" onlyMostRecent={5} skipForm={true}/>
         
         return ( 
             <div id="Archive">
