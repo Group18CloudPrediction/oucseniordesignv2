@@ -3,17 +3,18 @@ import Upcoming15MinutesLineGraph from "./apiCallers/Upcoming15MinutesLineGraph"
 
 class PowerPredictionsDashboard extends Component {
     render() {
-        
+        if (!this.props.stationID) return (<div id="Livestream">JSX / HTML Error: no stationID specified</div>);
         // const date = new Date();
         // <Upcoming15MinutesLineGraph stationID="TEST_MANUAL_ENTRY" year={date.year} month={date.month} day={date.day} hour=[date.hour] minute={date.minute-1}/>
-        
+
         // <Upcoming15MinutesLineGraph stationID="TEST_MANUAL_ENTRY" year={2020} month={9} day={14} hour={13} minute={0}/>
-        
+
         const IS_HEROUKU_BUILD = false;
-        
-        return ( 
+
+        return (
+
             <div id="PowerPredictionsDashboard">
-                <h1> Power Predictions </h1> 
+                <h1> Power Prediction Graph {this.props.stationID}</h1>
                 <Upcoming15MinutesLineGraph useUTC={IS_HEROUKU_BUILD} stationID="TEST_MANUAL_ENTRY" year={2020} month={9} day={14} hour={13} minute={0} isEST={true}/>
             </div>
         );
