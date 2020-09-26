@@ -13,7 +13,7 @@ class TestAPICall extends Component {
 
     componentDidMount() {
         this.setState({isLoading: true});
-        const baseURL = require("./_apiRootAddress");
+        const baseURL = process.env.Server || "http://localhost:3000"
 
         fetch(baseURL+"/testAPI")
             .then(res => res.text())

@@ -26,7 +26,7 @@ class Upcoming15MinutesLineGraph extends Component {
         this would make code a little more modular so we wont have to change code lines to access database.
         process.env.server would be defined on the heroku server. We could also try to use dotenv library which would accomplish the same thing.
         */
-        const server = require("./_apiRootAddress");
+        const server = process.env.Server || "http://localhost:3000"
 
         const baseURI = server+"/powerPredictions/getNow/";
 
