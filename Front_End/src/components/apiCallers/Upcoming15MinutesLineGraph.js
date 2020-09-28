@@ -63,7 +63,7 @@ class Upcoming15MinutesLineGraph extends Component {
         }
         
         if (!this.state.apiResponse.data[0]) {
-            return <p>No data for the given timestamp: {this.props.year +"/"+this.props.month+"/"+this.props.day+" "+this.props.hour+":"+this.props.minute}</p>;
+            return <p>No data for the given station and timestamp: {this.props.stationID} @ {this.props.year +"-"+this.props.month+"-"+this.props.day+" T "+this.props.hour+":"+this.props.minute}</p>;
         }
         
         
@@ -86,7 +86,7 @@ class Upcoming15MinutesLineGraph extends Component {
         for (var i = 0; i < data.powerPredictionsMade.length; i++)
         {
             var thisMinute = minute + i + 1;
-            var thisHour = thisMinute >= 60? hour+1 : hour;
+            var thisHour = (thisMinute >= 60? hour+1 : hour) % 24;
             thisMinute = thisMinute % 60;
             
             const thisName = thisHour + ":" + (thisMinute < 10? "0" : "") + thisMinute;

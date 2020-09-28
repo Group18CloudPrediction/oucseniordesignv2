@@ -16,7 +16,7 @@ const PowerPrediction = mongoose.Schema(
         measuredPowerValue: { type: Number, required: true}
         
     },
-    { timestamps: true, collection: "Predictions" },
+    { timestamps: true, collection: "TestPredictions" },
 );
 
 module.exports = mongoose.model('powerPredictions', PowerPrediction);
