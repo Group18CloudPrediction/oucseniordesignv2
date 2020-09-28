@@ -84,50 +84,25 @@ class ValidatePredictionsBarChart extends Component {
         console.log(this.state.apiResponse.data.data)
         
         const barData = [
-            {"name": "1 Minute Out", "uv": this.state.apiResponse.data.data[0]},
-            {"name": "2 Minutes Out", "uv": this.state.apiResponse.data.data[1]},
-            {"name": "3 Minutes Out", "uv": 5},//this.state.apiResponse.data.data[2]},
-            {"name": "4 Minutes Out", "uv": this.state.apiResponse.data.data[3]},
-            {"name": "5 Minutes Out", "uv": this.state.apiResponse.data.data[4]},
-            {"name": "6 Minutes Out", "uv": this.state.apiResponse.data.data[5]},
-            {"name": "7 Minutes Out", "uv": this.state.apiResponse.data.data[6]},
-            {"name": "8 Minutes Out", "uv": this.state.apiResponse.data.data[7]},
-            {"name": "9 Minutes Out", "uv": this.state.apiResponse.data.data[8]},
-            {"name": "10 Minutes Out", "uv": this.state.apiResponse.data.data[9]},
-            {"name": "11 Minutes Out", "uv": this.state.apiResponse.data.data[10]},
-            {"name": "12 Minutes Out", "uv": this.state.apiResponse.data.data[11]},
-            {"name": "13 Minutes Out", "uv": this.state.apiResponse.data.data[12]},
-            {"name": "14 Minutes Out", "uv": this.state.apiResponse.data.data[13]},
-            {"name": "15 Minutes Out", "uv": this.state.apiResponse.data.data[14]},
+            {"name": "1 Minute Out", "averagePercentError": this.state.apiResponse.data.data[0]},
+            {"name": "2 Minutes Out", "averagePercentError": this.state.apiResponse.data.data[1]},
+            {"name": "3 Minutes Out", "averagePercentError": this.state.apiResponse.data.data[2]},
+            {"name": "4 Minutes Out", "averagePercentError": this.state.apiResponse.data.data[3]},
+            {"name": "5 Minutes Out", "averagePercentError": this.state.apiResponse.data.data[4]},
+            {"name": "6 Minutes Out", "averagePercentError": this.state.apiResponse.data.data[5]},
+            {"name": "7 Minutes Out", "averagePercentError": this.state.apiResponse.data.data[6]},
+            {"name": "8 Minutes Out", "averagePercentError": this.state.apiResponse.data.data[7]},
+            {"name": "9 Minutes Out", "averagePercentError": this.state.apiResponse.data.data[8]},
+            {"name": "10 Minutes Out", "averagePercentError": this.state.apiResponse.data.data[9]},
+            {"name": "11 Minutes Out", "averagePercentError": this.state.apiResponse.data.data[10]},
+            {"name": "12 Minutes Out", "averagePercentError": this.state.apiResponse.data.data[11]},
+            {"name": "13 Minutes Out", "averagePercentError": this.state.apiResponse.data.data[12]},
+            {"name": "14 Minutes Out", "averagePercentError": this.state.apiResponse.data.data[13]},
+            {"name": "15 Minutes Out", "averagePercentError": this.state.apiResponse.data.data[14]},
         ]
         
         console.log(barData)
         
-        const data = [
-            {
-                name: 'Page A', uv: 4000, pv: 2400, amt: 2400,
-            },
-            {
-                name: 'Page B', uv: 3000, pv: 1398, amt: 2210,
-            },
-            {
-                name: 'Page C', uv: 2000, pv: 9800, amt: 2290,
-            },
-            {
-                name: 'Page D', uv: 2780, pv: 3908, amt: 2000,
-            },
-            {
-                name: 'Page E', uv: 1890, pv: 4800, amt: 2181,
-            },
-            {
-                name: 'Page F', uv: 2390, pv: 3800, amt: 2500,
-            },
-            {
-                name: 'Page G', uv: 3490, pv: 4300, amt: 2100,
-            },
-        ];
-
-
         
         //return (<div>nyi</div>)
         return (
@@ -146,7 +121,7 @@ class ValidatePredictionsBarChart extends Component {
                     <Tooltip />
                     <Legend />
                     {/*<Bar dataKey="pv" fill="#8884d8" />*/}
-                    <Bar dataKey="uv" fill="#8884d8" />
+                    <Bar dataKey="averagePercentError" fill="#ad5e4c" />
                 </BarChart>
             </div>
         )
@@ -166,25 +141,25 @@ import {
 
 const data = [
   {
-    name: 'Page A', uv: 4000, pv: 2400, amt: 2400,
+    name: 'Page A', averagePercentError: 4000, pv: 2400, amt: 2400,
   },
   {
-    name: 'Page B', uv: 3000, pv: 1398, amt: 2210,
+    name: 'Page B', averagePercentError: 3000, pv: 1398, amt: 2210,
   },
   {
-    name: 'Page C', uv: 2000, pv: 9800, amt: 2290,
+    name: 'Page C', averagePercentError: 2000, pv: 9800, amt: 2290,
   },
   {
-    name: 'Page D', uv: 2780, pv: 3908, amt: 2000,
+    name: 'Page D', averagePercentError: 2780, pv: 3908, amt: 2000,
   },
   {
-    name: 'Page E', uv: 1890, pv: 4800, amt: 2181,
+    name: 'Page E', averagePercentError: 1890, pv: 4800, amt: 2181,
   },
   {
-    name: 'Page F', uv: 2390, pv: 3800, amt: 2500,
+    name: 'Page F', averagePercentError: 2390, pv: 3800, amt: 2500,
   },
   {
-    name: 'Page G', uv: 3490, pv: 4300, amt: 2100,
+    name: 'Page G', averagePercentError: 3490, pv: 4300, amt: 2100,
   },
 ];
 
@@ -207,7 +182,7 @@ export default class Example extends PureComponent {
         <Tooltip />
         <Legend />
         <Bar dataKey="pv" fill="#8884d8" />
-        <Bar dataKey="uv" fill="#82ca9d" />
+        <Bar dataKey="averagePercentError" fill="#82ca9d" />
       </BarChart>
     );
   }

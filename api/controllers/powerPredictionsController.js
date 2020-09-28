@@ -102,7 +102,7 @@ const validateForStation = (req, res) => {
     PowerPredictionsModel
         .find({"dateAndTime": {"$lte": date}, "stationID": req.params.stationID})
         .sort('-dateAndTime')
-        .limit(req.body.overNMostRecent)
+        .limit(req.body.overNMostRecent+15)
         .exec((error, data) => {
             if (error) {
                 return res.json({'success':false,'message':'Some Error'});
@@ -123,8 +123,13 @@ const validateForStation = (req, res) => {
                     const predictedValue = data[i-j].powerPredictionsMade[15-j]
                     const percentError = (predictedValue - realValue) / realValue
                     
-                    percentErrors[j-1] += percentError / req.body.overNMostRecent
+                    percentErrors[j-1] += percentError
                 }
+            }
+            
+            
+            for (var i = 0; i < 15; i++) {
+                percentErrors[i] /= req.body.overNMostRecent
             }
             
             data = {"data":percentErrors}
