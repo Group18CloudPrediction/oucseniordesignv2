@@ -15,7 +15,7 @@ class PowerPredictionsDashboard extends Component {
         return ( 
             <div id="PowerPredictionsDashboard">
                 <h1> Power Predictions </h1> 
-                <Upcoming15MinutesLineGraph useUTC={IS_HEROUKU_BUILD} stationID="TEST_ENTRY" year={2020} month={9} day={28} hour={14} minute={2} isEST={true}/>
+                <Upcoming15MinutesLineGraph realTimeUpdates={true} useUTC={IS_HEROUKU_BUILD} stationID="TEST_ENTRY" year={2020} month={9} day={28} hour={14} minute={2} isEST={true}/>
                 
                 <h1> Power Prediction Average Accuracies </h1> 
                 Calculated over the 10 most recent sets of predictions. <br/>

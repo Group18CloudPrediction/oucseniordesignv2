@@ -40,7 +40,10 @@ const getTimeLocal = (req, res) => {
 
 const getNowForStation = (req, res) => {
     //console.log(req.params.time)
-    //console.log(req.params.year + " " + req.params.month);
+    console.log("===============================");
+    console.log("getNowForStation");
+    
+    console.log(req.params.year + " " + req.params.month + " " + req.params.day + " " + req.params.hour + " " + req.params.minute);
     const date = new Date(
                  Date.UTC(req.params.year,
                           req.params.month-1,
@@ -56,6 +59,8 @@ const getNowForStation = (req, res) => {
             if (error) {
                 return res.json({'success':false,'message':'Some Error'});
             }
+            console.log(data);
+            
             return res.json({'success':true,'message':'Data fetched successfully',data});
         })
 }
@@ -74,6 +79,9 @@ const getMostRecentForStation = (req, res) => {
 }
 
 const validateForStation = (req, res) => {
+    
+    console.log("===============================");
+    console.log("validateForStation");
     
     const success = req.body != undefined &&
                     req.body.year &&
@@ -108,7 +116,7 @@ const validateForStation = (req, res) => {
                 return res.json({'success':false,'message':'Some Error'});
             }
             
-            console.log(data)
+            //console.log(data)
 //             data[15].measuredPowerValue -> data[0].powerPredictionsMade[0]   // newest prediction for data[15].measured
 //                                         -> data[1].powerPredictionsMade[1]
 //                                         ...

@@ -5,6 +5,11 @@ import React, {Component} from "react";
 
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 
+// props
+// realTimeUpdates -> if true, causes graph to add one minute to its current date/time and refresh, every minute
+// year, month, day, hour, minute -> if these are all set, uses them to construct its initial date/time rather than the current system time
+// stationID -> MANDATORY, selects which station to grab predictions for
+
 class Upcoming15MinutesLineGraph extends Component {
     constructor(props) {
         super(props);
@@ -12,8 +17,36 @@ class Upcoming15MinutesLineGraph extends Component {
             apiResponse: "", 
             isLoading:true,
             hasError: false,
-            error: null
+            error: null,
+            
+             stationID: this.props.stationID,
+//             year: this.props.year,
+//             month: this.props.month,
+//             day: this.props.day,
+//             hour: this.props.hour,
+//             minute: this.props.minute,
+            dateTime: this.buildInitialDateTime()
         };
+        
+        if (!this.props.stationID)
+            this.setState({error: {message: "No stationID provided. Unable to display predictions."}});
+        
+        
+            
+    }
+    
+    buildInitialDateTime() {
+        if (
+            !this.props.year  ||
+            !this.props.month ||
+            !this.props.day   || 
+            !this.props.hour  || 
+            !this.props.minute 
+        ) {
+            return new Date();
+        } else {
+            return new Date(this.props.year, this.props.month, this.props.day, this.props.hour, this.props.minute);
+        }
     }
     
     callAPI() {
@@ -27,14 +60,15 @@ class Upcoming15MinutesLineGraph extends Component {
         if (this.props.isEST && this.props.useUTC)
             hourOffset = 4;
         
-        // this component REQUIRES the below props
+        console.log(this.props.hour + " <> " + this.state.dateTime.getHours());
+        
         const params = 
-                 this.props.stationID + "/" 
-               + this.props.year + "/" 
-               + this.props.month + "/" 
-               + this.props.day + "/" 
-               + (this.props.hour+hourOffset) + "/" 
-               + this.props.minute;
+                 this.state.stationID + "/" 
+               + this.state.dateTime.getFullYear() + "/" 
+               + this.state.dateTime.getMonth() + "/" 
+               + this.state.dateTime.getDate() + "/" 
+               + (this.state.dateTime.getHours()+hourOffset) + "/" 
+               + this.state.dateTime.getMinutes();
         
         console.log(baseURI + params);
         
@@ -45,8 +79,22 @@ class Upcoming15MinutesLineGraph extends Component {
     
     }
     
+    refreshData() {
+        console.log("Refreshing!");
+        var date = new Date(this.state.dateTime+60000);
+        this.setState({dateTime: date});
+    }
+    
     componentDidMount() {
+        if(this.props.realTimeUpdates)
+            this.interval = setInterval(this.func, 60000);
         this.callAPI();
+    }
+    
+    componentWillUnmount() {
+        // prevent memory leak
+        if(this.props.realTimeUpdates)
+            clearInterval(this.interval);
     }
     
     render() {    
