@@ -5,7 +5,7 @@ import GoogleMapReact from "google-map-react";
 import Upcoming15MinutesLineGraph from "./apiCallers/Upcoming15MinutesLineGraph"
 import RetrieveTargetedWeatherData from "./apiCallers/RetrieveTargetedWeatherData"
 import SubstationLivestream from "./SubstationLivestream"
-
+import PowerPredictionsDashboard from "./PowerPredictionsDashboard"
 
 const IS_HEROUKU_BUILD = false;
 
@@ -30,9 +30,19 @@ class SubstationHomepage extends Component {
         return (
         <div className="SubstationHomepage">
             <h1>Substation {this.props.stationID}</h1>
-            <div className="topdisplay">
-            <SubstationLivestream stationID={this.props.stationID}/>
-            <div className="subMap" style= {{ height: '92.5vh', width: '100%' }}>
+            <div className="banner">
+                <p>Humidity:</p>
+                <p>Temperature:</p>
+                <p>Wind Direction:</p>
+            </div>    
+            <div className="top-row">
+                <SubstationLivestream stationID={this.props.stationID}/>
+                <PowerPredictionsDashboard stationID={this.props.stationID}/>
+            </div>    
+            
+
+            <div className="map-display">
+            <div className="subMap" style= {{ height: '550px', width: '100%' }}>
             <GoogleMapReact
                 bootstrapURLKeys={{ key: "AIzaSyCn55lIh6mJ4GnR00jjgGeWUEii5R183xA" }}
                 defaultCenter={this.props.center}

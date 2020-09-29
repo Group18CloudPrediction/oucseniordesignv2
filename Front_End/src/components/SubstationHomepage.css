@@ -9,13 +9,6 @@
     flex-direction: row;
 }
 
-.SubstationHomepage > div > div {
-    display: flex;
-    flex-direction: column;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 .SubstationHomepage > div > div > h1 {
     display: flex;
     justify-content: center;
@@ -23,7 +16,19 @@
 .SubstationHomepage > h1 {
     display: flex;
     justify-content: center;
-    background-color: #605F5E;
-    color: #E2E2E2;
+    background-color: #CCDBDC;
+    color: #263D42;
     margin-bottom: 0;
+}
+
+.SubstationHomepage .banner {
+    display: flex;
+    background-color: #CCDBDC;
+    color: #263D42;
+    justify-content: space-around;
+}
+
+.SubstationHomepage .top-row{
+    display: flex;
+    flex-direction: row;
 }

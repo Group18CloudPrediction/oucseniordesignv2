@@ -24,7 +24,7 @@ class SubstationLivestream extends Component {
           options={videoOptions}
           overlayOptions={overlayOptions}
         />
-        <PowerPredictionsDashboard stationID={this.props.stationID}/>
+        
       </div>
     );
   }
