@@ -11,18 +11,18 @@ const overlayOptions = {};
 class SubstationLivestream extends Component {
   render() {
     if (!this.props.stationID) return (<div id="Livestream">JSX / HTML Error: no stationID specified</div>);
-      
+
     const url = "ws://cloudtracking-v2.herokuapp.com/sub-"+this.props.stationID
-    
+
     return (
       <div id="Livestream">
+        <h1> Livestream </h1>
         <JsmpegPlayer
           wrapperClassName="video-wrapper"
           videoUrl={url}
           options={videoOptions}
           overlayOptions={overlayOptions}
         />
-        <h1>Sub_{this.props.stationID}</h1>
       </div>
     );
   }

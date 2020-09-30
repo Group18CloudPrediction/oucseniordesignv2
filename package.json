@@ -23,6 +23,7 @@
     "cors": "^2.8.5",
     "dependencies": "0.0.1",
     "express": "^4.17.1",
+    "mathjs": "^7.2.0",
     "mongoose": "^5.10.0",
     "mongoose-to-csv": "^0.1.1",
     "multer": "^1.4.2",
