@@ -25,13 +25,20 @@ class Upcoming15MinutesLineGraph extends Component {
 //             day: this.props.day,
 //             hour: this.props.hour,
 //             minute: this.props.minute,
-            dateTime: this.buildInitialDateTime()
+            dateTime: this.buildInitialDateTime(),
+            startDateTime: this.buildInitialDateTime()
         };
         
         if (!this.props.stationID)
             this.setState({error: {message: "No stationID provided. Unable to display predictions."}});
         
         
+        this.refreshData = () => {
+            var date = new Date(this.state.dateTime.getTime()+60000);
+            console.log("Refreshing! - old date: " + this.state.dateTime + " new date: " + date);
+            this.setState({dateTime: date});
+            this.callAPI();
+        }
             
     }
     
@@ -50,7 +57,7 @@ class Upcoming15MinutesLineGraph extends Component {
     }
 
     callAPI() {
-        this.setState({isLoading: true});
+        
         /*
         I'd like to try this.
           const server = process.env.server || "http://localhost:3000"
@@ -67,8 +74,6 @@ class Upcoming15MinutesLineGraph extends Component {
         if (this.props.isEST && this.props.useUTC)
             hourOffset = 4;
         
-        console.log(this.props.hour + " <> " + this.state.dateTime.getHours());
-        
         const params = 
                  this.state.stationID + "/" 
                + this.state.dateTime.getFullYear() + "/" 
@@ -76,25 +81,21 @@ class Upcoming15MinutesLineGraph extends Component {
                + this.state.dateTime.getDate() + "/" 
                + (this.state.dateTime.getHours()+hourOffset) + "/" 
                + this.state.dateTime.getMinutes();
-        
-        console.log(baseURI + params);
 
         fetch(baseURI + params)
             .then(response => response.json())
             .then(res => this.setState({apiResponse: res, isLoading: false}))
             .catch(err => this.setState({hasError:true, error:err}));
-
     }
     
-    refreshData() {
-        console.log("Refreshing!");
-        var date = new Date(this.state.dateTime+60000);
-        this.setState({dateTime: date});
-    }
+    
     
     componentDidMount() {
         if(this.props.realTimeUpdates)
-            this.interval = setInterval(this.func, 60000);
+        {
+            console.log("setting interval");
+            this.interval = setInterval(this.refreshData, 60000);
+        }
         this.callAPI();
     }
     componentWillUnmount() {
@@ -121,22 +122,14 @@ class Upcoming15MinutesLineGraph extends Component {
         }
 
 
-        //console.log(this.state.apiResponse);
-        //console.log(this.state.apiResponse.data[0]);
-
+        const displayData = [];
+        
         const data = this.state.apiResponse.data[0];
 
-        const hour = this.props.hour;
-        const minute = this.props.minute;
-        const displayData = [];
-//         const displayData = [
-//             {name: hour+":"+(minute+1), "uv": data.powerPredictionsMade[0], amt: 2400},
-//             {name: hour+":"+(minute+2), "uv": data.powerPredictionsMade[1], amt: 2210},
-//             {name: hour+":"+(minute+3), "uv": data.powerPredictionsMade[2], amt: 2290},
-//             {name: '1:03', "uv": 2780, amt: 2000},
-//             {name: '1:04', "uv": 1890, amt: 2181},
-//         ];
-
+        const hour = this.state.dateTime.getHours();
+        const minute = this.state.dateTime.getMinutes();
+        
+        
         for (var i = 0; i < data.powerPredictionsMade.length; i++)
         {
             var thisMinute = minute + i + 1;

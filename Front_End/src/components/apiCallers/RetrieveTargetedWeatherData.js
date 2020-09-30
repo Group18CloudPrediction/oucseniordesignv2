@@ -14,10 +14,10 @@ class RetrieveTargetedWeatherData extends Component {
             utcOffset: this.props.isEST? -4: 0,
             
             request_stationID: this.props.stationID || null,
-            request_startDate: null,
-            request_startTime: null,
-            request_endDate: null,
-            request_endTime: null,
+            request_startDate: this.props.startDate || null,
+            request_startTime: this.props.startTime ||null,
+            request_endDate: this.props.endDate || null,
+            request_endTime: this.props.endTime || null,
             
             apiResponse: "", 
             hasSubmitted: (this.props.skipForm? true : false),
