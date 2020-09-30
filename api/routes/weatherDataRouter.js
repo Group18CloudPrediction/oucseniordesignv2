@@ -14,5 +14,5 @@ router.route("/:stationID")
       
 router.route("/")
       .post(weatherDataController.getTargeted);
-    
+      
 module.exports = router;
