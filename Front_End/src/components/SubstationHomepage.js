@@ -13,11 +13,6 @@ class SubstationHomepage extends Component {
     constructor(props) {
         super(props);
         
-        console.log("==================================");
-        console.log(typeof(this.props.stationID));
-        console.log(this.props.stationID);
-        console.log(this.props.stationID == "-1");
-        
         this.state = {
             testMode: (this.props.stationID == "-1")
         };
