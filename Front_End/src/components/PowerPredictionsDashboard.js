@@ -3,6 +3,14 @@ import Upcoming15MinutesLineGraph from "./apiCallers/Upcoming15MinutesLineGraph"
 import ValidatePredictionsBarChart from "./apiCallers/ValidatePredictionsBarChart";
 
 class PowerPredictionsDashboard extends Component {
+    constructor(props) {
+        super(props);
+        
+        this.state = {
+            stationID: this.props.stationID || "TEST_ENTRY"
+        };
+    }
+    
     render() {
         if (!this.props.stationID) return (<div id="Livestream">JSX / HTML Error: no stationID specified</div>);
         // const date = new Date();
@@ -16,11 +24,11 @@ class PowerPredictionsDashboard extends Component {
 
             <div id="PowerPredictionsDashboard">
                 <h1> Power Predictions </h1> 
-                <Upcoming15MinutesLineGraph realTimeUpdates={true} useUTC={IS_HEROUKU_BUILD} stationID="TEST_ENTRY" year={2020} month={9} day={28} hour={14} minute={2} isEST={true}/>
+                <Upcoming15MinutesLineGraph realTimeUpdates={true} useUTC={IS_HEROUKU_BUILD} stationID={this.state.stationID} year={2020} month={9} day={28} hour={14} minute={2} isEST={true}/>
                 
                 <h1> Power Prediction Average Accuracies </h1> 
                 Calculated over the 10 most recent sets of predictions. <br/>
-                <ValidatePredictionsBarChart stationID="TEST_ENTRY" overNMostRecent={10} year={2020} month={9} day={28} hour={14} minute={18}/>
+                <ValidatePredictionsBarChart stationID={this.state.stationID} overNMostRecent={10} year={2020} month={9} day={28} hour={14} minute={18}/>
             </div>
         );
     }

@@ -10,10 +10,18 @@ import PowerPredictionsDashboard from "./PowerPredictionsDashboard.js";
 const IS_HEROUKU_BUILD = false;
 
 class SubstationHomepage extends Component {
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {};
-    // }
+    constructor(props) {
+        super(props);
+        this.state = {
+            testMode: (this.props.stationID === "-1")
+        };
+        
+        console.log("==================================");
+        console.log(typeof(this.props.stationID));
+        console.log(this.props.stationID);
+        console.log(this.props.stationID === "-1");
+    }
+    
     static defaultProps = {
         center: {
           lat: 59.95,
@@ -25,6 +33,7 @@ class SubstationHomepage extends Component {
             mapTypeControl: true,
         }
       };
+      
     render() {
 
         return (
@@ -35,7 +44,7 @@ class SubstationHomepage extends Component {
             
                 <div>
                     <SubstationLivestream stationID={this.props.stationID}/>
-                    <PowerPredictionsDashboard stationID={this.props.stationID}/>
+                    <PowerPredictionsDashboard stationID={this.state.testMode? "TEST_ENTRY" : this.props.stationID}/>
                 </div>
                 
                 <div className="subMap" style= {{ height: '92.5vh', width: '100%' }}>
@@ -49,7 +58,7 @@ class SubstationHomepage extends Component {
 
             </div>
             
-            <RetrieveTargetedWeatherData stationID={this.props.stationID} onlyMostRecent={5} skipForm={true}/>
+            <RetrieveTargetedWeatherData stationID={this.state.testMode? "PLACEHOLDER_REPLACE" : this.props.stationID} onlyMostRecent={5} skipForm={true}/>
         </div>
         );
     }
