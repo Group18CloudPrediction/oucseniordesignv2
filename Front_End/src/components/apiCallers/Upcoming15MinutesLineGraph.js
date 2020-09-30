@@ -19,7 +19,10 @@ class Upcoming15MinutesLineGraph extends Component {
             hasError: false,
             error: null,
             
-             stationID: this.props.stationID,
+            numRefreshes: 0,
+            measuredValues: [],
+            
+            stationID: this.props.stationID,
 //             year: this.props.year,
 //             month: this.props.month,
 //             day: this.props.day,
@@ -36,7 +39,7 @@ class Upcoming15MinutesLineGraph extends Component {
         this.refreshData = () => {
             var date = new Date(this.state.dateTime.getTime()+60000);
             console.log("Refreshing! - old date: " + this.state.dateTime + " new date: " + date);
-            this.setState({dateTime: date});
+            this.setState({dateTime: date, numRefreshes:(this.state.numRefreshes+1)});
             this.callAPI();
         }
             
@@ -84,7 +87,10 @@ class Upcoming15MinutesLineGraph extends Component {
 
         fetch(baseURI + params)
             .then(response => response.json())
-            .then(res => this.setState({apiResponse: res, isLoading: false}))
+            .then(res => {
+                this.setState({apiResponse: res, isLoading: false});
+                this.state.measuredValues.push(res.data[0].measuredPowerValue);
+            })
             .catch(err => this.setState({hasError:true, error:err}));
     }
     
@@ -124,6 +130,21 @@ class Upcoming15MinutesLineGraph extends Component {
 
         const displayData = [];
         
+        const startHour = this.state.dateTime.getHours();
+        const startMinute = this.state.dateTime.getMinutes();
+        
+        for (var i = 0; i < this.state.numRefreshes; i++)
+        {
+            var thisMinute = startMinute + i + 1;
+            var thisHour = (thisMinute >= 60? startHour+1 : startHour) % 24;
+            thisMinute = thisMinute % 60;
+
+            const thisName = thisHour + ":" + (thisMinute < 10? "0" : "") + thisMinute;
+            displayData.push({time: thisName, "pv": this.state.measuredValues[i]});
+        }
+        
+        console.log(this.state.measuredValues);
+        
         const data = this.state.apiResponse.data[0];
 
         const hour = this.state.dateTime.getHours();
@@ -148,13 +169,14 @@ class Upcoming15MinutesLineGraph extends Component {
                         <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
                     </linearGradient>
                     {
-//                     <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-//                         <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
-//                         <stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
-//                     </linearGradient>
+                    <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#dbd24f" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#dbd24f" stopOpacity={0}/>
+                    </linearGradient>
                     }
                 </defs>
                 <Area type="monotone" dataKey="uv" stroke="#8884d8" fillOpacity={1} fill="url(#colorUv)"/>
+                <Area type="monotone" dataKey="pv" stroke="#b5ad38" fillOpacity={1} fill="url(#colorPv)"/>
                 {
 //                 <Line type="monotone" dataKey="pv" stroke="#82ca9d" fillOpacity={1} fill="url(#colorPv)" />
                 }
