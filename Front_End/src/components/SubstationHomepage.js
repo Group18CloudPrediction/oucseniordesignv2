@@ -38,9 +38,8 @@ class SubstationHomepage extends Component {
             
             <div className="topdisplay">
             
-                <div>
+                <div className="LivestreamWrapper">
                     <SubstationLivestream stationID={this.props.stationID}/>
-                    <PowerPredictionsDashboard stationID={this.state.testMode? "TEST_ENTRY" : this.props.stationID}/>
                 </div>
                 
                 <div className="subMap" style= {{ height: '92.5vh', width: '100%' }}>
@@ -54,6 +53,9 @@ class SubstationHomepage extends Component {
 
             </div>
             
+            <h3> test </h3>
+            
+            <PowerPredictionsDashboard stationID={this.state.testMode? "TEST_ENTRY" : this.props.stationID}/>
             <RetrieveTargetedWeatherData stationID={this.state.testMode? "PLACEHOLDER_REPLACE" : this.props.stationID} onlyMostRecent={5} skipForm={true}/>
         </div>
         );
