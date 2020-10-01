@@ -5,6 +5,11 @@ import React, {Component} from "react";
 
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 
+// props
+// realTimeUpdates -> if true, causes graph to add one minute to its current date/time and refresh, every minute
+// year, month, day, hour, minute -> if these are all set, uses them to construct its initial date/time rather than the current system time
+// stationID -> MANDATORY, selects which station to grab predictions for
+
 class Upcoming15MinutesLineGraph extends Component {
     constructor(props) {
         super(props);
@@ -12,8 +17,46 @@ class Upcoming15MinutesLineGraph extends Component {
             apiResponse: "",
             isLoading:true,
             hasError: false,
-            error: null
+            error: null,
+
+            numRefreshes: 0,
+            measuredValues: [],
+
+            stationID: this.props.stationID,
+//             year: this.props.year,
+//             month: this.props.month,
+//             day: this.props.day,
+//             hour: this.props.hour,
+//             minute: this.props.minute,
+            dateTime: this.buildInitialDateTime(),
+            startDateTime: this.buildInitialDateTime()
         };
+
+        if (!this.props.stationID)
+            this.setState({error: {message: "No stationID provided. Unable to display predictions."}});
+
+
+        this.refreshData = () => {
+            var date = new Date(this.state.dateTime.getTime()+60000);
+            console.log("Refreshing! - old date: " + this.state.dateTime + " new date: " + date);
+            this.setState({dateTime: date, numRefreshes:(this.state.numRefreshes+1)});
+            this.callAPI();
+        }
+
+    }
+
+    buildInitialDateTime() {
+        if (
+            !this.props.year  ||
+            !this.props.month ||
+            !this.props.day   ||
+            !this.props.hour  ||
+            !this.props.minute
+        ) {
+            return new Date();
+        } else {
+            return new Date(this.props.year, this.props.month, this.props.day, this.props.hour, this.props.minute);
+        }
     }
 
     callAPI() {
@@ -26,26 +69,37 @@ class Upcoming15MinutesLineGraph extends Component {
         if (this.props.isEST && this.props.useUTC)
             hourOffset = 4;
 
-        // this component REQUIRES the below props
         const params =
-                 this.props.stationID + "/"
-               + this.props.year + "/"
-               + this.props.month + "/"
-               + this.props.day + "/"
-               + (this.props.hour+hourOffset) + "/"
-               + this.props.minute;
-
-        console.log(baseURI + params);
+                 this.state.stationID + "/"
+               + this.state.dateTime.getFullYear() + "/"
+               + this.state.dateTime.getMonth() + "/"
+               + this.state.dateTime.getDate() + "/"
+               + (this.state.dateTime.getHours()+hourOffset) + "/"
+               + this.state.dateTime.getMinutes();
 
         fetch(baseURI + params)
             .then(response => response.json())
-            .then(res => this.setState({apiResponse: res, isLoading: false}))
+            .then(res => {
+                this.setState({apiResponse: res, isLoading: false});
+                this.state.measuredValues.push(res.data[0].measuredPowerValue);
+            })
             .catch(err => this.setState({hasError:true, error:err}));
-
     }
 
+
+
     componentDidMount() {
+        if(this.props.realTimeUpdates)
+        {
+            console.log("setting interval");
+            this.interval = setInterval(this.refreshData, 60*1000);
+        }
         this.callAPI();
+    }
+    componentWillUnmount() {
+        // prevent memory leak
+        if(this.props.realTimeUpdates)
+            clearInterval(this.interval);
     }
 
     render() {
@@ -62,30 +116,37 @@ class Upcoming15MinutesLineGraph extends Component {
         }
 
         if (!this.state.apiResponse.data[0]) {
-            return <p>No data for the given timestamp: {this.props.year +"/"+this.props.month+"/"+this.props.day+" "+this.props.hour+":"+this.props.minute}</p>;
+            return <p>No data for the given station and timestamp: {this.props.stationID} @ {this.props.year +"-"+this.props.month+"-"+this.props.day+" T "+this.props.hour+":"+this.props.minute}</p>;
         }
 
 
-        //console.log(this.state.apiResponse);
-        //console.log(this.state.apiResponse.data[0]);
+        const displayData = [];
+
+        const startHour = this.state.dateTime.getHours();
+        const startMinute = this.state.dateTime.getMinutes();
+
+        for (var i = 0; i < this.state.numRefreshes; i++)
+        {
+            var thisMinute = startMinute + i + 1;
+            var thisHour = (thisMinute >= 60? startHour+1 : startHour) % 24;
+            thisMinute = thisMinute % 60;
+
+            const thisName = thisHour + ":" + (thisMinute < 10? "0" : "") + thisMinute;
+            displayData.push({time: thisName, "pv": this.state.measuredValues[i], "uv": this.state.measuredValues[i]});
+        }
+
+        console.log(this.state.measuredValues);
 
         const data = this.state.apiResponse.data[0];
 
-        const hour = this.props.hour;
-        const minute = this.props.minute;
-        const displayData = [];
-//         const displayData = [
-//             {name: hour+":"+(minute+1), "uv": data.powerPredictionsMade[0], amt: 2400},
-//             {name: hour+":"+(minute+2), "uv": data.powerPredictionsMade[1], amt: 2210},
-//             {name: hour+":"+(minute+3), "uv": data.powerPredictionsMade[2], amt: 2290},
-//             {name: '1:03', "uv": 2780, amt: 2000},
-//             {name: '1:04', "uv": 1890, amt: 2181},
-//         ];
+        const hour = this.state.dateTime.getHours();
+        const minute = this.state.dateTime.getMinutes();
+
 
         for (var i = 0; i < data.powerPredictionsMade.length; i++)
         {
             var thisMinute = minute + i + 1;
-            var thisHour = thisMinute >= 60? hour+1 : hour;
+            var thisHour = (thisMinute >= 60? hour+1 : hour) % 24;
             thisMinute = thisMinute % 60;
 
             const thisName = thisHour + ":" + (thisMinute < 10? "0" : "") + thisMinute;
@@ -100,13 +161,14 @@ class Upcoming15MinutesLineGraph extends Component {
                         <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
                     </linearGradient>
                     {
-//                     <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-//                         <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
-//                         <stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
-//                     </linearGradient>
+                    <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#dbd24f" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#dbd24f" stopOpacity={0}/>
+                    </linearGradient>
                     }
                 </defs>
                 <Area type="monotone" dataKey="uv" stroke="#8884d8" fillOpacity={1} fill="url(#colorUv)"/>
+                <Area type="monotone" dataKey="pv" stroke="#b5ad38" fillOpacity={1} fill="url(#colorPv)"/>
                 {
 //                 <Line type="monotone" dataKey="pv" stroke="#82ca9d" fillOpacity={1} fill="url(#colorPv)" />
                 }

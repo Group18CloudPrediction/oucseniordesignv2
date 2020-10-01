@@ -2,18 +2,22 @@ import React, {Component} from "react";
 import "../stylesheets/SubstationHomepage.css";
 import GoogleMapReact from "google-map-react";
 
-import Upcoming15MinutesLineGraph from "./apiCallers/Upcoming15MinutesLineGraph"
 import RetrieveTargetedWeatherData from "./apiCallers/RetrieveTargetedWeatherData"
 import SubstationLivestream from "./SubstationLivestream"
+import PowerPredictionsDashboard from "./PowerPredictionsDashboard.js";
 
 
 const IS_HEROUKU_BUILD = false;
 
 class SubstationHomepage extends Component {
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {};
-    // }
+    constructor(props) {
+        super(props);
+        
+        this.state = {
+            testMode: (this.props.stationID == "-1")
+        };
+    }
+    
     static defaultProps = {
         center: {
           lat: 59.95,
@@ -25,25 +29,32 @@ class SubstationHomepage extends Component {
             mapTypeControl: true,
         }
       };
+      
     render() {
 
         return (
         <div className="SubstationHomepage">
             <h1>Substation {this.props.stationID}</h1>
+            
             <div className="topdisplay">
-            <SubstationLivestream stationID={this.props.stationID}/>
-            <div className="subMap" style= {{ height: '92.5vh', width: '100%' }}>
-            <GoogleMapReact
-                bootstrapURLKeys={{ key: "AIzaSyCn55lIh6mJ4GnR00jjgGeWUEii5R183xA" }}
-                defaultCenter={this.props.center}
-                defaultZoom={this.props.zoom}
-                options={this.props.options}
-            ></GoogleMapReact>
-            </div>
+            
+                <div>
+                    <SubstationLivestream stationID={this.props.stationID}/>
+                    <PowerPredictionsDashboard stationID={this.state.testMode? "TEST_ENTRY" : this.props.stationID}/>
+                </div>
+                
+                <div className="subMap" style= {{ height: '92.5vh', width: '100%' }}>
+                    <GoogleMapReact
+                        bootstrapURLKeys={{ key: "AIzaSyCn55lIh6mJ4GnR00jjgGeWUEii5R183xA" }}
+                        defaultCenter={this.props.center}
+                        defaultZoom={this.props.zoom}
+                        options={this.props.options}
+                    ></GoogleMapReact>
+                </div>
 
             </div>
-            <RetrieveTargetedWeatherData stationID={this.props.stationID} onlyMostRecent={5} skipForm={true}/>
-            <Upcoming15MinutesLineGraph useUTC={IS_HEROUKU_BUILD} stationID={this.props.stationID} year={2020} month={9} day={14} hour={13} minute={0} isEST={true}/>
+            
+            <RetrieveTargetedWeatherData stationID={this.state.testMode? "PLACEHOLDER_REPLACE" : this.props.stationID} onlyMostRecent={5} skipForm={true}/>
         </div>
         );
     }
