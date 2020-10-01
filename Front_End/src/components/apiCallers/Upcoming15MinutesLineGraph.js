@@ -22,8 +22,6 @@ class Upcoming15MinutesLineGraph extends Component {
             numRefreshes: 0,
             measuredValues: [],
             
-            refreshEveryXSeconds: 60,
-            
             stationID: this.props.stationID,
 //             year: this.props.year,
 //             month: this.props.month,
@@ -102,7 +100,7 @@ class Upcoming15MinutesLineGraph extends Component {
         if(this.props.realTimeUpdates)
         {
             console.log("setting interval");
-            this.interval = setInterval(this.refreshData, this.state.refreshEveryXSeconds*1000);
+            this.interval = setInterval(this.refreshData, 60*1000);
         }
         this.callAPI();
     }

@@ -22,12 +22,35 @@ class ValidatePredictionsBarChart extends Component {
             apiResponse: "", 
             isLoading:true,
             hasError: false,
-            error: null
+            error: null,
+            
+            dateTime: this.buildInitialDateTime()
         };
+        
+        this.refreshData = () => {
+            var date = new Date(this.state.dateTime.getTime()+60*1000);
+            console.log("Refreshing! - old date: " + this.state.dateTime + " new date: " + date);
+            this.setState({dateTime: date});
+            this.callAPI();
+        }
+    }
+    
+    buildInitialDateTime() {
+        if (
+            !this.props.year  ||
+            !this.props.month ||
+            !this.props.day   || 
+            !this.props.hour  || 
+            !this.props.minute 
+        ) {
+            return new Date();
+        } else {
+            return new Date(this.props.year, this.props.month, this.props.day, this.props.hour, this.props.minute);
+        }
     }
     
     callAPI() {
-        this.setState({isLoading: true});
+        //this.setState({isLoading: true});
         
         const params = (!this.props.stationID ? "" : this.props.stationID);
         const baseURL = require("./_apiRootAddress");
@@ -36,11 +59,11 @@ class ValidatePredictionsBarChart extends Component {
             stationID: this.props.stationID,
             overNMostRecent: this.props.overNMostRecent,
             
-            year:   this.props.year,
-            month:  this.props.month,
-            day:    this.props.day,
-            hour:   this.props.hour,
-            minute: this.props.minute
+            year:   this.state.dateTime.getFullYear(),
+            month:  this.state.dateTime.getMonth(),
+            day:    this.state.dateTime.getDate(),
+            hour:   this.state.dateTime.getHours(),
+            minute: this.state.dateTime.getMinutes()
         }
         
         console.log(postReqParams);
@@ -59,11 +82,21 @@ class ValidatePredictionsBarChart extends Component {
             .then (res      => this.setState({apiResponse: res, isLoading: false}) )
             .catch(err      => this.setState({hasError:true, error:err})           );
         
-        this.setState({hasSubmitted: true});
+        //this.setState({hasSubmitted: true});
     }
     
     componentDidMount() {
+        if(this.props.realTimeUpdates)
+        {
+            console.log("setting interval validate");
+            this.interval = setInterval(this.refreshData, 60*1000);
+        }
         this.callAPI();
+    }
+    componentWillUnmount() {
+        // prevent memory leak
+        if(this.props.realTimeUpdates)
+            clearInterval(this.interval);
     }
     
     render() {    

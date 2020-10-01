@@ -28,7 +28,7 @@ class PowerPredictionsDashboard extends Component {
                 
                 <h1> Power Prediction Average Accuracies </h1> 
                 Calculated over the 10 most recent sets of predictions. <br/>
-                <ValidatePredictionsBarChart stationID={this.state.stationID} overNMostRecent={10} year={2020} month={9} day={28} hour={14} minute={18}/>
+                <ValidatePredictionsBarChart realTimeUpdates={true} stationID={this.state.stationID} overNMostRecent={10} year={2020} month={9} day={28} hour={14} minute={18}/>
             </div>
         );
     }
