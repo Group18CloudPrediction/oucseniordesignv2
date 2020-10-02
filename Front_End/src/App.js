@@ -20,7 +20,6 @@ class App extends Component {
             <Route path="/" component={Home} exact />
             <Route path="/archive" component={Archive} />
             <Route path="/Sub/:stationID" component={SubstationHomepageWrapper} />
-
             <Route component={Error} />
           </Switch>
         </div>
