@@ -12,7 +12,6 @@ class Archive extends Component {
         return ( 
             <div id="Archive">
                 <h1> Archive page </h1> 
-                <MostRecentWeather stationID={"PLACEHOLDER_REPLACE"}/>
                 <RetrieveTargetedWeatherData/>
             </div>
         );

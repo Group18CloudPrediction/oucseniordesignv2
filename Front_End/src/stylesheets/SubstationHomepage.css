@@ -1,0 +1,44 @@
+
+.SubstationHomepage {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.SubstationHomepage > div {
+    display: flex;
+    flex-direction: row;
+}
+
+.SubstationHomepage > div > div {
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.SubstationHomepage > div > div > h1 {
+    display: flex;
+    justify-content: center;
+}
+
+.SubstationHomepage > h1 {
+    display: flex;
+    justify-content: center;
+    background-color: #bab8b6;
+    color: #2b2b2b;
+    margin-bottom: 0;
+}
+
+.SubstationHomepage > h3 {
+    display: flex;
+    justify-content: center;
+    background-color: #bab8b6;
+    color: #bab8b6;
+    margin-bottom: 0;
+}
+
+.LivestreamWrapper {
+    background-color: #2b2b2b;
+    color: #4a4a4a;
+}
