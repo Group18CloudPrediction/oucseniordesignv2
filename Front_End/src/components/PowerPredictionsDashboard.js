@@ -28,7 +28,7 @@ class PowerPredictionsDashboard extends Component {
                 <div className="LineGraphWrapper">
                     {/*<h1> Power Predictions </h1>*/} 
                     <h1> Power Predictions </h1>
-                    <Upcoming15MinutesLineGraph realTimeUpdates={true} useUTC={IS_HEROUKU_BUILD} stationID={this.state.stationID} year={2020} month={9} day={28} hour={14} minute={2} isEST={true}/>
+                    <Upcoming15MinutesLineGraph realTimeUpdates={true} useUTC={IS_HEROUKU_BUILD} stationID={this.state.stationID} year={2020} month={9} day={28} hour={14} minute={2} isEST={true} />
                 </div>
                 {/*
                 <div className="ValidationWrapper">
