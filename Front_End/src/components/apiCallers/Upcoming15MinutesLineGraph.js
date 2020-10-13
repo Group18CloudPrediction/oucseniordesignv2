@@ -52,7 +52,6 @@ class Upcoming15MinutesLineGraph extends Component {
             this.setState({dateTime: date, numRefreshes:(this.state.numRefreshes+1)});
             this.callAPI();
         }
-            
     }
     
     buildInitialDateTime() {
@@ -109,11 +108,12 @@ class Upcoming15MinutesLineGraph extends Component {
     componentDidMount() {
         if(this.props.realTimeUpdates)
         {
-            console.log("setting interval");
+            console.log("setting interval - PowerPredictionsLineGraph");
             this.interval = setInterval(this.refreshData, 60*1000);
         }
         this.callAPI();
     }
+    
     componentWillUnmount() {
         // prevent memory leak
         if(this.props.realTimeUpdates)
