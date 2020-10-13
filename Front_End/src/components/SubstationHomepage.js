@@ -18,7 +18,6 @@ class SubstationHomepage extends Component {
             testMode: (this.props.stationID == "-1")
         };
     }
-
     static defaultProps = {
         center: {
           lat: 59.95,
