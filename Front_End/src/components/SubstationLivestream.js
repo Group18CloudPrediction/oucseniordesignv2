@@ -15,7 +15,7 @@ class SubstationLivestream extends Component {
     const url = "ws://cloudtracking-v2.herokuapp.com/sub-"+this.props.stationID
 
     return (
-      <div id="Livestream">
+      <div id="Livestream" >
         <h1> Substation {this.props.stationID}</h1>
         <JsmpegPlayer
           wrapperClassName="video-wrapper"

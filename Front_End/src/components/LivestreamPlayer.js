@@ -12,7 +12,7 @@ class JsmpegPlayer extends Component {
 
   render() {
     return (
-      <div
+      <div  
         className={this.props.wrapperClassName}
         ref={videoWrapper => this.els.videoWrapper = videoWrapper}>
       </div>

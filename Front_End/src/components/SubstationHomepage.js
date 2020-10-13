@@ -46,7 +46,7 @@ class SubstationHomepage extends Component {
                         <SubstationLivestream stationID={this.props.stationID}/>
                     </div>
 
-                    <div className="subMap" style= {{ height: '40vh', width: '100%' }}>
+                    <div className="subMap" style= {{ height: '40vh', width: '640px' }}>
                         <GoogleMapReact
                             bootstrapURLKeys={{ key: "AIzaSyCn55lIh6mJ4GnR00jjgGeWUEii5R183xA" }}
                             defaultCenter={this.props.center}
