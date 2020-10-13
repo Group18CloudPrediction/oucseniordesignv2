@@ -39,7 +39,7 @@ class Upcoming15MinutesLineGraph extends Component {
             
             xAxisColor: this.props.xAxisColor || this.props.textColor || "#dddddd",
             yAxisColor: this.props.yAxisColor || this.props.textColor || "#dddddd",
-            gridLinesColor: this.props.gridLinesColor || this.props.textColor || "#cccccc",
+            gridLinesColor: this.props.gridLinesColor || this.props.textColor || "#dddddd",
         };
         
         if (!this.props.stationID)

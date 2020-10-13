@@ -40,7 +40,7 @@
     display: flex;
     justify-content: center;
     align-content: center;
-    border-bottom: 1px solid aqua;
+    border-bottom: 1px solid #8884d8 ;
 }
 
 .SubstationHomepage > h1 {
@@ -67,7 +67,7 @@
     display: flex;
     justify-content: center;
     color: #E9F1F7;
-    border-bottom: 1px solid aqua;
+    border-bottom: 1px solid #8884d8;
 }
 
 .SubstationHomepage > div >div > div > div {
@@ -83,8 +83,12 @@
     height: 100% !important;
 }
 
+.SubstationHomepage > div >div > div > div > div.PowerPredictionsLineGraph {
+    height: 85%;
+}
+
 .SubstationHomepage > div >div > div > div > div {
-    height: 80%;
+    width: auto;
 }
 
 
