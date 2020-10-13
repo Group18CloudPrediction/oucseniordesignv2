@@ -35,24 +35,39 @@ class SubstationHomepage extends Component {
 
         return (
         <div className="SubstationHomepage">
-            <h1>Substation {this.props.stationID}</h1>
+            {/*<h1>Substation {this.props.stationID}</h1>*/}
 
 
             <div className="topdisplay">
 
+                <div className="leftdisplay">
+                    <div className="LivestreamWrapper">
 
-                <div className="LivestreamWrapper">
+                        <SubstationLivestream stationID={this.props.stationID}/>
+                    </div>
 
-                    <SubstationLivestream stationID={this.props.stationID}/>
+                    <div className="subMap" style= {{ height: '40vh', width: '100%' }}>
+                        <GoogleMapReact
+                            bootstrapURLKeys={{ key: "AIzaSyCn55lIh6mJ4GnR00jjgGeWUEii5R183xA" }}
+                            defaultCenter={this.props.center}
+                            defaultZoom={this.props.zoom}
+                            options={this.props.options}
+                        ></GoogleMapReact>
+                    </div>
+
+                    
                 </div>
-
-                <div className="subMap" style= {{ height: '92.5vh', width: '100%' }}>
-                    <GoogleMapReact
-                        bootstrapURLKeys={{ key: "AIzaSyCn55lIh6mJ4GnR00jjgGeWUEii5R183xA" }}
-                        defaultCenter={this.props.center}
-                        defaultZoom={this.props.zoom}
-                        options={this.props.options}
-                    ></GoogleMapReact>
+                
+                <div className="rightdisplay">
+                    <PowerPredictionsDashboard stationID={this.state.testMode? "TEST_ENTRY" : this.props.stationID}/>
+                    <div>
+                        <p>Coverage Percentage: </p>
+                        <p>Wind Direction: </p>
+                        <p>Wind Speed: </p>
+                        <p>Relative Humidity: </p>
+                        <p>Barametric Pressure: </p>
+                        <p>Volumetric Pressure: </p>
+                    </div>
                 </div>
 
 
@@ -60,7 +75,7 @@ class SubstationHomepage extends Component {
 
             <h3> test </h3>
 
-            <PowerPredictionsDashboard stationID={this.state.testMode? "TEST_ENTRY" : this.props.stationID}/>
+            
             <RetrieveTargetedWeatherData stationID={this.state.testMode? "1" : this.props.stationID} onlyMostRecent={5} skipForm={true}/>
         </div>
         );

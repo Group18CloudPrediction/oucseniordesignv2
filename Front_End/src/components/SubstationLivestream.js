@@ -16,7 +16,7 @@ class SubstationLivestream extends Component {
 
     return (
       <div id="Livestream">
-        <h1> Livestream </h1>
+        <h1> Substation {this.props.stationID}</h1>
         <JsmpegPlayer
           wrapperClassName="video-wrapper"
           videoUrl={url}
