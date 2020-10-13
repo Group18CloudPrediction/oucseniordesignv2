@@ -62,13 +62,21 @@ class SubstationHomepage extends Component {
                     <PowerPredictionsDashboard stationID={this.state.testMode? "TEST_ENTRY" : this.props.stationID}/>
                     <div>
                         <h1>Weather Statistics</h1>
-                        <p>Coverage Percentage: </p>
-                        <p>Wind Direction: </p>
-                        <p>Wind Speed: </p>
-                        <p>Relative Humidity: </p>
-                        <p>Barametric Pressure: </p>
-                        <p>Volumetric Pressure: </p>
+                        <RetrieveTargetedWeatherData friendlyDisplay={true} stationID={this.state.testMode? "1" : this.props.stationID} onlyMostRecent={1} skipForm={true}/>
                     </div>
+                    
+                    {
+//                     <div>
+//                         <h1>Weather Statistics</h1>
+//                         <p>Coverage Percentage: </p>
+//                         <p>Wind Direction: </p>
+//                         <p>Wind Speed: </p>
+//                         <p>Relative Humidity: </p>
+//                         <p>Barametric Pressure: </p>
+//                         <p>Volumetric Pressure: </p>
+//                     </div>
+                    }
+                    
                 </div>
 
 

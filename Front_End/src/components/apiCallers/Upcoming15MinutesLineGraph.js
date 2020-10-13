@@ -32,13 +32,13 @@ class Upcoming15MinutesLineGraph extends Component {
             startDateTime: this.buildInitialDateTime(),
             
             
-            predictionsColor: this.props.predictionsColor || "#8884d8",
+            predictionsColor:     this.props.predictionsColor     || "#8884d8",
             predictionsFillColor: this.props.predictionsFillColor || this.props.predictionsColor || "#8884d8",
-            realDataColor: this.props.realDataColor || "#b5ad38",
-            realDataFillColor: this.props.realDataFillColor || this.props.realDataColor || "#dbd24f",
+            realDataColor:        this.props.realDataColor        || "#b5ad38",
+            realDataFillColor:    this.props.realDataFillColor    || this.props.realDataColor    || "#dbd24f",
             
-            xAxisColor: this.props.xAxisColor || this.props.textColor || "#dddddd",
-            yAxisColor: this.props.yAxisColor || this.props.textColor || "#dddddd",
+            xAxisColor:     this.props.xAxisColor     || this.props.textColor || "#dddddd",
+            yAxisColor:     this.props.yAxisColor     || this.props.textColor || "#dddddd",
             gridLinesColor: this.props.gridLinesColor || this.props.textColor || "#cccccc",
         };
         
