@@ -45,16 +45,26 @@
 .SubstationHomepage > h1 {
     display: flex;
     justify-content: center;
-    background-color: #2274A5;
     color: #E9F1F7;
     margin-bottom: 0;
 }
-.SubstationHomepage > div >div > div {
+.SubstationHomepage > div > div > div {
     background-color: #4a4a4a;
+    display: flex;
+    flex-direction: column;
+    width: 640px;
 }
 
-.SubstationHomepage > div >div > div > p {
+.SubstationHomepage > div > div > div > p {
     color:#E9F1F7;
+    display: flex;
+    justify-content: center;
+}
+
+.SubstationHomepage > div > div > div > h1 {
+    display: flex;
+    justify-content: center;
+    color: #E9F1F7;
 }
 
 .SubstationHomepage > div >div > div > div {

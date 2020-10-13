@@ -61,6 +61,7 @@ class SubstationHomepage extends Component {
                 <div className="rightdisplay">
                     <PowerPredictionsDashboard stationID={this.state.testMode? "TEST_ENTRY" : this.props.stationID}/>
                     <div>
+                        <h1>Weather Statistics</h1>
                         <p>Coverage Percentage: </p>
                         <p>Wind Direction: </p>
                         <p>Wind Speed: </p>
