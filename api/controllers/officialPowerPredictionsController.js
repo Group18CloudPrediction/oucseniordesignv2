@@ -53,10 +53,87 @@ const getTest2 = (req, res) => {
         })
 }
 
-const getAverageAndWorstPercentErrors = (lookbackDepth) => {
-    
+const getLatestPredictions = (res, stationID, percentageErrorData/*, forTime*/) => {
+    PredictionsModel
+        .find({"system_num": stationID})
+        //.find({"system_num": stationID, "prediction_start_time": forTime}) // future feature
+        .sort("-verified_time")
+        .limit(1)
+        .exec((error, data) => {
+            if (error) {
+                return res.json({'success':false,'message':'Some Error'});
+            }
+            
+            data = data[0];
+            
+            data = {
+                historical_worstPercentErrors: percentageErrorData.worstPercentErrors,
+                historical_averagePercentErrors: percentageErrorData.averagePercentErrors,
+                
+                latest_prediction_start_time: data.prediction_start_time,
+                latest_power_predictions: data.power_predictions,
+                system_num: data.system_num
+            }
+            
+            res.json({'success':true,'message':'Data fetched successfully',data});
+        })
+}
+
+const getAverageAndWorst_AbsoluteValue_PercentErrors = (res, lookbackDepth, stationID /*, beforeDate*/) => {
+    VerificationsModel
+        .find({"system_num": stationID})
+        //.find({"system_num": stationID, "verified_time": {"$lt": beforeDate}}) // future feature
+        .sort("-verified_time")
+        .limit(lookbackDepth)
+        .exec((error, data) => {
+            if (error) {
+                return res.json({'success':false,'message':'Some Error'});
+            }
+            
+            var processedData = {
+                // [one minute out, two minutes out, three minutes out, ...] 
+                worstPercentErrors: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                averagePercentErrors: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            };
+            
+            var numEntries = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            
+            for (var i = 0; i < data.length; i++)
+            {
+                var thisData = data[i];
+                
+                const temp = JSON.parse(thisData.verified_power_data);
+                
+                for (var j = 0; j < temp.length; j++)
+                {
+                    numEntries[j]++; // found another entry for (j+1) minutes out
+                    processedData.averagePercentErrors[j] += Math.abs(temp[j].percentage);
+                    processedData.worstPercentErrors[j] = Math.max(Math.abs(temp[j].percentage), processedData.worstPercentErrors[j]);
+                }
+            }
+            
+            
+            for (var i = 0; i < numEntries.length; i++)
+            {
+                processedData.averagePercentErrors[i] /= numEntries[i];
+            }
+            
+            getLatestPredictions(res, stationID, processedData);
+//             return res.json({'success':true,'message':'Data fetched successfully',data});
+//             return data;
+        })
+}
+
+const getTest3 = (req, res) => {
+    var percentageErrorData = getAverageAndWorst_AbsoluteValue_PercentErrors(res, 20, "1");
+//     var data = {
+//         "percentageErrorData": percentageErrorData
+//     }
+//     
+//     return res.json({'success':true,'message':'Data fetched successfully',data});
 }
 
 module.exports = {
-    getTest2
+    getTest2,
+    getTest3
 }
