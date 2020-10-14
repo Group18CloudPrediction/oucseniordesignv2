@@ -110,5 +110,14 @@
 }
 
 .video-wrapper {
-    height: 30vh !important;
+    height: 33vh !important;
+}
+
+.friendlyDataTableBody {
+    color:#E9F1F7;
+}
+
+.friendlyDataTable {
+    width: 100%;
+    height: 100%;
 }
