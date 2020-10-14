@@ -3,6 +3,13 @@ var router = express.Router();
 const mongoose = require("mongoose");
 const PowerPredictionsController = require("../controllers/powerPredictionsController");
 
+const OfficialPowerPredictionsController = require("../controllers/officialPowerPredictionsController");
+
+/* Router for:
+ * ~/powerPredictions/
+ */ 
+
+
 router.route("/getall")
     .get(PowerPredictionsController.getAll);
 router.route("/get15pastAndFuture/:year/:month/:day/:hour/:minute")
@@ -16,6 +23,8 @@ router.route("/validate/:stationID")
 
 //router.route("/get15pastAndFuture/:year/:month/:day/:hour/:minute");
 
+router.route('/official')
+    .get(OfficialPowerPredictionsController.getTest1)
 
     
 module.exports = router;

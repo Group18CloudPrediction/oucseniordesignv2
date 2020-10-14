@@ -139,7 +139,7 @@ class ValidatePredictionsBarChart extends Component {
         
         //return (<div>nyi</div>)
         return (
-            <div>
+            <div className="PowerPredictionsAveragePercentErrorBarGraph">
                 <BarChart
                     width={500}
                     height={300}

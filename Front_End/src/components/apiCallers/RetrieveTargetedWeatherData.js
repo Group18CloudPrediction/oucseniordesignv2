@@ -6,6 +6,7 @@ import React, {Component} from "react";
 
 import "../../stylesheets/dataTables.css";
 import DisplayWeatherData from "../miniComponents/DisplayWeatherData.js";
+import DisplayWeatherDataFriendly from "../miniComponents/DisplayWeatherDataFriendly.js";
 
 class RetrieveTargetedWeatherData extends Component {
     constructor(props) {
@@ -18,7 +19,9 @@ class RetrieveTargetedWeatherData extends Component {
             request_startTime: this.props.startTime ||null,
             request_endDate: this.props.endDate || null,
             request_endTime: this.props.endTime || null,
-            
+
+            friendlyDisplay: this.props.friendlyDisplay || false,
+
             apiResponse: "",
             hasSubmitted: (this.props.skipForm? true : false),
             isLoading: true,
@@ -204,9 +207,19 @@ class RetrieveTargetedWeatherData extends Component {
             return <p>Recieved bad response</p>;
         }
 
-        return (
-            <DisplayWeatherData apiResponseData={this.state.apiResponse.data}/>
-        );
+        if (this.state.friendlyDisplay)
+        {
+            return (
+                <DisplayWeatherDataFriendly apiResponseData={this.state.apiResponse.data}/>
+            );
+        }
+        else
+        {
+            return (
+                <DisplayWeatherData apiResponseData={this.state.apiResponse.data}/>
+            );
+        }
+
     }
 }
 

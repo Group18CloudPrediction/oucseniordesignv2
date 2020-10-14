@@ -1,29 +1,123 @@
+
 .SubstationHomepage {
     display: flex;
     justify-content: center;
     flex-direction: column;
+    background-color: #131B23;
 }
 
 .SubstationHomepage > div {
     display: flex;
     flex-direction: row;
+    justify-content: space-around;
 }
 
 .SubstationHomepage > div > div {
     display: flex;
     flex-direction: column;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 16px;
+    margin-right: 16px;
+    align-content: space-between;
 }
 
 .SubstationHomepage > div > div > h1 {
     display: flex;
     justify-content: center;
 }
+
+.SubstationHomepage > div > div > div {
+    display: flex;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    margin-left: 16px;
+    margin-right: 16px;
+    border: 1px solid #8884d8;
+    border-radius: 8px;
+    background-color: #2C3E50;
+    flex-direction: column;
+    width: 640px;
+    height: 40vh;
+}
+
+.SubstationHomepage > div > div > div > div > h1 {
+    color: #E9F1F7;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    border-bottom: 1px solid #8884d8 ;
+}
+
 .SubstationHomepage > h1 {
     display: flex;
     justify-content: center;
-    background-color: #605F5E;
-    color: #E2E2E2;
+    color: #E9F1F7;
     margin-bottom: 0;
+}
+
+.SubstationHomepage > div > div > div > p {
+    color:#E9F1F7;
+    display: flex;
+    justify-content: center;
+}
+
+.SubstationHomepage > div > div > div > h1 {
+    display: flex;
+    justify-content: center;
+    color: #E9F1F7;
+    border-bottom: 1px solid #8884d8;
+}
+
+.SubstationHomepage > div >div > div > div {
+    width: 100%;
+    height: 100%;
+}
+
+.SubstationHomepage > div >div > div > div > div > div > svg{
+    height: 100%;
+    width: 100%;
+}
+
+.SubstationHomepage > div >div > div > div > div > div {
+    height: 100% !important;
+    width: 100% !important;
+}
+
+.SubstationHomepage > div >div > div > div > div.PowerPredictionsLineGraph {
+    height: 80%;
+    width: 100%;
+}
+
+.SubstationHomepage > div >div > div > div > div {
+    width: auto;
+}
+
+
+.SubstationHomepage > h3 {
+    display: flex;
+    justify-content: center;
+    background-color: #bab8b6;
+    color: #bab8b6;
+    margin-bottom: 0;
+}
+
+.LivestreamWrapper {
+    background-color: #2b2b2b;
+    color: #4a4a4a;
+}
+
+.topdisplay {
+    height: 100vh;
+}
+
+.video-wrapper {
+    height: 80% !important;
+}
+
+.friendlyDataTableBody {
+    color:#E9F1F7;
+}
+
+.friendlyDataTable {
+    width: 100%;
+    height: 100%;
 }
