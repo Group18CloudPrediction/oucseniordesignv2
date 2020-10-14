@@ -27,12 +27,20 @@ class DisplayWeatherDataFriendly extends Component {
                             <td className="friendlyDataTableCell friendlyDataTableData">{"nyi"}</td>
                         </tr>
                         <tr className="friendlyDataTableRow">
+                            <th className="friendlyDataTableCell friendlyDataTableLabel">Solar Irradiance:</th>
+                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.slrFD_W, 3) + " watts/meter^2"}</td>
+                        </tr>
+                        <tr className="friendlyDataTableRow">
+                            <th className="friendlyDataTableCell friendlyDataTableLabel">Temperature:</th>
+                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.airT_C, 3) + " °C"}</td>
+                        </tr>
+                        <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Wind Direction:</th>
-                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.windDir, 3)}</td>
+                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.windDir, 3) + ""}</td>
                         </tr>
                         <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Wind Speed:</th>
-                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.ws_ms, 3)}</td>
+                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.ws_ms, 3) + " m/s"}</td>
                         </tr>
                         <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Relative Humidity:</th>
@@ -40,11 +48,7 @@ class DisplayWeatherDataFriendly extends Component {
                         </tr>
                         <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Barametric Pressure:</th>
-                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.bp_mmHg, 3)}</td>
-                        </tr>
-                        <tr className="friendlyDataTableRow">
-                            <th className="friendlyDataTableCell friendlyDataTableLabel">Volumetric Pressure:</th>
-                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.vp_mmHg, 3)}</td>
+                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.bp_mmHg, 3) + " mmHg"}</td>
                         </tr>
                         
                         
