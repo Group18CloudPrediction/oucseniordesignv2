@@ -83,7 +83,7 @@
 }
 
 .SubstationHomepage > div >div > div > div > div.PowerPredictionsLineGraph {
-    height: 85%;
+    height: 80%;
     width: 100%;
 }
 
@@ -110,7 +110,7 @@
 }
 
 .video-wrapper {
-    height: 32vh !important;
+    height: 80% !important;
 }
 
 .friendlyDataTableBody {
