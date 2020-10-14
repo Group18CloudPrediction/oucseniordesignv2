@@ -31,8 +31,12 @@
     margin-bottom: 16px;
     margin-left: 16px;
     margin-right: 16px;
-    border: 1px solid #eaceee;
+    border: 1px solid #8884d8;
     border-radius: 8px;
+    background-color: #2C3E50;
+    flex-direction: column;
+    width: 640px;
+    height: 40vh;
 }
 
 .SubstationHomepage > div > div > div > div > h1 {
@@ -40,7 +44,7 @@
     display: flex;
     justify-content: center;
     align-content: center;
-    border-bottom: 1px solid aqua;
+    border-bottom: 1px solid #8884d8 ;
 }
 
 .SubstationHomepage > h1 {
@@ -48,13 +52,6 @@
     justify-content: center;
     color: #E9F1F7;
     margin-bottom: 0;
-}
-.SubstationHomepage > div > div > div {
-    background-color: #2C3E50;
-    display: flex;
-    flex-direction: column;
-    width: 640px;
-    height: 50%;
 }
 
 .SubstationHomepage > div > div > div > p {
@@ -67,7 +64,7 @@
     display: flex;
     justify-content: center;
     color: #E9F1F7;
-    border-bottom: 1px solid aqua;
+    border-bottom: 1px solid #8884d8;
 }
 
 .SubstationHomepage > div >div > div > div {
@@ -77,14 +74,21 @@
 
 .SubstationHomepage > div >div > div > div > div > div > svg{
     height: 100%;
+    width: 100%;
 }
 
 .SubstationHomepage > div >div > div > div > div > div {
     height: 100% !important;
+    width: 100% !important;
+}
+
+.SubstationHomepage > div >div > div > div > div.PowerPredictionsLineGraph {
+    height: 85%;
+    width: 100%;
 }
 
 .SubstationHomepage > div >div > div > div > div {
-    height: 80%;
+    width: auto;
 }
 
 
@@ -99,4 +103,21 @@
 .LivestreamWrapper {
     background-color: #2b2b2b;
     color: #4a4a4a;
+}
+
+.topdisplay {
+    height: 100vh;
+}
+
+.video-wrapper {
+    height: 33vh !important;
+}
+
+.friendlyDataTableBody {
+    color:#E9F1F7;
+}
+
+.friendlyDataTable {
+    width: 100%;
+    height: 100%;
 }

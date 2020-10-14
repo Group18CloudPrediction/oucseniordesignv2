@@ -81,10 +81,10 @@ class SubstationHomepage extends Component {
 
             </div>
 
-            <h3> test </h3>
+            
 
             
-            <RetrieveTargetedWeatherData stationID={this.state.testMode? "1" : this.props.stationID} onlyMostRecent={5} skipForm={true}/>
+            {/*<RetrieveTargetedWeatherData stationID={this.state.testMode? "1" : this.props.stationID} onlyMostRecent={5} skipForm={true}/>*/}
         </div>
         );
     }

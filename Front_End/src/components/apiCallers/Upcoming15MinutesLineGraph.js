@@ -18,10 +18,10 @@ class Upcoming15MinutesLineGraph extends Component {
             isLoading:true,
             hasError: false,
             error: null,
-            
+
             numRefreshes: 0,
             measuredValues: [],
-            
+
             stationID: this.props.stationID,
 //             year: this.props.year,
 //             month: this.props.month,
@@ -30,37 +30,40 @@ class Upcoming15MinutesLineGraph extends Component {
 //             minute: this.props.minute,
             dateTime: this.buildInitialDateTime(),
             startDateTime: this.buildInitialDateTime(),
-            
-            
+
+
             predictionsColor:     this.props.predictionsColor     || "#8884d8",
             predictionsFillColor: this.props.predictionsFillColor || this.props.predictionsColor || "#8884d8",
             realDataColor:        this.props.realDataColor        || "#b5ad38",
             realDataFillColor:    this.props.realDataFillColor    || this.props.realDataColor    || "#dbd24f",
-            
-            xAxisColor:     this.props.xAxisColor     || this.props.textColor || "#dddddd",
-            yAxisColor:     this.props.yAxisColor     || this.props.textColor || "#dddddd",
-            gridLinesColor: this.props.gridLinesColor || this.props.textColor || "#cccccc",
+
+
+            xAxisColor: this.props.xAxisColor || this.props.textColor || "#dddddd",
+            yAxisColor: this.props.yAxisColor || this.props.textColor || "#dddddd",
+            gridLinesColor: this.props.gridLinesColor || this.props.textColor || "#dddddd",
+
         };
-        
+
         if (!this.props.stationID)
             this.setState({error: {message: "No stationID provided. Unable to display predictions."}});
-        
-        
+
+
         this.refreshData = () => {
             var date = new Date(this.state.dateTime.getTime()+60000);
             console.log("Refreshing! - old date: " + this.state.dateTime + " new date: " + date);
             this.setState({dateTime: date, numRefreshes:(this.state.numRefreshes+1)});
             this.callAPI();
         }
+        
     }
-    
+
     buildInitialDateTime() {
         if (
             !this.props.year  ||
             !this.props.month ||
-            !this.props.day   || 
-            !this.props.hour  || 
-            !this.props.minute 
+            !this.props.day   ||
+            !this.props.hour  ||
+            !this.props.minute
         ) {
             return new Date();
         } else {
@@ -69,7 +72,7 @@ class Upcoming15MinutesLineGraph extends Component {
     }
 
     callAPI() {
-        
+
         /*
         I'd like to try this.
           const server = process.env.server || "http://localhost:3000"
@@ -85,13 +88,13 @@ class Upcoming15MinutesLineGraph extends Component {
         var hourOffset = 0;
         if (this.props.isEST && this.props.useUTC)
             hourOffset = 4;
-        
-        const params = 
-                 this.state.stationID + "/" 
-               + this.state.dateTime.getFullYear() + "/" 
-               + this.state.dateTime.getMonth() + "/" 
-               + this.state.dateTime.getDate() + "/" 
-               + (this.state.dateTime.getHours()+hourOffset) + "/" 
+
+        const params =
+                 this.state.stationID + "/"
+               + this.state.dateTime.getFullYear() + "/"
+               + this.state.dateTime.getMonth() + "/"
+               + this.state.dateTime.getDate() + "/"
+               + (this.state.dateTime.getHours()+hourOffset) + "/"
                + this.state.dateTime.getMinutes();
 
         fetch(baseURI + params)
@@ -102,9 +105,9 @@ class Upcoming15MinutesLineGraph extends Component {
             })
             .catch(err => this.setState({hasError:true, error:err}));
     }
-    
-    
-    
+
+
+
     componentDidMount() {
         if(this.props.realTimeUpdates)
         {
@@ -119,7 +122,7 @@ class Upcoming15MinutesLineGraph extends Component {
         if(this.props.realTimeUpdates)
             clearInterval(this.interval);
     }
-    
+
     render() {
         if (this.state.hasError) {
             return <p>Error: <p>{this.state.error.message}</p></p>;
@@ -139,10 +142,10 @@ class Upcoming15MinutesLineGraph extends Component {
 
 
         const displayData = [];
-        
+
         const startHour = this.state.dateTime.getHours();
         const startMinute = this.state.dateTime.getMinutes();
-        
+
         for (var i = 0; i < this.state.numRefreshes; i++)
         {
             var thisMinute = startMinute + i + 1;
@@ -152,15 +155,15 @@ class Upcoming15MinutesLineGraph extends Component {
             const thisName = thisHour + ":" + (thisMinute < 10? "0" : "") + thisMinute;
             displayData.push({time: thisName, "pv": this.state.measuredValues[i], "uv": this.state.measuredValues[i]});
         }
-        
+
         console.log(this.state.measuredValues);
-        
+
         const data = this.state.apiResponse.data[0];
 
         const hour = this.state.dateTime.getHours();
         const minute = this.state.dateTime.getMinutes();
-        
-        
+
+
         for (var i = 0; i < data.powerPredictionsMade.length; i++)
         {
             var thisMinute = minute + i + 1;
