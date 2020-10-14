@@ -13,6 +13,8 @@ class OfficialPredictionsLineGraph extends Component {
             numRefreshes: 0,
             measuredValues: [],
 
+            lookbackDepth: this.props.lookbackDepth || 1,
+            
             stationID: this.props.stationID,
 //             year: this.props.year,
 //             month: this.props.month,
@@ -24,14 +26,14 @@ class OfficialPredictionsLineGraph extends Component {
 
             
             predictionsColor:     this.props.predictionsColor     || "#8884d8",
-            predictionsFillColor: this.props.predictionsFillColor || this.props.predictionsColor || "#8884d8",
+            predictionsFillColor: this.props.predictionsFillColor || this.props.predictionsColor || "#9490f0",
             realDataColor:        this.props.realDataColor        || "#58ff4f",
             realDataFillColor:    this.props.realDataFillColor    || this.props.realDataColor    || "#58ff4f",
 
-            averageExpectedDeviationColor:      this.props.averageExpectedDeviationColor     || "#fcd94c",
-            averageExpectedDeviationFillColor:  this.props.averageExpectedDeviationFillColor || this.props.averageExpectedDeviationColor || "#fcd94c",
-            worstExpectedDeviationColor:        this.props.worstExpectedDeviationColor       || "#fc4c4c",
-            worstExpectedDeviationFillColor:    this.props.worstExpectedDeviationFillColor   || this.props.worstExpectedDeviationColor   || "#fc4c4c",  
+            averageExpectedDeviationColor:      this.props.averageExpectedDeviationColor     || "#5f5c96",
+            averageExpectedDeviationFillColor:  this.props.averageExpectedDeviationFillColor || this.props.averageExpectedDeviationColor || "#5f5c96",
+            worstExpectedDeviationColor:        this.props.worstExpectedDeviationColor       || "#2f2d4a",
+            worstExpectedDeviationFillColor:    this.props.worstExpectedDeviationFillColor   || this.props.worstExpectedDeviationColor   || "#2f2d4a",  
 
             xAxisColor: this.props.xAxisColor || this.props.textColor || "#dddddd",
             yAxisColor: this.props.yAxisColor || this.props.textColor || "#dddddd",
@@ -71,7 +73,20 @@ class OfficialPredictionsLineGraph extends Component {
         const requestRootURI = "/powerPredictions/station/";
         const params = this.state.stationID;
         
-        fetch(server + requestRootURI + params)
+        var postReqParams = {
+            lookbackDepth: this.state.lookbackDepth
+        }
+        
+        console.log(JSON.stringify(postReqParams));
+        
+        fetch(server + requestRootURI + params, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(postReqParams)
+            })
             .then(response => response.json())
             .then(res => {
                 console.log("official line graph");
@@ -85,7 +100,7 @@ class OfficialPredictionsLineGraph extends Component {
     componentDidMount() {
         if(this.props.realTimeUpdates)
         {
-            console.log("setting interval - PowerPredictionsLineGraph");
+            console.log("setting interval - OfficialPowerPredictionsLineGraph");
             this.interval = setInterval(this.refreshData, 60*1000);
         }
         this.callAPI();
@@ -158,7 +173,8 @@ class OfficialPredictionsLineGraph extends Component {
             thisMinute = thisMinute % 60;
 
             const thisName = thisHour + ":" + (thisMinute < 10? "0" : "") + thisMinute;
-            displayData.push({time: thisName, "predicted":predictions[i]});
+            const thisPredicted = this.props.clampAboveZero? Math.max(0, predictions[i]) : predictions[i];
+            displayData.push({time: thisName, "predicted":thisPredicted});
         }
         
         //
@@ -167,7 +183,8 @@ class OfficialPredictionsLineGraph extends Component {
         
         
         const calcExpected = (value, percError) => {
-            return value + value*percError/100.0;
+            const val = value + value*percError/100.0;
+            return this.props.clampAboveZero? Math.max(0, val) : val;
         }
         
         
@@ -263,15 +280,27 @@ class OfficialPredictionsLineGraph extends Component {
         var lines = [];
         
         
-        lines.push(<Area type="monotone" dataKey="eMinWorst" stroke={this.state.worstExpectedDeviationColor} fillOpacity={1} fill="url(#colorEWorst)"/>)
-        lines.push(<Area type="monotone" dataKey="eMaxWorst" stroke={this.state.worstExpectedDeviationColor} fillOpacity={1} fill="url(#colorEWorst)"/>)
+//         lines.push(<Area type="monotone" dataKey="eMinWorst" stroke={this.state.worstExpectedDeviationColor} fillOpacity={1} fill="url(#colorEWorst)"/>)
+//         lines.push(<Area type="monotone" dataKey="eMaxWorst" stroke={this.state.worstExpectedDeviationColor} fillOpacity={1} fill="url(#colorEWorst)"/>)
+//         
+//         lines.push(<Area type="monotone" dataKey="eMinAverage" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill="url(#colorEAvg)"/>)
+//         lines.push(<Area type="monotone" dataKey="eMaxAverage" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill="url(#colorEAvg)"/>)
+//         
+//         
+//         lines.push(<Area type="monotone" dataKey="predicted" stroke={this.state.predictionsColor} fillOpacity={1} fill="url(#colorUv)" />)
+//         lines.push(<Area type="monotone" dataKey="measured"  stroke={this.state.realDataColor}    fillOpacity={1} fill="url(#colorPv)" />)
+//         
         
-        lines.push(<Area type="monotone" dataKey="eMinAverage" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill="url(#colorEAvg)"/>)
-        lines.push(<Area type="monotone" dataKey="eMaxAverage" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill="url(#colorEAvg)"/>)
+        
+        lines.push(<Area type="monotone" dataKey="eMinWorst" stroke={this.state.worstExpectedDeviationColor} fillOpacity={1} fill={this.state.worstExpectedDeviationFillColor}/>)
+        lines.push(<Area type="monotone" dataKey="eMaxWorst" stroke={this.state.worstExpectedDeviationColor} fillOpacity={1} fill={this.state.worstExpectedDeviationFillColor}/>)
+        
+        lines.push(<Area type="monotone" dataKey="eMinAverage" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill={this.state.averageExpectedDeviationFillColor}/>)
+        lines.push(<Area type="monotone" dataKey="eMaxAverage" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill={this.state.averageExpectedDeviationFillColor}/>)
         
         
-        lines.push(<Area type="monotone" dataKey="predicted" stroke={this.state.predictionsColor} fillOpacity={1} />)
-        lines.push(<Area type="monotone" dataKey="measured"  stroke={this.state.realDataColor}    fillOpacity={1} />)
+        lines.push(<Area type="monotone" dataKey="predicted" stroke={this.state.predictionsColor} fillOpacity={1} strokeWidth={5} fill={this.state.predictionsFillColor} />)
+        lines.push(<Area type="monotone" dataKey="measured"  stroke={this.state.realDataColor}    fillOpacity={1} fill={this.state.predictionsFillColor} />)
         
         
         return lines;
