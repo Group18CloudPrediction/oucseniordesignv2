@@ -27,6 +27,8 @@ router.route('/official/test2')
     .get(OfficialPowerPredictionsController.getTest2)
 router.route('/official/test3')
     .get(OfficialPowerPredictionsController.getTest3)
+router.route('/official/:stationID')
+    .get(OfficialPowerPredictionsController.getLatestForStation_predictionsAndVerification)
 
     
 module.exports = router;

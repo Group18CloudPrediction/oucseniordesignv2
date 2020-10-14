@@ -61,25 +61,37 @@ const getLatestPredictions = (res, stationID, percentageErrorData/*, forTime*/) 
         .limit(1)
         .exec((error, data) => {
             if (error) {
-                return res.json({'success':false,'message':'Some Error'});
+                data = {
+                    historical_worstPercentErrors: percentageErrorData.worstPercentErrors,
+                    historical_averagePercentErrors: percentageErrorData.averagePercentErrors,
+                }
+                
+                return res.json({'success':false,'message':'Failed to retrieve predictions', 'error':error, data});
             }
             
             data = data[0];
             
+            // collate the data
             data = {
-                historical_worstPercentErrors: percentageErrorData.worstPercentErrors,
+                historicalCalculations_lookbackDepth : percentageErrorData.lookbackDepth,
+                historical_worstPercentErrors:   percentageErrorData.worstPercentErrors,
                 historical_averagePercentErrors: percentageErrorData.averagePercentErrors,
                 
+                latest_actualPowerValue:     percentageErrorData.latestActualPowerValue,
+                latest_actualPowerValueTime: percentageErrorData.latestActualPowerValueTime,
+              
                 latest_prediction_start_time: data.prediction_start_time,
-                latest_power_predictions: data.power_predictions,
+                latest_power_predictions:     data.power_predictions,
+              
                 system_num: data.system_num
             }
             
+            // send the data
             res.json({'success':true,'message':'Data fetched successfully',data});
         })
 }
 
-const getAverageAndWorst_AbsoluteValue_PercentErrors = (res, lookbackDepth, stationID /*, beforeDate*/) => {
+const getAverageAndWorst_AbsoluteValue_PercentErrors_AndLatestPredictions = (res, lookbackDepth, stationID /*, beforeDate*/) => {
     VerificationsModel
         .find({"system_num": stationID})
         //.find({"system_num": stationID, "verified_time": {"$lt": beforeDate}}) // future feature
@@ -87,13 +99,19 @@ const getAverageAndWorst_AbsoluteValue_PercentErrors = (res, lookbackDepth, stat
         .limit(lookbackDepth)
         .exec((error, data) => {
             if (error) {
-                return res.json({'success':false,'message':'Some Error'});
+                return res.json({'success':false,'message':'failed to retrieve verification data', 'error':error});
             }
+            // verification data has been requested
             
+            // calculate the average and worst Math.abs(percentageError) values over the reqested period
             var processedData = {
                 // [one minute out, two minutes out, three minutes out, ...] 
+                lookbackDepth: lookbackDepth,
+              
                 worstPercentErrors: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                averagePercentErrors: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+                averagePercentErrors: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                latestActualPowerValue: null,
+                latestActualPowerValueTime: data[0].verified_time
             };
             
             var numEntries = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
@@ -103,6 +121,10 @@ const getAverageAndWorst_AbsoluteValue_PercentErrors = (res, lookbackDepth, stat
                 var thisData = data[i];
                 
                 const temp = JSON.parse(thisData.verified_power_data);
+                
+                if(processedData.latestActualPowerValue == null)
+                    processedData.latestActualPowerValue = temp[0].actual_value;
+                    // every temp[k].actual_value has the same value
                 
                 for (var j = 0; j < temp.length; j++)
                 {
@@ -118,14 +140,15 @@ const getAverageAndWorst_AbsoluteValue_PercentErrors = (res, lookbackDepth, stat
                 processedData.averagePercentErrors[i] /= numEntries[i];
             }
             
+            // now get the latest predictions
+            // the result will be sent from in there.
+            
             getLatestPredictions(res, stationID, processedData);
-//             return res.json({'success':true,'message':'Data fetched successfully',data});
-//             return data;
         })
 }
 
 const getTest3 = (req, res) => {
-    var percentageErrorData = getAverageAndWorst_AbsoluteValue_PercentErrors(res, 20, "1");
+    var percentageErrorData = getAverageAndWorst_AbsoluteValue_PercentErrors_AndLatestPredictions(res, 20, "1");
 //     var data = {
 //         "percentageErrorData": percentageErrorData
 //     }
@@ -133,7 +156,13 @@ const getTest3 = (req, res) => {
 //     return res.json({'success':true,'message':'Data fetched successfully',data});
 }
 
+const getLatestForStation_predictionsAndVerification = (req, res) => {
+    var lookbackDepth = req.body.lookbackDepth || 1;
+    getAverageAndWorst_AbsoluteValue_PercentErrors_AndLatestPredictions(res, lookbackDepth, req.params.stationID);
+}
+
 module.exports = {
     getTest2,
-    getTest3
+    getTest3,
+    getLatestForStation_predictionsAndVerification
 }
