@@ -353,7 +353,32 @@ class OfficialPredictionsLineGraph extends Component {
                         </AreaChart>
                     </td>
                 
+                    <td style={{color:"#00000000"}}> a</td>
+                
                     <td>
+                        {/* Below is style 1 */}
+                        
+                        <table style={{color: this.state.textColor}}> <tbody>
+                            <tr>
+                                <td style={{ color: this.state.worstExpectedDeviationColor, backgroundColor: this.state.worstExpectedDeviationColor}}>sss</td>
+                                <td> Expected Worst Deviation </td>
+                            </tr>
+                            <tr>
+                                <td style={{ color: this.state.averageExpectedDeviationColor, backgroundColor: this.state.averageExpectedDeviationColor}}>sss</td>
+                                <td> Expected Average Deviation </td>
+                            </tr>
+                            <tr>
+                                <td style={{ color: this.state.predictionsColor, backgroundColor: this.state.predictionsColor}}>sss</td>
+                                <td> Prediction </td>
+                            </tr>
+                            <tr>
+                                <td style={{ color: this.state.realDataColor, backgroundColor: this.state.realDataColor}}>sss</td>
+                                <td> Actual Value </td>
+                            </tr>
+                        </tbody> </table>
+                        
+                        {/* Below is style 2 */}
+                        {/*
                         <div> 
                             <span style={{color: this.state.worstExpectedDeviationColor}}>
                                 ■
@@ -377,7 +402,9 @@ class OfficialPredictionsLineGraph extends Component {
                             <span style={{color:this.state.textColor}}>
                                 - Prediction
                             </span> 
-                        </div>
+                        </div>*/}
+                        
+                        
                     </td>
                     
                 </tr></tbody></table>
