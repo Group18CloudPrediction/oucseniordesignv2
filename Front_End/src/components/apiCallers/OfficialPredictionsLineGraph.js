@@ -1,6 +1,8 @@
 import React, {Component} from "react";
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 
+import "../../stylesheets/Tooltips.css";
+
 class OfficialPredictionsLineGraph extends Component {
     constructor(props) {
         super(props);
@@ -39,6 +41,8 @@ class OfficialPredictionsLineGraph extends Component {
             yAxisColor: this.props.yAxisColor || this.props.textColor || "#dddddd",
             gridLinesColor: this.props.gridLinesColor || this.props.textColor || "#dddddd",
 
+            tooltipBackgroundColor: this.props.tooltipBackgroundColor || '#131b23',
+            tooltipBorderColor: this.props.tooltipBorderColor || '#8884d8'
         };
 
         if (!this.props.stationID)
@@ -256,6 +260,50 @@ class OfficialPredictionsLineGraph extends Component {
                 return round(value, 2) + " kW AC"
         }
         
+        // CustomToolTip code modified from ericraq's code at
+        // https://github.com/recharts/recharts/issues/1612#issuecomment-461898105
+        const CustomToolTip = props => {
+            const { active, payload, label } = props;
+            if (!active || !payload) {
+                return null;
+            }
+            
+            const tooltip = {
+                backgroundColor: this.state.tooltipBackgroundColor,//'#2c3e50',
+                opacity: '0.9',
+                border: '1px solid ' + this.state.tooltipBorderColor,
+                borderRadius: '15px',
+                paddingLeft:'10px',
+                paddingRight:'10px'
+            }
+            
+            return (
+                <div> 
+                    <div className="custom-tooltip" style={tooltip}>
+                        <p style={{textAlign: 'center'}}>
+                            <strong style={{color: this.state.predictionsColor}}>{label}</strong>
+                        </p>
+                        
+                        {payload.map((item, i, payload) => {
+                            
+                            //const itemColor = i == 1 ? (item.value > payload[0].value ? '#00A86B' :  '#FF2400') : item.color
+                            const itemColor = item.color;
+                            
+                            return(
+                                <div key={i}>
+                                    <p style={{color: itemColor}} key={i}>
+                                        {item.name}: <strong>{formatLegendData(item.value)}</strong>
+                                    </p>
+                                </div>
+                                )
+                            })
+                        }
+                    </div>
+                </div>
+            )
+        }
+        
+        
         //units : kW AC
         return (
             <div className="PowerPredictionsLineGraph">
@@ -272,7 +320,8 @@ class OfficialPredictionsLineGraph extends Component {
                     <CartesianGrid stroke={this.state.gridLinesColor} strokeDasharray="5 5" />
                     <XAxis dataKey="time" stroke={this.state.xAxisColor}/>
                     <YAxis dataKey="predicted" stroke={this.state.yAxisColor}/>
-                    <Tooltip formatter={formatLegendData}  wrapperStyle={{ backgroundColor: '#000000' }}/>
+                    {/*<Tooltip className="powerPredictionTooltip" formatter={formatLegendData}  wrapperStyle={{ backgroundColor: '#000000' }}/>*/}
+                    <Tooltip content={CustomToolTip}/>
                 </AreaChart>
             </div>
         );
