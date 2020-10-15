@@ -270,6 +270,10 @@ class OfficialPredictionsLineGraph extends Component {
             else
                 return round(value, 2) + " kW AC"
         }
+
+        const myWidth = document.getElementsByClassName('LineGraphWrapper')[0].offsetWidth;
+        const myHeight = document.getElementsByClassName('LineGraphWrapper')[0].offsetHeight;
+
         
         // CustomToolTip code modified from ericraq's code at
         // https://github.com/recharts/recharts/issues/1612#issuecomment-461898105
@@ -323,7 +327,7 @@ class OfficialPredictionsLineGraph extends Component {
         return (
             <div className="PowerPredictionsLineGraph" id="PowerPredictionsLineGraph">
                 <AreaChart width={this.state.width*0.8} height={this.state.height*0.8} data={displayData}>
-                    
+
                     <defs>
                         {
                             this.GetLineGraphColors()
