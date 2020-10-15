@@ -332,51 +332,55 @@ class OfficialPredictionsLineGraph extends Component {
         
         //units : kW AC
         return (
-            <div style={{float: "left"}} className="PowerPredictionsLineGraph" id="PowerPredictionsLineGraph">
-                <AreaChart width={this.state.width*0.8} height={this.state.height*0.8} data={displayData}>
+            <div className="PowerPredictionsLineGraph" id="PowerPredictionsLineGraph">
+                <table> <tbody> <tr>
+                    <td>
+                        <AreaChart width={this.state.width*0.8} height={this.state.height*0.8} data={displayData}>
 
-                    <defs>
-                        {
-                            this.GetLineGraphColors()
-                        }
-                    </defs>
-                    
-                    {this.GetLines()}
-                    
-                    <CartesianGrid stroke={this.state.gridLinesColor} strokeDasharray="5 5" />
-                    <XAxis dataKey="time" stroke={this.state.xAxisColor}/>
-                    <YAxis dataKey="predicted" stroke={this.state.yAxisColor}/>
-                    {/*<Tooltip className="powerPredictionTooltip" formatter={formatLegendData}  wrapperStyle={{ backgroundColor: '#000000' }}/>*/}
-                    <Tooltip content={CustomToolTip}/>
-                </AreaChart>
+                            <defs>
+                                {
+                                    this.GetLineGraphColors()
+                                }
+                            </defs>
+                            
+                            {this.GetLines()}
+                            
+                            <CartesianGrid stroke={this.state.gridLinesColor} strokeDasharray="5 5" />
+                            <XAxis dataKey="time" stroke={this.state.xAxisColor}/>
+                            <YAxis dataKey="predicted" stroke={this.state.yAxisColor}/>
+                            {/*<Tooltip className="powerPredictionTooltip" formatter={formatLegendData}  wrapperStyle={{ backgroundColor: '#000000' }}/>*/}
+                            <Tooltip content={CustomToolTip}/>
+                        </AreaChart>
+                    </td>
                 
-                <div style={{float: "right"}}>
-                    <div> 
-                        <span style={{color: this.state.worstExpectedDeviationColor}}>
-                            ■
-                        </span> 
-                        <span style={{color:this.state.textColor}}>
-                            - Expected Worst Deviation 
-                        </span>
-                    </div>
-                    <div> 
-                        <span style={{color: this.state.averageExpectedDeviationColor}}>
-                            ■
-                        </span> 
-                        <span style={{color:this.state.textColor}}>
-                            - Expected Average Deviation 
-                        </span> 
-                    </div>
-                    <div> 
-                        <span style={{color: this.state.predictionsColor}}>
-                            ■
-                        </span> 
-                        <span style={{color:this.state.textColor}}>
-                            - Prediction
-                        </span> 
-                    </div>
+                    <td>
+                        <div> 
+                            <span style={{color: this.state.worstExpectedDeviationColor}}>
+                                ■
+                            </span> 
+                            <span style={{color:this.state.textColor}}>
+                                - Expected Worst Deviation 
+                            </span>
+                        </div>
+                        <div> 
+                            <span style={{color: this.state.averageExpectedDeviationColor}}>
+                                ■
+                            </span> 
+                            <span style={{color:this.state.textColor}}>
+                                - Expected Average Deviation 
+                            </span> 
+                        </div>
+                        <div> 
+                            <span style={{color: this.state.predictionsColor}}>
+                                ■
+                            </span> 
+                            <span style={{color:this.state.textColor}}>
+                                - Prediction
+                            </span> 
+                        </div>
+                    </td>
                     
-                </div>
+                </tr></tbody></table>
             </div>
         );
     }
