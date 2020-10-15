@@ -38,12 +38,14 @@ class OfficialPredictionsLineGraph extends Component {
             worstExpectedDeviationColor:        this.props.worstExpectedDeviationColor       || "#2f2d4a",
             worstExpectedDeviationFillColor:    this.props.worstExpectedDeviationFillColor   || this.props.worstExpectedDeviationColor   || "#2f2d4a",  
 
+            textColor:  this.props.textColor  || '#dddddd',
             xAxisColor: this.props.xAxisColor || this.props.textColor || "#dddddd",
             yAxisColor: this.props.yAxisColor || this.props.textColor || "#dddddd",
             gridLinesColor: this.props.gridLinesColor || this.props.textColor || "#dddddd",
 
             tooltipBackgroundColor: this.props.tooltipBackgroundColor || '#131b23',//'#2c3e50',
             tooltipBorderColor: this.props.tooltipBorderColor || '#8884d8'
+            
         };
 
         if (!this.props.stationID)
@@ -302,15 +304,20 @@ class OfficialPredictionsLineGraph extends Component {
                         <table> <tbody>
                             {payload.map((item, i, payload) => {
                                 
+                                
                                 //const itemColor = i == 1 ? (item.value > payload[0].value ? '#00A86B' :  '#FF2400') : item.color
-                                const itemColor = item.color;
+//                                 const itemColor = item.color;
+                                
                                 
                                 return(
                                     <tr key={i}>
-                                        <td style={{color: itemColor}} key={i+"tooltipDataName"}>
+                                        <th style={{color: this.state.predictionsColor}} key={i+"tooltipDataName"}>
                                             {item.name}:  
+                                        </th>
+                                        <td key={i+"spacer"} style={{color: this.state.tooltipBackgroundColor}}>
+                                          s
                                         </td>
-                                        <td style={{color: itemColor}} key={i+"tooltipDataValue"}>
+                                        <td style={{color: this.state.predictionsColor}} key={i+"tooltipDataValue"}>
                                             {formatLegendData(item.value)}
                                         </td>
                                     </tr>
@@ -325,7 +332,7 @@ class OfficialPredictionsLineGraph extends Component {
         
         //units : kW AC
         return (
-            <div className="PowerPredictionsLineGraph" id="PowerPredictionsLineGraph">
+            <div style={{float: "left"}} className="PowerPredictionsLineGraph" id="PowerPredictionsLineGraph">
                 <AreaChart width={this.state.width*0.8} height={this.state.height*0.8} data={displayData}>
 
                     <defs>
@@ -342,6 +349,34 @@ class OfficialPredictionsLineGraph extends Component {
                     {/*<Tooltip className="powerPredictionTooltip" formatter={formatLegendData}  wrapperStyle={{ backgroundColor: '#000000' }}/>*/}
                     <Tooltip content={CustomToolTip}/>
                 </AreaChart>
+                
+                <div style={{float: "right"}}>
+                    <div> 
+                        <span style={{color: this.state.worstExpectedDeviationColor}}>
+                            ■
+                        </span> 
+                        <span style={{color:this.state.textColor}}>
+                            - Expected Worst Deviation 
+                        </span>
+                    </div>
+                    <div> 
+                        <span style={{color: this.state.averageExpectedDeviationColor}}>
+                            ■
+                        </span> 
+                        <span style={{color:this.state.textColor}}>
+                            - Expected Average Deviation 
+                        </span> 
+                    </div>
+                    <div> 
+                        <span style={{color: this.state.predictionsColor}}>
+                            ■
+                        </span> 
+                        <span style={{color:this.state.textColor}}>
+                            - Prediction
+                        </span> 
+                    </div>
+                    
+                </div>
             </div>
         );
     }
