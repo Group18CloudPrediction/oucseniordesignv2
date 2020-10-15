@@ -74,7 +74,7 @@
     height: 100%;
 }
 
-.SubstationHomepage > div >div > div > div > div > div > svg{
+/*.SubstationHomepage > div >div > div > div > div > div > svg{
     height: 100%;
     width: 100%;
 }
@@ -82,7 +82,7 @@
 .SubstationHomepage > div >div > div > div > div > div {
     height: 100% !important;
     width: 100% !important;
-}
+}*/
 
 .SubstationHomepage > div >div > div > div > div.PowerPredictionsLineGraph {
     height: 80%;

@@ -1,7 +1,9 @@
-import React, {Component} from "react";
+import React, {Component, useState, useEffect, useRef } from "react";
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 
-import "../../stylesheets/Tooltips.css";
+
+
+//import "../../stylesheets/Tooltips.css";
 
 class OfficialPredictionsLineGraph extends Component {
     constructor(props) {
@@ -11,6 +13,9 @@ class OfficialPredictionsLineGraph extends Component {
             isLoading:true,
             hasError: false,
             error: null,
+            
+            width:  this.props.width  || 600,
+            height: this.props.height || 200,
 
             numRefreshes: 0,
             measuredValues: [],
@@ -41,7 +46,7 @@ class OfficialPredictionsLineGraph extends Component {
             yAxisColor: this.props.yAxisColor || this.props.textColor || "#dddddd",
             gridLinesColor: this.props.gridLinesColor || this.props.textColor || "#dddddd",
 
-            tooltipBackgroundColor: this.props.tooltipBackgroundColor || '#131b23',
+            tooltipBackgroundColor: this.props.tooltipBackgroundColor || '#131b23',//'#2c3e50',
             tooltipBorderColor: this.props.tooltipBorderColor || '#8884d8'
         };
 
@@ -55,7 +60,6 @@ class OfficialPredictionsLineGraph extends Component {
             this.setState({dateTime: date, numRefreshes:(this.state.numRefreshes+1)});
             this.callAPI();
         }
-        
     }
 
     buildInitialDateTime() {
@@ -107,6 +111,11 @@ class OfficialPredictionsLineGraph extends Component {
             console.log("setting interval - OfficialPowerPredictionsLineGraph");
             this.interval = setInterval(this.refreshData, 60*1000);
         }
+        
+        
+        
+        console.log(this.state.height)
+        
         this.callAPI();
     }
     
@@ -284,30 +293,35 @@ class OfficialPredictionsLineGraph extends Component {
                             <strong style={{color: this.state.predictionsColor}}>{label}</strong>
                         </p>
                         
-                        {payload.map((item, i, payload) => {
-                            
-                            //const itemColor = i == 1 ? (item.value > payload[0].value ? '#00A86B' :  '#FF2400') : item.color
-                            const itemColor = item.color;
-                            
-                            return(
-                                <div key={i}>
-                                    <p style={{color: itemColor}} key={i}>
-                                        {item.name}: <strong>{formatLegendData(item.value)}</strong>
-                                    </p>
-                                </div>
-                                )
-                            })
-                        }
+                        <table> <tbody>
+                            {payload.map((item, i, payload) => {
+                                
+                                //const itemColor = i == 1 ? (item.value > payload[0].value ? '#00A86B' :  '#FF2400') : item.color
+                                const itemColor = item.color;
+                                
+                                return(
+                                    <tr key={i}>
+                                        <td style={{color: itemColor}} key={i}>
+                                            {item.name}:  
+                                        </td>
+                                        <td style={{color: itemColor}} key={i}>
+                                            {formatLegendData(item.value)}
+                                        </td>
+                                    </tr>
+                                    )
+                                })
+                            }
+                        </tbody> </table>
                     </div>
                 </div>
             )
         }
         
-        
+        console.log(this.state.width + " x " + this.state.height);
         //units : kW AC
         return (
-            <div className="PowerPredictionsLineGraph">
-                <AreaChart width={400} height={400} data={displayData}>
+            <div className="PowerPredictionsLineGraph" id="PowerPredictionsLineGraph">
+                <AreaChart width={this.state.width} height={this.state.height} data={displayData}>
                     
                     <defs>
                         {
@@ -386,7 +400,7 @@ class OfficialPredictionsLineGraph extends Component {
         lines.push(<Area type="monotone" dataKey="expectedDeviationAverageCase" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill={this.state.averageExpectedDeviationFillColor}/>)
         
         lines.push(<Area type="monotone" dataKey="predicted" stroke={this.state.predictionsColor} fillOpacity={0} strokeWidth={5} fill={this.state.predictionsFillColor} />)
-        lines.push(<Area type="monotone" dataKey="measured"  stroke={this.state.realDataColor}    fillOpacity={1} fill={this.state.predictionsFillColor} />)
+        lines.push(<Area type="monotone" dataKey="measured"  stroke={this.state.realDataColor}    fillOpacity={0} strokeWidth={5} fill={this.state.predictionsFillColor} />)
         
         
         return lines;
