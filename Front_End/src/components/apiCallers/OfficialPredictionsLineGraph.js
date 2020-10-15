@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 
 import "../../stylesheets/Tooltips.css";
+import PowerPredictionsDashboard from "../PowerPredictionsDashboard";
 
 class OfficialPredictionsLineGraph extends Component {
     constructor(props) {
@@ -259,6 +260,10 @@ class OfficialPredictionsLineGraph extends Component {
             else
                 return round(value, 2) + " kW AC"
         }
+
+        const myWidth = document.getElementsByClassName('LineGraphWrapper')[0].offsetWidth;
+        const myHeight = document.getElementsByClassName('LineGraphWrapper')[0].offsetHeight;
+
         
         // CustomToolTip code modified from ericraq's code at
         // https://github.com/recharts/recharts/issues/1612#issuecomment-461898105
@@ -307,7 +312,7 @@ class OfficialPredictionsLineGraph extends Component {
         //units : kW AC
         return (
             <div className="PowerPredictionsLineGraph">
-                <AreaChart width={400} height={400} data={displayData}>
+                <AreaChart width={myWidth} height={myHeight * .8} data={displayData}>
                     
                     <defs>
                         {

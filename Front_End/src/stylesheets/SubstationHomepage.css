@@ -79,10 +79,11 @@
     width: 100%;
 }
 
-.SubstationHomepage > div >div > div > div > div > div {
+
+/* .SubstationHomepage > div >div > div > div > div > div {
     height: 100% !important;
     width: 100% !important;
-}
+} */
 
 .SubstationHomepage > div >div > div > div > div.PowerPredictionsLineGraph {
     height: 80%;
