@@ -1,10 +1,6 @@
 import React, {Component, useState, useEffect, useRef } from "react";
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 
-
-
-//import "../../stylesheets/Tooltips.css";
-
 class OfficialPredictionsLineGraph extends Component {
     constructor(props) {
         super(props);
@@ -60,6 +56,15 @@ class OfficialPredictionsLineGraph extends Component {
             this.setState({dateTime: date, numRefreshes:(this.state.numRefreshes+1)});
             this.callAPI();
         }
+        
+        this.setSize = () => {
+            const myWidth  = document.getElementsByClassName('LineGraphWrapper')[0].offsetWidth;
+            const myHeight = document.getElementsByClassName('LineGraphWrapper')[0].offsetHeight; 
+        
+            this.setState({width: myWidth, height: myHeight});
+        }
+        
+        window.addEventListener('resize', this.setSize);
     }
 
     buildInitialDateTime() {
@@ -112,9 +117,7 @@ class OfficialPredictionsLineGraph extends Component {
             this.interval = setInterval(this.refreshData, 60*1000);
         }
         
-        
-        
-        console.log(this.state.height)
+        this.setSize();
         
         this.callAPI();
     }
@@ -262,7 +265,6 @@ class OfficialPredictionsLineGraph extends Component {
         }
         
         const formatLegendData = (value) => {
-            console.log(value);
             if (value[0] != null)
                 return round(value[0], 2) + " - " + round(value[1], 2) + " kW AC";
             else
@@ -301,10 +303,10 @@ class OfficialPredictionsLineGraph extends Component {
                                 
                                 return(
                                     <tr key={i}>
-                                        <td style={{color: itemColor}} key={i}>
+                                        <td style={{color: itemColor}} key={i+"tooltipDataName"}>
                                             {item.name}:  
                                         </td>
-                                        <td style={{color: itemColor}} key={i}>
+                                        <td style={{color: itemColor}} key={i+"tooltipDataValue"}>
                                             {formatLegendData(item.value)}
                                         </td>
                                     </tr>
@@ -317,11 +319,10 @@ class OfficialPredictionsLineGraph extends Component {
             )
         }
         
-        console.log(this.state.width + " x " + this.state.height);
         //units : kW AC
         return (
             <div className="PowerPredictionsLineGraph" id="PowerPredictionsLineGraph">
-                <AreaChart width={this.state.width} height={this.state.height} data={displayData}>
+                <AreaChart width={this.state.width*0.8} height={this.state.height*0.8} data={displayData}>
                     
                     <defs>
                         {
@@ -345,28 +346,28 @@ class OfficialPredictionsLineGraph extends Component {
         var colors = [];
         
         colors.push(
-            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1" key="colorUv">
                 <stop offset="5%" stopColor={this.state.predictionsFillColor} stopOpacity={0.8}/>
                 <stop offset="95%" stopColor={this.state.predictionsFillColor} stopOpacity={0}/>
             </linearGradient>
         );
         
         colors.push(
-            <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1" key="colorPv">
                 <stop offset="5%" stopColor={this.state.realDataFillColor} stopOpacity={0.8}/>
                 <stop offset="95%" stopColor={this.state.realDataFillColor} stopOpacity={0}/>
             </linearGradient>
         );
         
         colors.push(
-            <linearGradient id="colorEAvg" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id="colorEAvg" x1="0" y1="0" x2="0" y2="1" key="colorEAvg">
                 <stop offset="5%" stopColor={this.state.averageExpectedDeviationFillColor} stopOpacity={0.8}/>
                 <stop offset="95%" stopColor={this.state.averageExpectedDeviationFillColor} stopOpacity={0}/>
             </linearGradient>
         );
         
         colors.push(
-            <linearGradient id="colorEWorst" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id="colorEWorst" x1="0" y1="0" x2="0" y2="1" key="colorEWorst">
                 <stop offset="5%" stopColor={this.state.worstExpectedDeviationFillColor} stopOpacity={0.8}/>
                 <stop offset="95%" stopColor={this.state.worstExpectedDeviationFillColor} stopOpacity={0}/>
             </linearGradient>
@@ -393,14 +394,14 @@ class OfficialPredictionsLineGraph extends Component {
         
         //lines.push(<Area type="monotone" dataKey="eMinWorst" stroke={this.state.worstExpectedDeviationColor} fillOpacity={1} fill={this.state.worstExpectedDeviationFillColor}/>)
         //lines.push(<Area type="monotone" dataKey="eMaxWorst" stroke={this.state.worstExpectedDeviationColor} fillOpacity={1} fill={this.state.worstExpectedDeviationFillColor}/>)
-        lines.push(<Area type="monotone" dataKey="expectedDeviationWorstCase" stroke={this.state.worstExpectedDeviationColor} strokeWidth={7} fillOpacity={1} fill={this.state.worstExpectedDeviationFillColor}/>)
+        lines.push(<Area type="monotone" dataKey="expectedDeviationWorstCase" key="expectedDeviationWorstCase" stroke={this.state.worstExpectedDeviationColor} strokeWidth={7} fillOpacity={1} fill={this.state.worstExpectedDeviationFillColor}/>)
         
         //lines.push(<Area type="monotone" dataKey="eMinAverage" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill={this.state.averageExpectedDeviationFillColor}/>)
         //lines.push(<Area type="monotone" dataKey="eMaxAverage" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill={this.state.averageExpectedDeviationFillColor}/>)
-        lines.push(<Area type="monotone" dataKey="expectedDeviationAverageCase" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill={this.state.averageExpectedDeviationFillColor}/>)
+        lines.push(<Area type="monotone" dataKey="expectedDeviationAverageCase" key="expectedDeviationAverageCase" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill={this.state.averageExpectedDeviationFillColor}/>)
         
-        lines.push(<Area type="monotone" dataKey="predicted" stroke={this.state.predictionsColor} fillOpacity={0} strokeWidth={5} fill={this.state.predictionsFillColor} />)
-        lines.push(<Area type="monotone" dataKey="measured"  stroke={this.state.realDataColor}    fillOpacity={0} strokeWidth={5} fill={this.state.predictionsFillColor} />)
+        lines.push(<Area type="monotone" dataKey="predicted" key="predicted" stroke={this.state.predictionsColor} fillOpacity={0} strokeWidth={5} fill={this.state.predictionsFillColor} />)
+        lines.push(<Area type="monotone" dataKey="measured"  key="measured"  stroke={this.state.realDataColor}    fillOpacity={0} strokeWidth={5} fill={this.state.predictionsFillColor} />)
         
         
         return lines;
