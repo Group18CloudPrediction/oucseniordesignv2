@@ -24,8 +24,8 @@ class OfficialPredictionsLineGraph extends Component {
             dateTime: this.buildInitialDateTime(),
             startDateTime: this.buildInitialDateTime(),
 
-            
-            predictionsColor:     this.props.predictionsColor     || "#8884d8",
+            // base color: #8884d8
+            predictionsColor:     this.props.predictionsColor     || "#dcd9fa",
             predictionsFillColor: this.props.predictionsFillColor || this.props.predictionsColor || "#9490f0",
             realDataColor:        this.props.realDataColor        || "#58ff4f",
             realDataFillColor:    this.props.realDataFillColor    || this.props.realDataColor    || "#58ff4f",
@@ -187,6 +187,12 @@ class OfficialPredictionsLineGraph extends Component {
             return this.props.clampAboveZero? Math.max(0, val) : val;
         }
         
+        const calcExpectedRange = (value, percError) => {
+            if (value < 0) value *= -1;
+            
+            return [calcExpected(value, -percError), calcExpected(value, percError)];
+        }
+        
         
         // for the last 15 elements of displayData, calculate expected max and expected min, and add them as emin and emax
         // for all other elements, add emin and emax = uv
@@ -194,11 +200,14 @@ class OfficialPredictionsLineGraph extends Component {
         var predictionsStart = displayData.length-15;
         
         for (var i = 0; i < predictionsStart; i++) {
-            displayData[i].eMinAverage = displayData[i].measured;
-            displayData[i].eMaxAverage = displayData[i].measured;
+            displayData[i].expectedDeviationAverageCase = [displayData[i].measured, displayData[i].measured];
+            displayData[i].expectedDeviationWorstCase   = [displayData[i].measured, displayData[i].measured];
             
-            displayData[i].eMinWorst = displayData[i].measured;
-            displayData[i].eMaxWorst = displayData[i].measured;
+            //displayData[i].eMinAverage = displayData[i].measured;
+            //displayData[i].eMaxAverage = displayData[i].measured;
+            
+            //displayData[i].eMinWorst = displayData[i].measured;
+            //displayData[i].eMaxWorst = displayData[i].measured;
         }
         
         for (var i = predictionsStart; i < displayData.length; i++) {
@@ -207,12 +216,20 @@ class OfficialPredictionsLineGraph extends Component {
             const averagPerc = this.state.apiResponse.data.historical_averagePercentErrors[minutesOut];
             const worstPerc  = this.state.apiResponse.data.historical_worstPercentErrors[minutesOut];
             
+            const avgExpA = calcExpected(prediction, -averagPerc);
+            const avgExpB = calcExpected(prediction, averagPerc);
+            const wstExpA = calcExpected(prediction, -worstPerc);
+            const wstExpB = calcExpected(prediction, worstPerc);
             
-            displayData[i].eMinAverage = calcExpected(prediction, -averagPerc);
-            displayData[i].eMaxAverage = calcExpected(prediction, averagPerc);
+            displayData[i].expectedDeviationAverageCase = [Math.min(avgExpA, avgExpB), Math.max(avgExpA, avgExpB)];
+            displayData[i].expectedDeviationWorstCase   = [Math.min(wstExpA, wstExpB), Math.max(wstExpA, wstExpB)];
             
-            displayData[i].eMinWorst = calcExpected(prediction, -worstPerc);
-            displayData[i].eMaxWorst = calcExpected(prediction, worstPerc);
+            
+//             displayData[i].eMinAverage = calcExpected(prediction, -averagPerc);
+//             displayData[i].eMaxAverage = calcExpected(prediction, averagPerc);
+//             
+//             displayData[i].eMinWorst = calcExpected(prediction, -worstPerc);
+//             displayData[i].eMaxWorst = calcExpected(prediction, worstPerc);
         }
         
         
@@ -220,6 +237,25 @@ class OfficialPredictionsLineGraph extends Component {
     }
     
     renderGraph(displayData) {
+        const round = (number, decimalPlaces) => {
+            if (isNaN(number)) {
+                return number;
+            }
+            
+            const factorOfTen = Math.pow(10, decimalPlaces)
+            var retval = (Math.round(number * factorOfTen) / factorOfTen)
+            
+            return retval+"";
+        }
+        
+        const formatLegendData = (value) => {
+            console.log(value);
+            if (value[0] != null)
+                return round(value[0], 2) + " - " + round(value[1], 2) + " kW AC";
+            else
+                return round(value, 2) + " kW AC"
+        }
+        
         //units : kW AC
         return (
             <div className="PowerPredictionsLineGraph">
@@ -236,7 +272,7 @@ class OfficialPredictionsLineGraph extends Component {
                     <CartesianGrid stroke={this.state.gridLinesColor} strokeDasharray="5 5" />
                     <XAxis dataKey="time" stroke={this.state.xAxisColor}/>
                     <YAxis dataKey="predicted" stroke={this.state.yAxisColor}/>
-                    <Tooltip />
+                    <Tooltip formatter={formatLegendData}  wrapperStyle={{ backgroundColor: '#000000' }}/>
                 </AreaChart>
             </div>
         );
@@ -292,14 +328,15 @@ class OfficialPredictionsLineGraph extends Component {
 //         
         
         
-        lines.push(<Area type="monotone" dataKey="eMinWorst" stroke={this.state.worstExpectedDeviationColor} fillOpacity={1} fill={this.state.worstExpectedDeviationFillColor}/>)
-        lines.push(<Area type="monotone" dataKey="eMaxWorst" stroke={this.state.worstExpectedDeviationColor} fillOpacity={1} fill={this.state.worstExpectedDeviationFillColor}/>)
+        //lines.push(<Area type="monotone" dataKey="eMinWorst" stroke={this.state.worstExpectedDeviationColor} fillOpacity={1} fill={this.state.worstExpectedDeviationFillColor}/>)
+        //lines.push(<Area type="monotone" dataKey="eMaxWorst" stroke={this.state.worstExpectedDeviationColor} fillOpacity={1} fill={this.state.worstExpectedDeviationFillColor}/>)
+        lines.push(<Area type="monotone" dataKey="expectedDeviationWorstCase" stroke={this.state.worstExpectedDeviationColor} strokeWidth={7} fillOpacity={1} fill={this.state.worstExpectedDeviationFillColor}/>)
         
-        lines.push(<Area type="monotone" dataKey="eMinAverage" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill={this.state.averageExpectedDeviationFillColor}/>)
-        lines.push(<Area type="monotone" dataKey="eMaxAverage" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill={this.state.averageExpectedDeviationFillColor}/>)
+        //lines.push(<Area type="monotone" dataKey="eMinAverage" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill={this.state.averageExpectedDeviationFillColor}/>)
+        //lines.push(<Area type="monotone" dataKey="eMaxAverage" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill={this.state.averageExpectedDeviationFillColor}/>)
+        lines.push(<Area type="monotone" dataKey="expectedDeviationAverageCase" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill={this.state.averageExpectedDeviationFillColor}/>)
         
-        
-        lines.push(<Area type="monotone" dataKey="predicted" stroke={this.state.predictionsColor} fillOpacity={1} strokeWidth={5} fill={this.state.predictionsFillColor} />)
+        lines.push(<Area type="monotone" dataKey="predicted" stroke={this.state.predictionsColor} fillOpacity={0} strokeWidth={5} fill={this.state.predictionsFillColor} />)
         lines.push(<Area type="monotone" dataKey="measured"  stroke={this.state.realDataColor}    fillOpacity={1} fill={this.state.predictionsFillColor} />)
         
         
