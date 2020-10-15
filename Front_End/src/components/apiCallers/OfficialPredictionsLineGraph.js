@@ -360,7 +360,10 @@ class OfficialPredictionsLineGraph extends Component {
         //units : kW AC
         return (
             <div className="PowerPredictionsLineGraph" id="PowerPredictionsLineGraph">
-                <table> <tbody> <tr>
+                <table style={{marginLeft:"auto", marginRight:"auto"}}> <tbody> <tr>
+                    
+                    <td style={{color:"#00000000"}}> aaa</td>
+                    
                     <td>
                         <AreaChart width={this.state.width*this.state.widthPercent} height={this.state.height*this.state.heightPercent} data={displayData}>
 
@@ -379,7 +382,7 @@ class OfficialPredictionsLineGraph extends Component {
                                     value="Power Generation (kW AC)"
                                     position="insideLeft"
                                     angle={-90}
-                                    style={{ textAnchor: 'middle', color: this.state.textColor }}
+                                    style={{ textAnchor: 'middle', fill: this.state.textColor, fontWeight:"bold"}}
                                     />
                             </YAxis>
                             {/*<Tooltip className="powerPredictionTooltip" formatter={formatLegendData}  wrapperStyle={{ backgroundColor: '#000000' }}/>*/}
@@ -395,14 +398,14 @@ class OfficialPredictionsLineGraph extends Component {
                         
                     </td>
                     
-                    <td style={{color:"#00000000"}}>aaaaa</td>
-                    
                 </tr></tbody></table>
             </div>
         );
     }
     
     GetLegend(style) {
+        if (style == -1)
+            return null;
         if (style == 0)
             return (
                 <table style={{color: this.state.textColor}}> <tbody>
