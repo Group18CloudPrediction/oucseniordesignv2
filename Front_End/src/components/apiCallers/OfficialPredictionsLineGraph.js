@@ -19,11 +19,8 @@ class OfficialPredictionsLineGraph extends Component {
             lookbackDepth: this.props.lookbackDepth || 1,
             
             stationID: this.props.stationID,
-//             year: this.props.year,
-//             month: this.props.month,
-//             day: this.props.day,
-//             hour: this.props.hour,
-//             minute: this.props.minute,
+            
+            //maxRealValueRecordings: this.props.maxRealValueRecordings || 2, //5,
             dateTime: this.buildInitialDateTime(),
             startDateTime: this.buildInitialDateTime(),
 
@@ -108,6 +105,14 @@ class OfficialPredictionsLineGraph extends Component {
                 console.log(res);
                 this.setState({apiResponse: res, predictions: res.data.latest_power_predictions, isLoading: false});
                 this.state.measuredValues.push(res.data.latest_actualPowerValue);
+            
+//                 if (this.state.measuredValues.length > this.state.maxRealValueRecordings)
+//                 {
+//                     // if we've already collected the max number of real values, delete the oldest one and update the graph's start time
+//                     this.state.measuredValues.shift()
+//                     this.setState({startDateTime: new Date(this.state.startDateTime.getTime()+60000)});
+//                 }
+                
             })
             .catch(err => this.setState({hasError:true, error:err}));
     }
@@ -116,7 +121,8 @@ class OfficialPredictionsLineGraph extends Component {
         if(this.props.realTimeUpdates)
         {
             console.log("setting interval - OfficialPowerPredictionsLineGraph");
-            this.interval = setInterval(this.refreshData, 60*1000);
+            const updateEveryXSeconds = 60;
+            this.interval = setInterval(this.refreshData, updateEveryXSeconds*1000);
         }
         
         this.setSize();
@@ -172,7 +178,7 @@ class OfficialPredictionsLineGraph extends Component {
             thisMinute = thisMinute % 60;
 
             const thisName = thisHour + ":" + (thisMinute < 10? "0" : "") + thisMinute;
-            displayData.push({time: thisName, "measured": this.state.measuredValues[i], "predicted": this.state.measuredValues[i]});
+            displayData.push({time: thisName, "measured": this.state.measuredValues[i], "predicted":(i == this.state.numRefreshes-1? this.state.measuredValues[1] : null)});
         }
 
         console.log(this.state.measuredValues);
@@ -218,8 +224,11 @@ class OfficialPredictionsLineGraph extends Component {
         var predictionsStart = displayData.length-15;
         
         for (var i = 0; i < predictionsStart; i++) {
-            displayData[i].expectedDeviationAverageCase = [displayData[i].measured, displayData[i].measured];
-            displayData[i].expectedDeviationWorstCase   = [displayData[i].measured, displayData[i].measured];
+            
+            var val = (i == predictionsStart-1 ? [displayData[i].measured, displayData[i].measured] : null)
+            
+            displayData[i].expectedDeviationAverageCase = val;//null;//[displayData[i].measured, displayData[i].measured];
+            displayData[i].expectedDeviationWorstCase   = val;//null;//[displayData[i].measured, displayData[i].measured];
             
             //displayData[i].eMinAverage = displayData[i].measured;
             //displayData[i].eMaxAverage = displayData[i].measured;
@@ -227,7 +236,7 @@ class OfficialPredictionsLineGraph extends Component {
             //displayData[i].eMinWorst = displayData[i].measured;
             //displayData[i].eMaxWorst = displayData[i].measured;
         }
-        
+
         for (var i = predictionsStart; i < displayData.length; i++) {
             const minutesOut = i - predictionsStart;
             const prediction = this.state.apiResponse.data.latest_power_predictions[minutesOut];
