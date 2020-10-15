@@ -33,10 +33,10 @@ class OfficialPredictionsLineGraph extends Component {
             realDataColor:        this.props.realDataColor        || "#58ff4f",
             realDataFillColor:    this.props.realDataFillColor    || this.props.realDataColor    || "#58ff4f",
 
-            averageExpectedDeviationColor:      this.props.averageExpectedDeviationColor     || "#5f5c96",
-            averageExpectedDeviationFillColor:  this.props.averageExpectedDeviationFillColor || this.props.averageExpectedDeviationColor || "#5f5c96",
-            worstExpectedDeviationColor:        this.props.worstExpectedDeviationColor       || "#2f2d4a",
-            worstExpectedDeviationFillColor:    this.props.worstExpectedDeviationFillColor   || this.props.worstExpectedDeviationColor   || "#2f2d4a",  
+            averageExpectedDeviationColor:      this.props.averageExpectedDeviationColor     || "#6d6aad",//"#5f5c96",
+            averageExpectedDeviationFillColor:  this.props.averageExpectedDeviationFillColor || this.props.averageExpectedDeviationColor || "#6d6aad",//"#5f5c96",
+            worstExpectedDeviationColor:        this.props.worstExpectedDeviationColor       || "#4e4b7d",//"#2f2d4a",
+            worstExpectedDeviationFillColor:    this.props.worstExpectedDeviationFillColor   || this.props.worstExpectedDeviationColor   || "#4e4b7d",//"#2f2d4a",  
 
             textColor:  this.props.textColor  || '#dddddd',
             xAxisColor: this.props.xAxisColor || this.props.textColor || "#dddddd",
@@ -294,11 +294,26 @@ class OfficialPredictionsLineGraph extends Component {
                 paddingRight:'10px'
             }
             
+            const formatTime = (s) => {
+                var arr = s.split(":");
+                var hour = parseInt(arr[0], 10);
+                if (isNaN(hour))
+                    return s;
+                if (hour > 12)
+                    return (hour-12) + ":" + arr[1] + " PM";
+                else if (hour == 12)
+                    return 12 + ":" + arr[1] + " PM";
+                else if (hour == 0)
+                    return 12 + ":" + arr[1] + " AM";
+                else
+                    return s+" AM";
+            }
+            
             return (
                 <div> 
                     <div className="custom-tooltip" style={tooltip}>
                         <p style={{textAlign: 'center'}}>
-                            <strong style={{color: this.state.predictionsColor}}>{label}</strong>
+                            <strong style={{color: this.state.textColor}}>{formatTime(label)}</strong>
                         </p>
                         
                         <table> <tbody>
@@ -311,13 +326,13 @@ class OfficialPredictionsLineGraph extends Component {
                                 
                                 return(
                                     <tr key={i}>
-                                        <th style={{color: this.state.predictionsColor}} key={i+"tooltipDataName"}>
+                                        <th style={{color: item.color}} key={i+"tooltipDataName"}>
                                             {item.name}:  
                                         </th>
                                         <td key={i+"spacer"} style={{color: this.state.tooltipBackgroundColor}}>
                                           s
                                         </td>
-                                        <td style={{color: this.state.predictionsColor}} key={i+"tooltipDataValue"}>
+                                        <td style={{color: item.color}} key={i+"tooltipDataValue"}>
                                             {formatLegendData(item.value)}
                                         </td>
                                     </tr>
@@ -356,60 +371,99 @@ class OfficialPredictionsLineGraph extends Component {
                     <td style={{color:"#00000000"}}> a</td>
                 
                     <td>
-                        {/* Below is style 1 */}
                         
-                        <table style={{color: this.state.textColor}}> <tbody>
-                            <tr>
-                                <td style={{ color: this.state.worstExpectedDeviationColor, backgroundColor: this.state.worstExpectedDeviationColor}}>sss</td>
-                                <td> Expected Worst Deviation </td>
-                            </tr>
-                            <tr>
-                                <td style={{ color: this.state.averageExpectedDeviationColor, backgroundColor: this.state.averageExpectedDeviationColor}}>sss</td>
-                                <td> Expected Average Deviation </td>
-                            </tr>
-                            <tr>
-                                <td style={{ color: this.state.predictionsColor, backgroundColor: this.state.predictionsColor}}>sss</td>
-                                <td> Prediction </td>
-                            </tr>
-                            <tr>
-                                <td style={{ color: this.state.realDataColor, backgroundColor: this.state.realDataColor}}>sss</td>
-                                <td> Actual Value </td>
-                            </tr>
-                        </tbody> </table>
-                        
-                        {/* Below is style 2 */}
-                        {/*
-                        <div> 
-                            <span style={{color: this.state.worstExpectedDeviationColor}}>
-                                ■
-                            </span> 
-                            <span style={{color:this.state.textColor}}>
-                                - Expected Worst Deviation 
-                            </span>
-                        </div>
-                        <div> 
-                            <span style={{color: this.state.averageExpectedDeviationColor}}>
-                                ■
-                            </span> 
-                            <span style={{color:this.state.textColor}}>
-                                - Expected Average Deviation 
-                            </span> 
-                        </div>
-                        <div> 
-                            <span style={{color: this.state.predictionsColor}}>
-                                ■
-                            </span> 
-                            <span style={{color:this.state.textColor}}>
-                                - Prediction
-                            </span> 
-                        </div>*/}
-                        
+                        {this.GetLegend(2)}
                         
                     </td>
+                    
+                    <td style={{color:"#00000000"}}>aaaaa</td>
                     
                 </tr></tbody></table>
             </div>
         );
+    }
+    
+    GetLegend(style) {
+        if (style == 0)
+            return (
+                <table style={{color: this.state.textColor}}> <tbody>
+                    <tr>
+                        <td style={{ color: this.state.worstExpectedDeviationColor, backgroundColor: this.state.worstExpectedDeviationColor}}>sss</td>
+                        <td> Expected Worst Deviation </td>
+                    </tr>
+                    <tr>
+                        <td style={{ color: this.state.averageExpectedDeviationColor, backgroundColor: this.state.averageExpectedDeviationColor}}>sss</td>
+                        <td> Expected Average Deviation </td>
+                    </tr>
+                    <tr>
+                        <td style={{ color: this.state.predictionsColor, backgroundColor: this.state.predictionsColor}}>sss</td>
+                        <td> Prediction </td>
+                    </tr>
+                    <tr>
+                        <td style={{ color: this.state.realDataColor, backgroundColor: this.state.realDataColor}}>sss</td>
+                        <td> Actual Value </td>
+                    </tr>
+                </tbody> </table>
+            );
+        if (style == 1)
+            return (
+                <div>
+                    <div> 
+                        <span style={{color: this.state.worstExpectedDeviationColor}}>
+                            ■
+                        </span> 
+                        <span style={{color:this.state.textColor}}>
+                            - Expected Worst Deviation 
+                        </span>
+                    </div>
+                    <div> 
+                        <span style={{color: this.state.averageExpectedDeviationColor}}>
+                            ■
+                        </span> 
+                        <span style={{color:this.state.textColor}}>
+                            - Expected Average Deviation 
+                        </span> 
+                    </div>
+                    <div> 
+                        <span style={{color: this.state.predictionsColor}}>
+                            ■
+                        </span> 
+                        <span style={{color:this.state.textColor}}>
+                            - Prediction
+                        </span> 
+                    </div>
+                    <div> 
+                        <span style={{color: this.state.realDataColor}}>
+                            ■
+                        </span> 
+                        <span style={{color:this.state.textColor}}>
+                            - Actual Values
+                        </span> 
+                    </div>
+                </div>
+            );
+        if (style == 2)
+            return (
+                <table style={{color: this.state.textColor}}> <tbody>
+                    <tr>
+                        <td style={{ color: this.state.worstExpectedDeviationColor, verticalAlign:"top"}}>██</td>
+                        <td> Expected Worst Deviation </td>
+                    </tr>
+                    <tr>
+                        <td style={{ color: this.state.averageExpectedDeviationColor, verticalAlign:"top"}}>██</td>
+                        <td> Expected Average Deviation </td>
+                    </tr>
+                    <tr>
+                        <td style={{ color: this.state.predictionsColor, verticalAlign:"top"}}>██</td>
+                        <td> Prediction </td>
+                    </tr>
+                    <tr>
+                        <td style={{ color: this.state.realDataColor, verticalAlign:"top"}}>██</td>
+                        <td> Actual Value </td>
+                    </tr>
+                </tbody> </table>
+            );
+        return (<div>No Legend Specified</div>);
     }
     
     GetLineGraphColors() {
