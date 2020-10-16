@@ -181,7 +181,7 @@ class OfficialPredictionsLineGraph extends Component {
             thisMinute = thisMinute % 60;
 
             const thisName = this.militaryToStandardTime(thisHour + ":" + (thisMinute < 10? "0" : "") + thisMinute);
-            displayData.push({time: thisName, "measured": this.state.measuredValues[i], "predicted":(i == this.state.numRefreshes-1? this.state.measuredValues[1] : null)});
+            displayData.push({time: thisName, "measured": this.state.measuredValues[i], "predicted":(i == this.state.numRefreshes-1? this.state.measuredValues[i] : null)});
         }
 
         console.log(this.state.measuredValues);
