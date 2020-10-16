@@ -10,6 +10,7 @@ var express = require("express"),
 
 var app = express(),
   streamServer = http.createServer(app),
+  socketio = socketIO(streamServer),
   channels = {},
   viewers = {},
   port = process.env.PORT || 3000;
@@ -105,6 +106,23 @@ function init() {
       viewSrv.emit("connection", ws, req);
     });
   });
+
+  //Copy and paste from previous team code
+  socketio.on('connection', (client) => {
+    client.on('coverage', (frame) => {
+      client.broadcast.emit('coverage', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('shadow', (frame) => {
+      client.broadcast.emit('shadow', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('error', (err) => {
+      console.log("Error from client: ", client.id);
+      console.log(err)
+    });
+  });
+
 
   // Serve the static files from the React app
   app.use(express.static(path.join(__dirname, "Front_End/build")));
