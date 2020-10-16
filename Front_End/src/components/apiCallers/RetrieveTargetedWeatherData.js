@@ -8,6 +8,7 @@ import "../../stylesheets/dataTables.css";
 import DisplayWeatherData from "../miniComponents/DisplayWeatherData.js";
 import DisplayWeatherDataFriendly from "../miniComponents/DisplayWeatherDataFriendly.js";
 
+// note: this component will automatically refresh if the onlyMostRecent prop is present and the disableRefresh prop is not
 class RetrieveTargetedWeatherData extends Component {
     constructor(props) {
         super(props);
@@ -67,6 +68,10 @@ class RetrieveTargetedWeatherData extends Component {
             this.callAPI();
         }
 
+        this.refreshData = () => {
+            this.callAPI();
+        }
+
         if (this.props.skipForm)
             this.handleSubmit();
     }
@@ -111,9 +116,13 @@ class RetrieveTargetedWeatherData extends Component {
         this.setState({hasSubmitted: true});
     }
 
-    //componentDidMount() {
-        //this.callAPI();
-    //}
+    componentDidMount() {
+        if(this.props.onlyMostRecent && !this.props.disableRefresh)
+        {
+            console.log("setting interval - RetrieveTargetedWeatherData");
+            this.interval = setInterval(this.refreshData, 60*1000);
+        }
+    }
 
     showDataLimitNotice() {
         if (this.props.onlyMostRecent) {

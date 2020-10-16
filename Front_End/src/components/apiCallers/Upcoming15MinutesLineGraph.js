@@ -31,7 +31,7 @@ class Upcoming15MinutesLineGraph extends Component {
             dateTime: this.buildInitialDateTime(),
             startDateTime: this.buildInitialDateTime(),
 
-
+            
             predictionsColor:     this.props.predictionsColor     || "#8884d8",
             predictionsFillColor: this.props.predictionsFillColor || this.props.predictionsColor || "#8884d8",
             realDataColor:        this.props.realDataColor        || "#b5ad38",
@@ -54,7 +54,7 @@ class Upcoming15MinutesLineGraph extends Component {
             this.setState({dateTime: date, numRefreshes:(this.state.numRefreshes+1)});
             this.callAPI();
         }
-
+        
     }
 
     buildInitialDateTime() {
@@ -92,7 +92,7 @@ class Upcoming15MinutesLineGraph extends Component {
         fetch(baseURI + params)
             .then(response => response.json())
             .then(res => {
-                this.setState({apiResponse: res, isLoading: false});
+                this.setState({apiResponse: res,  predictions:res.data[0].powerPredictionsMade, isLoading: false});
                 this.state.measuredValues.push(res.data[0].measuredPowerValue);
             })
             .catch(err => this.setState({hasError:true, error:err}));
@@ -103,11 +103,12 @@ class Upcoming15MinutesLineGraph extends Component {
     componentDidMount() {
         if(this.props.realTimeUpdates)
         {
-            console.log("setting interval");
+            console.log("setting interval - PowerPredictionsLineGraph");
             this.interval = setInterval(this.refreshData, 60*1000);
         }
         this.callAPI();
     }
+    
     componentWillUnmount() {
         // prevent memory leak
         if(this.props.realTimeUpdates)
@@ -116,7 +117,7 @@ class Upcoming15MinutesLineGraph extends Component {
 
     render() {
         if (this.state.hasError) {
-            return <p>Error: <p>{this.state.error.message}</p></p>;
+            return <div>Error: <p>{this.state.error.message}</p></div>;
         }
 
         if (this.state.isLoading) {
@@ -127,12 +128,18 @@ class Upcoming15MinutesLineGraph extends Component {
             return <p>Recieved bad response</p>;
         }
 
-        if (!this.state.apiResponse.data[0]) {
+        if (!this.state.apiResponse.data) {
             return <p>No data for the given station and timestamp: {this.props.stationID} @ {this.props.year +"-"+this.props.month+"-"+this.props.day+" T "+this.props.hour+":"+this.props.minute}</p>;
         }
 
 
-        const displayData = [];
+        const displayData = this.createDisplayData();
+
+        return this.renderGraph(displayData);
+    }
+    
+    createDisplayData() {
+        var displayData = [];
 
         const startHour = this.state.dateTime.getHours();
         const startMinute = this.state.dateTime.getMinutes();
@@ -144,54 +151,83 @@ class Upcoming15MinutesLineGraph extends Component {
             thisMinute = thisMinute % 60;
 
             const thisName = thisHour + ":" + (thisMinute < 10? "0" : "") + thisMinute;
-            displayData.push({time: thisName, "pv": this.state.measuredValues[i], "uv": this.state.measuredValues[i]});
+            displayData.push({time: thisName, "measured": this.state.measuredValues[i], "predicted": this.state.measuredValues[i]});
         }
 
         console.log(this.state.measuredValues);
 
-        const data = this.state.apiResponse.data[0];
-
+        //const data = this.state.apiResponse.data[0];
+        const predictions = this.state.predictions;
+        
         const hour = this.state.dateTime.getHours();
         const minute = this.state.dateTime.getMinutes();
 
 
-        for (var i = 0; i < data.powerPredictionsMade.length; i++)
+        for (var i = 0; i < predictions.length; i++)
         {
             var thisMinute = minute + i + 1;
             var thisHour = (thisMinute >= 60? hour+1 : hour) % 24;
             thisMinute = thisMinute % 60;
 
             const thisName = thisHour + ":" + (thisMinute < 10? "0" : "") + thisMinute;
-            displayData.push({time: thisName, "uv":data.powerPredictionsMade[i]});
+            displayData.push({time: thisName, "predicted":predictions[i]});
         }
-
+        
+        return displayData;
+    }
+    
+    renderGraph(displayData) {
         return (
             <div className="PowerPredictionsLineGraph">
                 <AreaChart width={400} height={400} data={displayData}>
+                    
                     <defs>
-                        <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor={this.state.predictionsFillColor} stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor={this.state.predictionsFillColor} stopOpacity={0}/>
-                        </linearGradient>
                         {
-                        <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor={this.state.realDataFillColor} stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor={this.state.realDataFillColor} stopOpacity={0}/>
-                        </linearGradient>
+                            this.GetLineGraphColors()
                         }
                     </defs>
-                    <Area type="monotone" dataKey="uv" stroke={this.state.predictionsColor} fillOpacity={1} fill="url(#colorUv)"/>
-                    <Area type="monotone" dataKey="pv" stroke={this.state.realDataColor} fillOpacity={1} fill="url(#colorPv)"/>
-                    {
-    //                 <Line type="monotone" dataKey="pv" stroke="#82ca9d" fillOpacity={1} fill="url(#colorPv)" />
-                    }
+                    
+                    {this.GetLines()}
+                    
                     <CartesianGrid stroke={this.state.gridLinesColor} strokeDasharray="5 5" />
                     <XAxis dataKey="time" stroke={this.state.xAxisColor}/>
-                    <YAxis dataKey="uv" stroke={this.state.yAxisColor}/>
+                    <YAxis dataKey="predicted" stroke={this.state.yAxisColor}/>
                     <Tooltip />
                 </AreaChart>
             </div>
         );
+    }
+    
+    GetLineGraphColors() {
+        var colors = [];
+        
+        colors.push(
+            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={this.state.predictionsFillColor} stopOpacity={0.8}/>
+                <stop offset="95%" stopColor={this.state.predictionsFillColor} stopOpacity={0}/>
+            </linearGradient>
+        );
+        
+        colors.push(
+            <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={this.state.realDataFillColor} stopOpacity={0.8}/>
+                <stop offset="95%" stopColor={this.state.realDataFillColor} stopOpacity={0}/>
+            </linearGradient>
+        );
+        
+        return colors;
+    }
+    
+    GetLines() {
+        var lines = [];
+        
+        lines.push(<Area type="monotone" dataKey="predicted" stroke={this.state.predictionsColor} fillOpacity={1} fill="url(#colorUv)"/>)
+        lines.push(<Area type="monotone" dataKey="measured"  stroke={this.state.realDataColor}    fillOpacity={1} fill="url(#colorPv)"/>)
+        
+        return lines;
+    
+//          <Line type="monotone" dataKey="pv" stroke="#82ca9d" fillOpacity={1} fill="url(#colorPv)" />
+                
     }
 }
 

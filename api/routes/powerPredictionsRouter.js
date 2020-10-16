@@ -23,8 +23,13 @@ router.route("/validate/:stationID")
 
 //router.route("/get15pastAndFuture/:year/:month/:day/:hour/:minute");
 
-router.route('/official')
-    .get(OfficialPowerPredictionsController.getTest1)
+router.route('/officialSystem_test/test2')
+    .get(OfficialPowerPredictionsController.getTest2)
+router.route('/officialSystem_test/test3')
+    .get(OfficialPowerPredictionsController.getTest3)
+router.route('/station/:stationID')
+    .get (OfficialPowerPredictionsController.getLatestForStation_predictionsAndVerification)
+    .post(OfficialPowerPredictionsController.getLatestForStation_predictionsAndVerification)
 
     
 module.exports = router;
