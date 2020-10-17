@@ -36,7 +36,7 @@ class DisplayWeatherDataFriendly extends Component {
                         </tr>
                         <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Wind Direction:</th>
-                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.windDir, 3) + ""}</td>
+                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.windDir, 3) + " °"}</td>
                         </tr>
                         <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Wind Speed:</th>
@@ -44,11 +44,19 @@ class DisplayWeatherDataFriendly extends Component {
                         </tr>
                         <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Relative Humidity:</th>
-                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.rh, 3)}</td>
+                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.rh, 3) + " %"}</td>
                         </tr>
                         <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Barametric Pressure:</th>
                             <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.bp_mmHg, 3) + " mmHg"}</td>
+                        </tr>
+                        <tr className="friendlyDataTableRow">
+                            <th className="friendlyDataTableCell friendlyDataTableLabel">Dew Point:</th>
+                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.airT_C, 3) - (((100 - round(dataPoint.rh, 3))/5)) + " °C"}</td>
+                        </tr>
+                        <tr className="friendlyDataTableRow">
+                            <th className="friendlyDataTableCell friendlyDataTableLabel">Cloud Height:</th>
+                            <td className="friendlyDataTableCell friendlyDataTableData">{round((1000 * (round(dataPoint.airT_C, 3) - (round(dataPoint.airT_C, 3) - (((100 - round(dataPoint.rh, 3))/5)))))/4.4, 3) + " meters"}</td>
                         </tr>
                         
                         
