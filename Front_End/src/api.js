@@ -1,6 +1,6 @@
 import openSocket from 'socket.io-client';
 
-const API_URL = 'http://cloud-track.herokuapp.com';
+const API_URL = 'https://cloudtracking-v2.herokuapp.com';
 // const API_URL = 'http://localhost:3001/';
 
 const  socket = openSocket(API_URL);
@@ -13,8 +13,4 @@ function subscribeToShadow(cb) {
   socket.on('shadow', imagestr => cb(null, imagestr));
 }
 
-function subscribeToData(cb) { 
-    socket.on('data', data => cb(null, data))
-}
-
-export { subscribeToCoverage, subscribeToShadow, subscribeToData, API_URL };
+export { subscribeToCoverage, subscribeToShadow, API_URL };

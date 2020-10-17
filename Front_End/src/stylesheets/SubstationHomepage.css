@@ -95,7 +95,9 @@
     width: auto;
 }
 
-
+.localMap {
+    transform: translate(1%, 1%)
+}
 .SubstationHomepage > h3 {
     display: flex;
     justify-content: center;

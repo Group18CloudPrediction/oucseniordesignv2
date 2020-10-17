@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import L from 'leaflet';
-import { subscribeToCoverage, subscribeToShadow, subscribeToData } from '../api';
+import { subscribeToCoverage, subscribeToShadow } from '../api';
 import SunCalc from 'suncalc';
 
 // Calib is an array of the dimensions of whatever was used to calibrate the camera.
@@ -26,13 +26,6 @@ class Map extends Component {
       this.shadowOverlay.setUrl(shadow_img);
     });
 
-    subscribeToData((err, data) => {
-      // Update state
-      this.setState(data);
-
-      // Update Image bounds
-      this.updateImageBounds();
-    });
   }
 
   state = {
@@ -40,22 +33,17 @@ class Map extends Component {
   };
 
   componentDidMount() {
-    fetch('/weather')
-    .then( res => res.json() )
-    .then( (data) => {
-      this.setState(data)
-      this.updateImageBounds()
-    }).catch(console.log)
-
+    
+    this.updateImageBounds();
     // var satellite = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
     //       { maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] }),
       var satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        //a ttribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
       }),      
         // terrain   = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',
         //   { maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] })
         terrain =  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-          attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+          //attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
         })
 
     var baseMaps = {
@@ -102,16 +90,16 @@ class Map extends Component {
       "Coverage": this.coverageOverlay,
       "Coverage Bounds": this.coverageBorder
     }
-  
+    
     L.control.layers(baseMaps, overlayMaps).addTo(this.map);
 
-    var north = L.control({position: "bottomright"});
-    north.onAdd = function(map) {
-        var div = L.DomUtil.create("div", "info legend");
-        div.innerHTML = '<img src="north_arrow.png">';
-        return div;
-    }
-    north.addTo(this.map);
+    // var north = L.control({position: "bottomright"});
+    // north.onAdd = function(map) {
+    //     var div = L.DomUtil.create("div", "info legend");
+    //     div.innerHTML = '<img src="north_arrow.png">';
+    //     return div;
+    // }
+    // north.addTo(this.map);
 
     var marker = L.marker(CENTER,
       {
@@ -123,7 +111,7 @@ class Map extends Component {
 
   render (){
     return (
-      <div id="map" style={{display:"flex", height:"550px"}}></div>
+      <div id="map" className="localMap"style={{display:"flex", height:"98%", width: "98%"}}></div>
     );
   };
 
