@@ -8,46 +8,47 @@ import "../../stylesheets/dataTables.css";
 import DisplayWeatherData from "../miniComponents/DisplayWeatherData.js";
 import DisplayWeatherDataFriendly from "../miniComponents/DisplayWeatherDataFriendly.js";
 
+// note: this component will automatically refresh if the onlyMostRecent prop is present and the disableRefresh prop is not
 class RetrieveTargetedWeatherData extends Component {
     constructor(props) {
         super(props);
-        this.state = { 
+        this.state = {
             utcOffset: this.props.isEST? -4: 0,
-            
+
             request_stationID: this.props.stationID || null,
             request_startDate: this.props.startDate || null,
             request_startTime: this.props.startTime ||null,
             request_endDate: this.props.endDate || null,
             request_endTime: this.props.endTime || null,
-            
+
             friendlyDisplay: this.props.friendlyDisplay || false,
-            
-            apiResponse: "", 
+
+            apiResponse: "",
             hasSubmitted: (this.props.skipForm? true : false),
             isLoading: true,
             hasError: false,
             error: null
         };
-        
+
         this.setStationID = event => {
             if (!this.props.stationID)
                 this.setState({ request_stationID: event.target.value })
         }
-        
+
         this.handleSubmit = (event) => {
             if (event)
                 event.preventDefault();
-            
+
             if (!this.props.skipForm) {
-                
+
                 var proceed = true;
                 const msPerDay = (1000*60*60*24)
                 const minutesPerDay = 1440
                 var dayRange = 0
                 const unlimited = this.props.onlyMostRecent == null;
-                
+
                 if (unlimited && !this.state.request_startDate) {
-                    proceed = window.confirm("You didn't enter a date range. THIS MAY REQUEST A LARGE AMOUNT OF DATA. Are you sure?") 
+                    proceed = window.confirm("You didn't enter a date range. THIS MAY REQUEST A LARGE AMOUNT OF DATA. Are you sure?")
                 } else if (!this.state.request_endDate) {
                     dayRange = Math.floor((new Date() - new Date(this.state.request_startDate)) / msPerDay);
                 } else if (this.state.request_endDate >= this.state.request_startDate) {
@@ -56,31 +57,35 @@ class RetrieveTargetedWeatherData extends Component {
                     alert('Invalid date range: The start date is after the end date.');
                     return;
                 }
-                
+
                 if (unlimited && proceed && dayRange > 1) {
-                    proceed = window.confirm("You requested "+dayRange+" days of data. This will request ~"+(minutesPerDay*dayRange)+" rows of data. Are you sure?") 
+                    proceed = window.confirm("You requested "+dayRange+" days of data. This will request ~"+(minutesPerDay*dayRange)+" rows of data. Are you sure?")
                 }
-                    
+
                 if(!proceed) return;
             }
-            
+
             this.callAPI();
         }
-        
+
+        this.refreshData = () => {
+            this.callAPI();
+        }
+
         if (this.props.skipForm)
             this.handleSubmit();
     }
-    
+
     callAPI() {
         this.setState({isLoading: true});
-        
+
         // this component works whether a station id is passed or not
         if (this.state.stationID === "")
             this.setState({staionID: null});
-        
+
         const params = (!this.state.request_stationID ? "" : this.state.request_stationID);
-        const baseURL = require("./_apiRootAddress");
-        
+        const baseURL = process.env.Server || "http://localhost:3000"
+
         var postReqParams = {
             stationID: this.state.request_stationID,
             startDate: this.state.request_startDate,
@@ -88,14 +93,14 @@ class RetrieveTargetedWeatherData extends Component {
             endDate: this.state.request_endDate,
             endTime: this.state.request_endTime,
             onlyMostRecent: this.props.onlyMostRecent,
-            
+
             isEST: true
         }
-        
+
         console.log(postReqParams);
-        
+
         var postReqURL = baseURL + "/weatherData/" + params;
-            
+
         fetch(postReqURL, {
                 method: 'post',
                 headers: {
@@ -107,33 +112,37 @@ class RetrieveTargetedWeatherData extends Component {
             .then (response => response.json()                                     )
             .then (res      => this.setState({apiResponse: res, isLoading: false}) )
             .catch(err      => this.setState({hasError:true, error:err})           );
-        
+
         this.setState({hasSubmitted: true});
     }
-    
-    //componentDidMount() {
-        //this.callAPI();
-    //}
-    
+
+    componentDidMount() {
+        if(this.props.onlyMostRecent && !this.props.disableRefresh)
+        {
+            console.log("setting interval - RetrieveTargetedWeatherData");
+            this.interval = setInterval(this.refreshData, 60*1000);
+        }
+    }
+
     showDataLimitNotice() {
         if (this.props.onlyMostRecent) {
             return (
                 <h4 className="dataLimitNotice">
-                    {"This component is set up to only display the "} 
+                    {"This component is set up to only display the "}
                     {this.props.onlyMostRecent}
                     {" most recent entries."}
                 </h4>
             );
         }
-        
+
         return ("");
     }
-    
-    render() {    
+
+    render() {
         if (this.state.hasError) {
             return <div>Error: <p>{this.state.error.message}</p></div>;
         }
-        
+
         if (!this.state.hasSubmitted) {
             // I have to make a function for this because I can't put an if statement inside a jsx () object
             var makeStationInputField = () => {
@@ -142,9 +151,9 @@ class RetrieveTargetedWeatherData extends Component {
                 else
                     return (<input type="text" value={this.state.request_stationID || ""} onChange={this.setStationID} readonly="true"/>)
             }
-            
+
             // the actual jsx for the form
-            return ( 
+            return (
                 <div>
                     {this.showDataLimitNotice() }
                     {"Note: you can leave a field empty if you don't want to select against it."}
@@ -157,9 +166,9 @@ class RetrieveTargetedWeatherData extends Component {
                             {makeStationInputField()}
                             <br/>
                         </label>
-                        
+
                         <br/>
-                        
+
                         <table>
                             <tbody>
                                 <tr>
@@ -168,10 +177,10 @@ class RetrieveTargetedWeatherData extends Component {
                                 </tr>
                                 <tr>
                                     <td>
-                                        <input type="date" value={this.state.request_startDate || ""} onChange={e => this.setState({ request_startDate: e.target.value })} />        
+                                        <input type="date" value={this.state.request_startDate || ""} onChange={e => this.setState({ request_startDate: e.target.value })} />
                                     </td>
                                     <td>
-                                        <input type="date" value={this.state.request_endDate || ""}   onChange={e => this.setState({ request_endDate:   e.target.value })} />        
+                                        <input type="date" value={this.state.request_endDate || ""}   onChange={e => this.setState({ request_endDate:   e.target.value })} />
                                     </td>
                                 </tr>
                                 <tr>
@@ -180,46 +189,46 @@ class RetrieveTargetedWeatherData extends Component {
                                 </tr>
                                 <tr>
                                     <td>
-                                        <input type="time" value={this.state.request_startTime || ""} onChange={e => this.setState({ request_startTime: e.target.value })} />        
+                                        <input type="time" value={this.state.request_startTime || ""} onChange={e => this.setState({ request_startTime: e.target.value })} />
                                     </td>
                                     <td>
-                                        <input type="time" value={this.state.request_endTime || ""}   onChange={e => this.setState({ request_endTime:   e.target.value })} />        
+                                        <input type="time" value={this.state.request_endTime || ""}   onChange={e => this.setState({ request_endTime:   e.target.value })} />
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
-                        
+
                         <br/>
                         <input type="submit" value="Submit" />
                     </form>
                 </div>);
         }
-        
+
         if (this.state.isLoading) {
             return <p>Loading Weather Data...</p>;
         }
-        
+
         if (!this.state.apiResponse) {
             return <p>Internal Error: API Response was not recorded</p>;
         }
-        
+
         if (!this.state.apiResponse.data) {
             return <p>Recieved bad response</p>;
         }
-        
+
         if (this.state.friendlyDisplay)
         {
-            return ( 
+            return (
                 <DisplayWeatherDataFriendly apiResponseData={this.state.apiResponse.data}/>
             );
         }
         else
         {
-            return ( 
+            return (
                 <DisplayWeatherData apiResponseData={this.state.apiResponse.data}/>
             );
         }
-        
+
     }
 }
 

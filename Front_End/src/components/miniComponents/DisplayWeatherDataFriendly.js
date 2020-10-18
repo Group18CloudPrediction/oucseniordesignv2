@@ -2,65 +2,73 @@ import React, {Component} from "react";
 
 
 class DisplayWeatherDataFriendly extends Component {
-    render() {   
+    render() {
         const round = (number, decimalPlaces) => {
             if (isNaN(number)) return "NaN";
-            
+
             const factorOfTen = Math.pow(10, decimalPlaces)
             var retval = (Math.round(number * factorOfTen) / factorOfTen)
-            
+
             return retval+"";
         }
-        
+
         var dataPoint = this.props.apiResponseData[0];
-        
-        return ( 
+
+        return (
             <div id="RetrievedWeatherData">
                 <table className="friendlyDataTable" id="weatherDataTable_friendly">
                     <thead className="friendlyDataTableHeader">
-                        
+
                     </thead>
-                    
+
                     <tbody className="friendlyDataTableBody">
                         <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Coverage Percentage:</th>
                             <td className="friendlyDataTableCell friendlyDataTableData">{"nyi"}</td>
                         </tr>
                         <tr className="friendlyDataTableRow">
-                            <th className="friendlyDataTableCell friendlyDataTableLabel">Temperature:</th>
-                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.airT_C , 3) + " °C"}</td>
+                            <th className="friendlyDataTableCell friendlyDataTableLabel">Solar Irradiance:</th>
+                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.slrFD_W, 3) + " watts/meter^2"}</td>
                         </tr>
                         <tr className="friendlyDataTableRow">
-                            <th className="friendlyDataTableCell friendlyDataTableLabel">Solar Irradiance:</th>
-                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.slrFD_W , 3) + " W/m²"}</td>
+                            <th className="friendlyDataTableCell friendlyDataTableLabel">Temperature:</th>
+                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.airT_C, 3) + " °C"}</td>
                         </tr>
                         <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Wind Direction:</th>
-                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.windDir, 3) + "°"}</td>
+                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.windDir, 3) + " °"}</td>
                         </tr>
                         <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Wind Speed:</th>
-                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.ws_ms, 3) + " mph"}</td>
+                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.ws_ms, 3) + " m/s"}</td>
                         </tr>
                         <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Relative Humidity:</th>
-                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.rh, 3) + " g/m³"}</td>
+                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.rh, 3) + " %"}</td>
                         </tr>
                         <tr className="friendlyDataTableRow">
-                            <th className="friendlyDataTableCell friendlyDataTableLabel">Barometric Pressure:</th>
-                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.bp_mmHg, 3) + " pa"}</td>
+                            <th className="friendlyDataTableCell friendlyDataTableLabel">Barametric Pressure:</th>
+                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.bp_mmHg, 3) + " mmHg"}</td>
                         </tr>
-                        
-                        
+                        <tr className="friendlyDataTableRow">
+                            <th className="friendlyDataTableCell friendlyDataTableLabel">Dew Point:</th>
+                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.airT_C, 3) - (((100 - round(dataPoint.rh, 3))/5)) + " °C"}</td>
+                        </tr>
+                        <tr className="friendlyDataTableRow">
+                            <th className="friendlyDataTableCell friendlyDataTableLabel">Cloud Height:</th>
+                            <td className="friendlyDataTableCell friendlyDataTableData">{round((1000 * (round(dataPoint.airT_C, 3) - (round(dataPoint.airT_C, 3) - (((100 - round(dataPoint.rh, 3))/5)))))/4.4, 3) + " meters"}</td>
+                        </tr>
+
+
                     </tbody>
                 </table>
             </div>
         );
     }
-    
+
 //     renderTable(data) {
-//         
-//         
+//
+//
 //         return (
 //                 <td className="friendlyDataTableCell">{dataPoint.slrFD_W}</td>
 //                 <td className="friendlyDataTableCell">{dataPoint.rain_mm}</td>
