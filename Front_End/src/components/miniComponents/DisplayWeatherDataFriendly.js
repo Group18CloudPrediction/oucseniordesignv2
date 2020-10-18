@@ -2,25 +2,25 @@ import React, {Component} from "react";
 
 
 class DisplayWeatherDataFriendly extends Component {
-    render() {
+    render() {   
         const round = (number, decimalPlaces) => {
             if (isNaN(number)) return "NaN";
-
+            
             const factorOfTen = Math.pow(10, decimalPlaces)
             var retval = (Math.round(number * factorOfTen) / factorOfTen)
-
+            
             return retval+"";
         }
-
+        
         var dataPoint = this.props.apiResponseData[0];
-
-        return (
+        
+        return ( 
             <div id="RetrievedWeatherData">
                 <table className="friendlyDataTable" id="weatherDataTable_friendly">
                     <thead className="friendlyDataTableHeader">
-
+                        
                     </thead>
-
+                    
                     <tbody className="friendlyDataTableBody">
                         <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Coverage Percentage:</th>
@@ -56,19 +56,19 @@ class DisplayWeatherDataFriendly extends Component {
                         </tr>
                         <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Cloud Height:</th>
-                            <td className="friendlyDataTableCell friendlyDataTableData">{round((1000 * (round(dataPoint.airT_C, 3) - (round(dataPoint.airT_C, 3) - (((100 - round(dataPoint.rh, 3))/5)))))/4.4, 3) + " meters"}</td>
+                            <td className="friendlyDataTableCell friendlyDataTableData cloudheight">{round((1000 * (round(dataPoint.airT_C, 3) - (round(dataPoint.airT_C, 3) - (((100 - round(dataPoint.rh, 3))/5)))))/4.4, 3) + " meters"}</td>
                         </tr>
-
-
+                        
+                        
                     </tbody>
                 </table>
             </div>
         );
     }
-
+    
 //     renderTable(data) {
-//
-//
+//         
+//         
 //         return (
 //                 <td className="friendlyDataTableCell">{dataPoint.slrFD_W}</td>
 //                 <td className="friendlyDataTableCell">{dataPoint.rain_mm}</td>
