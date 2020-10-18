@@ -13,7 +13,7 @@ class SubstationLivestream extends Component {
     if (!this.props.stationID) return (<div id="Livestream">JSX / HTML Error: no stationID specified</div>);
 
     const url = "ws://cloudtracking-v2.herokuapp.com/sub-"+this.props.stationID
-
+    //const url = "ws://localhost:3000/sub-" +this.props.stationID
     return (
       <div id="Livestream" >
         <h1> Substation {this.props.stationID}</h1>

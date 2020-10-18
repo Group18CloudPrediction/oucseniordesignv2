@@ -88,12 +88,6 @@ function init() {
   require('./databaseConnection');
   initChannels();
   init_routes();
-  /// todo: viewers = { }
-
-  // viewerServer.on("connection", function connection(ws, req) {
-  //   const location = url.parse(req.url, true);
-  //   addValueToList(location.pathname.substring(1), ws);
-  // });
 
   streamServer.on("upgrade", (req, socket, head) => {
     const pathname = url.parse(req.url).pathname;
