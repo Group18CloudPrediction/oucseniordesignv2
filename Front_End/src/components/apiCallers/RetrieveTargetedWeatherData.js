@@ -88,10 +88,13 @@ class RetrieveTargetedWeatherData extends Component {
         
         var postReqParams = {
             stationID: this.state.request_stationID,
+            
             startDate: this.state.request_startDate,
-            startTime: this.state.request_startTime,
             endDate: this.state.request_endDate,
+            
             endTime: this.state.request_endTime,
+            startTime: this.state.request_startTime,
+            
             onlyMostRecent: this.props.onlyMostRecent,
             
             isEST: true
@@ -99,6 +102,7 @@ class RetrieveTargetedWeatherData extends Component {
         
         console.log(postReqParams);
         
+        // https://localhost:3000/weatherData/1
         var postReqURL = baseURL + "/weatherData/" + params;
             
         fetch(postReqURL, {
