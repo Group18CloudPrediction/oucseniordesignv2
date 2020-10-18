@@ -10,17 +10,16 @@ const CALIB  = [0.6883333, 0.6883333, 1/6];
 
 // lat/long coordinates of the center of the image. i.e. wherever the camera is placed
 // const CENTER = [28.4294, -81.309];
-const CENTER = [28.601722, -81.198545]
+const CENTER = [28.2367025, -81.23375]
+
+const sub28 = [28.29172, -81.19373]
+const sub27 = [28.24917, -81.28942]
+const sub29 = [28.22465, -81.17819]
+const sub33 = [28.18127, -81.27366]
 
 class Map extends Component {
   constructor(props) {
     super(props);
-    this.refreshData = () => {this.callAPI()};
-    this.state = {apiResponse: "",
-    hasSubmitted: (this.props.skipForm? true : false),
-    isLoading: true,
-    hasError: false,
-    error: null}
     
     subscribeToCoverage((err, coverage_img) => {
       // If already exists, update the coverage image
@@ -38,60 +37,20 @@ class Map extends Component {
     cloud_base_height: -1
   };
 
-  callAPI() {
-    this.setState({isLoading: true});
-
-    // this component works whether a station id is passed or not
-    if (this.state.stationID === "")
-        this.setState({staionID: null});
-
-    const params = (!this.props.stationID ? "" : this.props.stationID);
-    const baseURL = process.env.Server || "http://localhost:3000"
-
-    var postReqParams = {
-        stationID: this.props.stationID,
-        onlyMostRecent: 1
-    }
-
-    console.log(postReqParams);
-
-    var postReqURL = baseURL + "/weatherData/" + params;
-
-    fetch(postReqURL, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(postReqParams)
-        })
-        .then (response => response.json()                                     )
-        .then (res      => this.setState({apiResponse: res, isLoading: false}) )
-        .catch(err      => this.setState({hasError:true, error:err})           );
-
-    this.setState({hasSubmitted: true});
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
   componentDidMount() {
     
-    this.interval = setInterval(this.refreshData, 60*1000);
-
     this.updateImageBounds();
     // var satellite = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
     //       { maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] }),
       var satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        //a ttribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
       }),      
         // terrain   = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',
         //   { maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] })
         terrain =  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-          //attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+          attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
         })
-
+    
     var baseMaps = {
         "Satellite": satellite,
         "Terrain": terrain,
@@ -100,7 +59,7 @@ class Map extends Component {
     // Create Map Object
     this.map = L.map('map', {
       center: CENTER,
-      zoom: 14,
+      zoom: 13,
       layers: [ satellite, terrain ]
     });
     
@@ -136,6 +95,7 @@ class Map extends Component {
       "Coverage": this.coverageOverlay,
       "Coverage Bounds": this.coverageBorder
     }
+    
     L.control.layers(baseMaps, overlayMaps).addTo(this.map);
 
     // var north = L.control({position: "bottomright"});
@@ -145,13 +105,32 @@ class Map extends Component {
     //     return div;
     // }
     // north.addTo(this.map);
+    
 
-    var marker = L.marker(CENTER,
+    var marker27 = L.marker(sub27,
       {
         draggable: false,        // Make the icon dragable
         title: 'Camera Position'
       });
-    marker.addTo(this.map)
+    marker27.addTo(this.map)
+    var marker28 = L.marker(sub28,
+      {
+        draggable: false,        // Make the icon dragable
+        title: 'Camera Position'
+      });
+    marker28.addTo(this.map)
+    var marker29 = L.marker(sub29,
+      {
+        draggable: false,        // Make the icon dragable
+        title: 'Camera Position'
+      });
+    marker29.addTo(this.map)
+    var marker33 = L.marker(sub33,
+      {
+        draggable: false,        // Make the icon dragable
+        title: 'Camera Position'
+      });
+    marker33.addTo(this.map)
   };
 
   render (){
@@ -187,16 +166,8 @@ class Map extends Component {
     // ===================================================================================
     // To avoid inflating this code with comments, check the final project design document
     // for a more detailed description that explains the logic behind this.
-    var cloudHeight;
-    if(this.state.apiResponse){
-      var dataPoint = this.apiResponse.data[0];
-      cloudHeight = (1000 * (dataPoint.airT_C, 3 - (dataPoint.airT_C, 3 - (((100 - dataPoint.rh, 3)/5)))))/4.4;
-    } else{
-      cloudHeight = -1;
-    }
-    
+    var cloudHeight = this.state.cloud_base_height;
     var calibrationAngle = Math.atan(CALIB[0] / CALIB[1]);
-
 
     var smallHypo  = Math.sqrt(Math.pow(CALIB[0]/2, 2) + Math.pow(CALIB[1]/2, 2));
     var largeHypo  = smallHypo * cloudHeight / CALIB[2];

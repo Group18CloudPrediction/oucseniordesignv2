@@ -47,7 +47,7 @@ class SubstationHomepage extends Component {
                     </div>
 
                     <div className="subMap" style= {{ height: '40vh', width: '640px' }}>
-                        <Map />
+                        <Map stationID={this.props.stationID}/>
                         {/* <GoogleMapReact
                             bootstrapURLKeys={{ key: "AIzaSyCn55lIh6mJ4GnR00jjgGeWUEii5R183xA" }}
                             defaultCenter={this.props.center}
