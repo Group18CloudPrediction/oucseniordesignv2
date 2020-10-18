@@ -135,7 +135,7 @@ class Map extends Component {
 
   render (){
     return (
-      <div id="map" className="localMap"style={{display:"flex", height:"98%", width: "98%"}}></div>
+      <div id="map" className="homeMap"style={{display:"flex", height:"100%", width: "100%"}}></div>
     );
   };
 
