@@ -58,7 +58,7 @@ class SubstationHomepage extends Component {
                 </div>
                 
                 <div className="rightdisplay">
-                    <PowerPredictionsDashboard stationID={this.state.testMode? "TEST_ENTRY" : this.props.stationID}/>
+                    <PowerPredictionsDashboard stationID={this.state.testMode? "1" : this.props.stationID}/>
                     <div>
                         <h1>Weather Statistics</h1>
                         <RetrieveTargetedWeatherData friendlyDisplay={true} stationID={this.state.testMode? "1" : this.props.stationID} onlyMostRecent={1} skipForm={true}/>
