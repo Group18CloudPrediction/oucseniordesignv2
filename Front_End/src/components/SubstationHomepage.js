@@ -9,7 +9,7 @@ import SubstationLivestream from "./SubstationLivestream"
 import PowerPredictionsDashboard from "./PowerPredictionsDashboard.js";
 
 
-const IS_HEROUKU_BUILD = false;
+const IS_HEROKU_BUILD = process.env.IS_HEROKU_BUILD || false;
 
 class SubstationHomepage extends Component {
     constructor(props) {
@@ -63,7 +63,7 @@ class SubstationHomepage extends Component {
                     <PowerPredictionsDashboard stationID={this.state.testMode? "TEST_ENTRY" : this.props.stationID}/>
                     <div>
                         <h1>Weather Statistics</h1>
-                        //<RetrieveTargetedWeatherData friendlyDisplay={true} stationID={this.state.testMode? "1" : this.props.stationID} onlyMostRecent={1} skipForm={true}/>
+                        <RetrieveTargetedWeatherData friendlyDisplay={true} stationID={this.state.testMode? "1" : this.props.stationID} onlyMostRecent={1} skipForm={true}/>
                     </div>
 
                     {

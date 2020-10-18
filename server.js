@@ -15,6 +15,8 @@ var app = express(),
   viewers = {},
   port = process.env.PORT || 3000;
 
+
+
 function addValueToList(map, key, value) {
   //if the list is already created for the "key", then uses it
   //else creates new list for the "key" to store multiple values in it.
@@ -84,7 +86,6 @@ function pushData (toWho, data) {
 function init() {
   app.use(cors());
   app.use(bodyParser.json());
-
   require('./databaseConnection');
   initChannels();
   init_routes();
@@ -116,6 +117,26 @@ function init() {
       console.log(err)
     });
   });
+
+  /*
+  TODO: need create client channel and client array. maybe rename current
+  channels to lsChannel
+
+  socket.io.on("connection", (req, socket, head) => {
+    const pathname = url.parse(req.url).pathname
+    client = client[pathname]
+    if(!client){
+      console.log("[error] client tried to access invalid client path" + pathname)
+      return
+    }
+    client.on('coverage', (frame) => {
+      client.pushData.emit('coverage', "data:image/png;base64," + frame.toString("base64"))
+    })
+    client.on('shadow', (frame) => {
+      client.pushData.emit('shadow', "data:image/png;base64" + frame.toString("base64"))
+    })
+  })
+  */
 
 
   // Serve the static files from the React app
