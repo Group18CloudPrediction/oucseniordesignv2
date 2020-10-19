@@ -1,3 +1,4 @@
+// Import
 import React, { Component } from 'react';
 import L from 'leaflet';
 import { subscribeToCoverage, subscribeToShadow } from '../api';
@@ -10,13 +11,17 @@ const CALIB  = [0.6883333, 0.6883333, 1/6];
 
 // lat/long coordinates of the center of the image. i.e. wherever the camera is placed
 // const CENTER = [28.4294, -81.309];
+// In our case the center is the average of the long lats for the substations
 const CENTER = [28.2367025, -81.23375]
 
+
+// Set substation lat longs
 const sub28 = [28.29172, -81.19373]
 const sub27 = [28.24917, -81.28942]
 const sub29 = [28.22465, -81.17819]
 const sub33 = [28.18127, -81.27366]
 
+// Class
 class Map extends Component {
   constructor(props) {
     super(props);
@@ -30,13 +35,13 @@ class Map extends Component {
       // If already exists, update the shadow image
       this.shadowOverlay.setUrl(shadow_img);
     });
-
   }
-
+  // TODO REMOVE
   state = {
     cloud_base_height: -1
   };
-
+  // TODO GET CLOUD BASE HEIGHT IN HERE LIKE IN OTHER MAP
+  // TODO DISPLAY ALL COVERAGES AND SHADOWS TO THIS MAP
   componentDidMount() {
     
     this.updateImageBounds();
@@ -63,6 +68,7 @@ class Map extends Component {
       layers: [ satellite, terrain ]
     });
     
+    // Add Clouds and Shadows to the map
     this.shadowOverlay = L.imageOverlay('', [[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]]);
     this.shadowOverlay.addTo(this.map);
     
@@ -82,7 +88,9 @@ class Map extends Component {
       "fill": false,
       "fillOpacity": .1
     };
-        
+    
+    // Add borders to the map
+
     this.coverageBorder = L.rectangle([[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]], coverageBorderOptions)
     this.coverageBorder.addTo(this.map)
 
@@ -96,6 +104,7 @@ class Map extends Component {
       "Coverage Bounds": this.coverageBorder
     }
     
+    // Add controls to map
     L.control.layers(baseMaps, overlayMaps).addTo(this.map);
 
     // var north = L.control({position: "bottomright"});
@@ -107,6 +116,7 @@ class Map extends Component {
     // north.addTo(this.map);
     
 
+    // Add substation markers to map
     var marker27 = L.marker(sub27,
       {
         draggable: false,        // Make the icon dragable
@@ -133,6 +143,7 @@ class Map extends Component {
     marker33.addTo(this.map)
   };
 
+  // Render the following HTML
   render (){
     return (
       <div id="map" className="homeMap"style={{display:"flex", height:"100%", width: "100%"}}></div>

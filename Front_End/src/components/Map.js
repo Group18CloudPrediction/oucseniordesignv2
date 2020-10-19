@@ -1,7 +1,13 @@
+// Import
 import React, { Component } from 'react';
 import L from 'leaflet';
 import { subscribeToCoverage, subscribeToShadow } from '../api';
 import SunCalc from 'suncalc';
+
+
+
+// TODO set map to display at location of stationID
+
 
 // Calib is an array of the dimensions of whatever was used to calibrate the camera.
 // In our case, we used a square sheet of paper that's 210mmx210mm and was held at
@@ -9,9 +15,10 @@ import SunCalc from 'suncalc';
 const CALIB  = [0.6883333, 0.6883333, 1/6];
 
 // lat/long coordinates of the center of the image. i.e. wherever the camera is placed
-// const CENTER = [28.4294, -81.309];
-const CENTER = [28.601722, -81.198545]
+// In our case the center is the average of the long lats for the substations
+const CENTER = [28.2367025, -81.23375]
 
+// Class
 class Map extends Component {
   constructor(props) {
     super(props);
@@ -33,11 +40,7 @@ class Map extends Component {
     });
 
   }
-
-  state = {
-    cloud_base_height: -1
-  };
-
+  // Call API to our mongoDB to fetch weather stats
   callAPI() {
     this.setState({isLoading: true});
 
@@ -72,92 +75,115 @@ class Map extends Component {
     this.setState({hasSubmitted: true});
   }
 
+  // Set an interval to clear memory cache
   componentWillUnmount() {
     clearInterval(this.interval);
   }
 
+  // On Mount
   componentDidMount() {
     
+    // Set an interval to refresh data
     this.interval = setInterval(this.refreshData, 60*1000);
 
+    // Call function to update the bounds
     this.updateImageBounds();
+
+
+    // The following is used to set parameters for our leaflet map
+
     // var satellite = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
     //       { maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] }),
       var satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        //a ttribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
       }),      
         // terrain   = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',
         //   { maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] })
         terrain =  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-          //attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+          attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
         })
 
-    var baseMaps = {
-        "Satellite": satellite,
-        "Terrain": terrain,
-    };
+      var baseMaps = {
+          "Satellite": satellite,
+          "Terrain": terrain,
+      };
 
-    // Create Map Object
-    this.map = L.map('map', {
-      center: CENTER,
-      zoom: 14,
-      layers: [ satellite, terrain ]
-    });
-    
-    this.shadowOverlay = L.imageOverlay('', [[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]]);
-    this.shadowOverlay.addTo(this.map);
-    
-    this.coverageOverlay = L.imageOverlay('', [[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]]);
-    this.coverageOverlay.addTo(this.map);
-    
-    var coverageBorderOptions = {
-      "color": "#d35fb7",
-      "weight": 2,
-      "fill": false,
-      "fillOpacity": .1
-    };
-
-    var shadowBorderOptions = {
-      "color": "#fefe62",
-      "weight": 2,
-      "fill": false,
-      "fillOpacity": .1
-    };
-        
-    this.coverageBorder = L.rectangle([[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]], coverageBorderOptions)
-    this.coverageBorder.addTo(this.map)
-
-    this.shadowBorder = L.rectangle([[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]], shadowBorderOptions)
-    this.shadowBorder.addTo(this.map)
-
-    var overlayMaps = {
-      "Shadow": this.shadowOverlay,
-      "Shadow Bounds": this.shadowBorder,
-      "Coverage": this.coverageOverlay,
-      "Coverage Bounds": this.coverageBorder
-    }
-    L.control.layers(baseMaps, overlayMaps).addTo(this.map);
-
-    // var north = L.control({position: "bottomright"});
-    // north.onAdd = function(map) {
-    //     var div = L.DomUtil.create("div", "info legend");
-    //     div.innerHTML = '<img src="north_arrow.png">';
-    //     return div;
-    // }
-    // north.addTo(this.map);
-
-    var marker = L.marker(CENTER,
-      {
-        draggable: false,        // Make the icon dragable
-        title: 'Camera Position'
+      // Create Map Object
+      this.map = L.map('map', {
+        center: CENTER,
+        zoom: 13,
+        layers: [ satellite, terrain ]
       });
-    marker.addTo(this.map)
-  };
+      
+      // Set Shadow Overlay and add it to the map
+      this.shadowOverlay = L.imageOverlay('', [[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]]);
+      this.shadowOverlay.addTo(this.map);
+      
+      // Set Coverage Overlay and add it to the map
+      this.coverageOverlay = L.imageOverlay('', [[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]]);
+      this.coverageOverlay.addTo(this.map);
+      
+      // Set Border Options for coverage
+      var coverageBorderOptions = {
+        "color": "#d35fb7",
+        "weight": 2,
+        "fill": false,
+        "fillOpacity": .1
+      };
+      
+      // Set Border Options for shadow
+      var shadowBorderOptions = {
+        "color": "#fefe62",
+        "weight": 2,
+        "fill": false,
+        "fillOpacity": .1
+      };
+      
+      // Set Coverage Border and add it to the map
+      this.coverageBorder = L.rectangle([[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]], coverageBorderOptions)
+      this.coverageBorder.addTo(this.map)
 
-  render (){
-    return (
-      <div id="map" className="localMap"style={{display:"flex", height:"98%", width: "98%"}}></div>
-    );
+      // Set Shadow Border and add it to the map
+      this.shadowBorder = L.rectangle([[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]], shadowBorderOptions)
+      this.shadowBorder.addTo(this.map)
+
+      var overlayMaps = {
+        "Shadow": this.shadowOverlay,
+        "Shadow Bounds": this.shadowBorder,
+        "Coverage": this.coverageOverlay,
+        "Coverage Bounds": this.coverageBorder
+      }
+
+      // Add controls to the map
+      L.control.layers(baseMaps, overlayMaps).addTo(this.map);
+
+
+      // The following is commented out code from the previous group to display the north star onto the map
+
+
+      // var north = L.control({position: "bottomright"});
+      // north.onAdd = function(map) {
+      //     var div = L.DomUtil.create("div", "info legend");
+      //     div.innerHTML = '<img src="north_arrow.png">';
+      //     return div;
+      // }
+      // north.addTo(this.map);
+
+
+      // Add marker at center to map
+      var marker = L.marker(CENTER,
+        {
+          draggable: false,        // Make the icon dragable
+          title: 'Camera Position'
+        });
+      marker.addTo(this.map)
+    };
+
+    // Render the following HTML
+    render (){
+      return (
+        <div id="map" className="localMap"style={{display:"flex", height:"98%", width: "98%"}}></div>
+      );
   };
 
   // Input: Starting lat/long coordinate, North/South distance travlled, East/West distance.
