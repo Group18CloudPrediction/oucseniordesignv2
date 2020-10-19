@@ -101,6 +101,11 @@ const getAverageAndWorst_AbsoluteValue_PercentErrors_AndLatestPredictions = (res
             if (error) {
                 return res.json({'success':false,'message':'failed to retrieve verification data', 'error':error});
             }
+            
+            if (!data || data.length <= 0){
+                return res.json({'success':false,'message':'failed to retrieve verification data, or no verification data available for station ' + stationID, 'error':error});
+            }
+            
             // verification data has been requested
             
             // calculate the average and worst Math.abs(percentageError) values over the reqested period

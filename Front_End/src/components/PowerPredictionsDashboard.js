@@ -11,7 +11,7 @@ class PowerPredictionsDashboard extends Component {
         super(props);
         
         this.state = {
-            stationID: this.props.stationID || "TEST_ENTRY"
+            stationID: this.props.stationID || "1"
         };
     }
     
@@ -33,7 +33,7 @@ class PowerPredictionsDashboard extends Component {
                     
                     {/*<Upcoming15MinutesLineGraph realTimeUpdates={true} useUTC={IS_HEROUKU_BUILD} stationID={this.state.stationID} year={2020} month={9} day={28} hour={14} minute={2} isEST={true} />*/}
                 
-                    <OfficialPredictionsLineGraph realTimeUpdates={true} stationID={"1"} clampAboveZero={true} lookbackDepth={20}/>
+                    <OfficialPredictionsLineGraph realTimeUpdates={true} stationID={this.state.stationID} clampAboveZero={true} lookbackDepth={20}/>
                 </div>
                 
                 

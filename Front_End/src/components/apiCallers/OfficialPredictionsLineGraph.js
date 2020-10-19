@@ -106,9 +106,13 @@ class OfficialPredictionsLineGraph extends Component {
             .then(res => {
                 console.log("official line graph");
                 console.log(res);
-                this.setState({apiResponse: res, predictions: res.data.latest_power_predictions, isLoading: false});
-                this.state.measuredValues.push(res.data.latest_actualPowerValue);
-            
+                
+                if (res.data) {
+                    this.setState({apiResponse: res, predictions: res.data.latest_power_predictions, isLoading: false});
+                    this.state.measuredValues.push(res.data.latest_actualPowerValue);
+                } else {
+                    this.setState({hasError: true, error : {message: res.message}})
+                }
 //                 if (this.state.measuredValues.length > this.state.maxRealValueRecordings)
 //                 {
 //                     // if we've already collected the max number of real values, delete the oldest one and update the graph's start time
@@ -140,20 +144,25 @@ class OfficialPredictionsLineGraph extends Component {
     }
 
     render() {
+        const messageStyle = {
+            color: this.state.textColor,
+            textAlign: "center"
+        }
+        
         if (this.state.hasError) {
-            return <div>Error: <p>{this.state.error.message}</p></div>;
+            return <div style={messageStyle}>Error: <p>{this.state.error.message}</p></div>;
         }
 
         if (this.state.isLoading) {
-            return <p>Loading Prediction Data...</p>;
+            return <p style={messageStyle}>Loading Prediction Data...</p>;
         }
 
         if (!this.state.apiResponse.data) {
-            return <p>Recieved bad response</p>;
+            return <p style={messageStyle}>Recieved bad response</p>;
         }
 
         if (!this.state.apiResponse.data) {
-            return <p>No data for the given station and timestamp: {this.props.stationID} @ {this.props.year +"-"+this.props.month+"-"+this.props.day+" T "+this.props.hour+":"+this.props.minute}</p>;
+            return <p style={messageStyle}>No data for the given station and timestamp: {this.props.stationID} @ {this.props.year +"-"+this.props.month+"-"+this.props.day+" T "+this.props.hour+":"+this.props.minute}</p>;
         }
 
 
