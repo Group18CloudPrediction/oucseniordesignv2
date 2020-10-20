@@ -1,7 +1,7 @@
 // Import
 import React, { Component } from 'react';
 import L from 'leaflet';
-import { subscribeToCoverage, subscribeToShadow } from '../api';
+import { subscribeToCoverage, subscribeToShadow, } from '../api';
 import SunCalc from 'suncalc';
 
 
@@ -18,11 +18,16 @@ const CALIB  = [0.6883333, 0.6883333, 1/6];
 // In our case the center is the average of the long lats for the substations
 const CENTER = [28.2367025, -81.23375]
 
+
+
 // Class
 class Map extends Component {
   constructor(props) {
     super(props);
-    this.refreshData = () => {this.callAPI()};
+    this.refreshData = () => {
+      this.callAPI(); 
+      this.updateImageBounds();
+    };
     this.state = {apiResponse: "",
     hasSubmitted: (this.props.skipForm? true : false),
     isLoading: true,
@@ -31,14 +36,27 @@ class Map extends Component {
     
     subscribeToCoverage((err, coverage_img) => {
       // If already exists, update the coverage image
-      this.coverageOverlay.setUrl(coverage_img);
+
+      // If Coverage Overlay is available, recompute the bounds given new CBH
+      if (!(this.coverageOverlay === undefined)) {
+        this.coverageOverlay.setUrl(coverage_img);
+      }
+
+    
+      console.log("cvg" + coverage_img);
     });
 
     subscribeToShadow((err, shadow_img) => {
       // If already exists, update the shadow image
-      this.shadowOverlay.setUrl(shadow_img);
+      
+      // If Shadow Overlay is available, recompute the bounds given new CBH
+      if (!(this.shadowOverlay === undefined)) {
+        this.shadowOverlay.setUrl(shadow_img);
+      }
+      console.log("shdw" + shadow_img);
     });
 
+    
   }
   // Call API to our mongoDB to fetch weather stats
   callAPI() {
@@ -115,11 +133,11 @@ class Map extends Component {
         layers: [ satellite, terrain ]
       });
       
-      // Set Shadow Overlay and add it to the map
+      // Create Image Overlay Options
       this.shadowOverlay = L.imageOverlay('', [[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]]);
       this.shadowOverlay.addTo(this.map);
       
-      // Set Coverage Overlay and add it to the map
+      // Create Image Overlay Options
       this.coverageOverlay = L.imageOverlay('', [[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]]);
       this.coverageOverlay.addTo(this.map);
       
@@ -182,7 +200,10 @@ class Map extends Component {
     // Render the following HTML
     render (){
       return (
-        <div id="map" className="localMap"style={{display:"flex", height:"98%", width: "98%"}}></div>
+        <div className="localDiv" style={{display:"flex", height:"100%", width: "100%"}}>
+          <div id="map" className="localMap"style={{display:"flex", height:"98%", width: "98%"}}></div>
+          <img src={this.state.coverageOverlay}/>
+        </div>
       );
   };
 
@@ -213,13 +234,14 @@ class Map extends Component {
     // ===================================================================================
     // To avoid inflating this code with comments, check the final project design document
     // for a more detailed description that explains the logic behind this.
-    var cloudHeight;
-    if(this.state.apiResponse){
-      var dataPoint = this.apiResponse.data[0];
-      cloudHeight = (1000 * (dataPoint.airT_C, 3 - (dataPoint.airT_C, 3 - (((100 - dataPoint.rh, 3)/5)))))/4.4;
-    } else{
-      cloudHeight = -1;
-    }
+    var cloudHeight = 2000;
+    // if(this.state.apiResponse){
+    //   var dataPoint = this.apiResponse.data[0];
+    //   cloudHeight = (1000 * (dataPoint.airT_C, 3 - (dataPoint.airT_C, 3 - (((100 - dataPoint.rh, 3)/5)))))/4.4;
+    // } else{
+    //   cloudHeight = 2000;
+    // }
+    console.log("cloudHeight " + cloudHeight);
     
     var calibrationAngle = Math.atan(CALIB[0] / CALIB[1]);
 
