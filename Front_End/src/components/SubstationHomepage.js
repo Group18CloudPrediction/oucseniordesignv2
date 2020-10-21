@@ -34,7 +34,7 @@ class SubstationHomepage extends Component {
                     </div>
 
                     <div className="subMap" style= {{ height: '40vh', width: '640px' }}>
-                        <Map stationID={this.props.stationID}/>
+                        <Map stationID={this.state.testMode? "1" : this.props.stationID}/>
                     </div> 
                 </div>
                 {/* Right display has the power prediction graph component at the top and the weather statistics component at the bottom */}
