@@ -10,10 +10,12 @@ const videoOptions = {
 
 // Set Overlay Options
 const overlayOptions = {};
-// Set which server we are trying to connect livestream too using enviroment variables.
-const server = process.env.LS_Server || "localhost:3000";
+//Get which address we are calling from
+let server = require("./apiCallers/_apiRootAddress");
 
-console.log("the result of enviroment variable " + process.env.LS_Server )
+//edit server string to conform to livestream url needs => removes http(s)://
+let pos = server.lastIndexOf("/");
+server = server.slice(pos+1, server.length)
 
 // Class
 class SubstationLivestream extends Component {

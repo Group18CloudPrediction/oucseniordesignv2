@@ -73,7 +73,7 @@ class Upcoming15MinutesLineGraph extends Component {
 
     callAPI() {
         this.setState({isLoading: true}); //might need to comment out
-        const server = process.env.Server || require("./_apiRootAddress");
+        const server = require("./_apiRootAddress");
 
         const baseURI = server+"/powerPredictions/getNow/";
 

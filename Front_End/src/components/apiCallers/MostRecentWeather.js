@@ -26,7 +26,7 @@ class MostRecentWeather extends Component {
         this.setState({isLoading: true});
 
         // this component works whether a station id is passed or not
-        const baseURL = process.env.Server || require("./_apiRootAddress");
+        const baseURL = require("./_apiRootAddress");
 
         var postReqParams = {
             stationID: this.props.stationID,

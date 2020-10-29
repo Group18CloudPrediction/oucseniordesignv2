@@ -94,7 +94,7 @@ class OfficialPredictionsLineGraph extends Component {
     }
 
     callAPI() {
-        const server = process.env.Server || require("./_apiRootAddress");
+        const server = require("./_apiRootAddress");
         const requestRootURI = "/powerPredictions/station/";
         const params = this.state.stationID;
 
