@@ -10,6 +10,8 @@ const videoOptions = {
 
 // Set Overlay Options
 const overlayOptions = {};
+// Set which server we are trying to connect livestream too using enviroment variables.
+const server = process.env.Server || require("./apiCallers/_apiRootAddress");
 
 // Class
 class SubstationLivestream extends Component {
@@ -19,7 +21,7 @@ class SubstationLivestream extends Component {
     if (!this.props.stationID) return (<div id="Livestream">JSX / HTML Error: no stationID specified</div>);
 
     //const url = "ws://cloudtracking-v2.herokuapp.com/sub-"+this.props.stationID
-    const url = "ws://localhost:3000/sub-" +this.props.stationID
+    const url = "wss://" + server + "/sub-" +this.props.stationID
     return (
       <div id="Livestream" >
         <h1> Substation {this.props.stationID}</h1>
