@@ -26,14 +26,19 @@ class Map extends Component {
   constructor(props) {
     super(props);
     
+    // TODO 
     subscribeToCoverage((err, coverage_img) => {
       // If already exists, update the coverage image
-      this.coverageOverlay.setUrl(coverage_img);
+      if (!(this.coverageOverlay === undefined)) {
+        this.coverageOverlay.setUrl(coverage_img);
+      }
     });
 
     subscribeToShadow((err, shadow_img) => {
       // If already exists, update the shadow image
-      this.shadowOverlay.setUrl(shadow_img);
+      if (!(this.shadowOverlay === undefined)) {
+        this.shadowOverlay.setUrl(shadow_img);
+      }
     });
   }
   // TODO REMOVE

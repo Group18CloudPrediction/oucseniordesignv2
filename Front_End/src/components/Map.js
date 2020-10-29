@@ -1,7 +1,7 @@
 // Import
 import React, { Component } from 'react';
 import L from 'leaflet';
-import { subscribeToCoverage, subscribeToShadow } from '../api';
+import { subscribeToCoverage, subscribeToShadow, } from '../api';
 import SunCalc from 'suncalc';
 
 
@@ -18,30 +18,48 @@ const CALIB  = [0.6883333, 0.6883333, 1/6];
 // In our case the center is the average of the long lats for the substations
 const CENTER = [28.2367025, -81.23375]
 
+
+
 // Class
 class Map extends Component {
   constructor(props) {
     super(props);
-    this.refreshData = () => {this.callAPI()};
+    this.refreshData = () => {
+      this.callAPI(); 
+    };
     this.state = {apiResponse: "",
     hasSubmitted: (this.props.skipForm? true : false),
     isLoading: true,
     hasError: false,
     error: null}
-    
+    this.callAPI();
     subscribeToCoverage((err, coverage_img) => {
       // If already exists, update the coverage image
-      this.coverageOverlay.setUrl(coverage_img);
+
+      // If Coverage Overlay is available, recompute the bounds given new CBH
+      if (!(this.coverageOverlay === undefined)) {
+        this.coverageOverlay.setUrl(coverage_img);
+      }
+
+    
+      console.log("cvg" + coverage_img);
     });
 
     subscribeToShadow((err, shadow_img) => {
       // If already exists, update the shadow image
-      this.shadowOverlay.setUrl(shadow_img);
+      
+      // If Shadow Overlay is available, recompute the bounds given new CBH
+      if (!(this.shadowOverlay === undefined)) {
+        this.shadowOverlay.setUrl(shadow_img);
+      }
+      console.log("shdw" + shadow_img);
     });
 
+    
   }
   // Call API to our mongoDB to fetch weather stats
   callAPI() {
+    console.log("I love this API");
     this.setState({isLoading: true});
 
     // this component works whether a station id is passed or not
@@ -69,7 +87,7 @@ class Map extends Component {
             body: JSON.stringify(postReqParams)
         })
         .then (response => response.json()                                     )
-        .then (res      => this.setState({apiResponse: res, isLoading: false}) )
+        .then (res      => {this.setState({apiResponse: res, isLoading: false}); this.updateImageBounds(); console.log("Hello");})
         .catch(err      => this.setState({hasError:true, error:err})           );
 
     this.setState({hasSubmitted: true});
@@ -115,11 +133,11 @@ class Map extends Component {
         layers: [ satellite, terrain ]
       });
       
-      // Set Shadow Overlay and add it to the map
+      // Create Image Overlay Options
       this.shadowOverlay = L.imageOverlay('', [[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]]);
       this.shadowOverlay.addTo(this.map);
       
-      // Set Coverage Overlay and add it to the map
+      // Create Image Overlay Options
       this.coverageOverlay = L.imageOverlay('', [[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]]);
       this.coverageOverlay.addTo(this.map);
       
@@ -181,8 +199,11 @@ class Map extends Component {
 
     // Render the following HTML
     render (){
+      console.log("ERROR " + this.state.error);
       return (
-        <div id="map" className="localMap"style={{display:"flex", height:"98%", width: "98%"}}></div>
+        <div className="localDiv" style={{display:"flex", height:"100%", width: "100%"}}>
+          <div id="map" className="localMap"style={{display:"flex", height:"98%", width: "98%"}}></div>
+        </div>
       );
   };
 
@@ -208,18 +229,30 @@ class Map extends Component {
     // Returns a {azimuth, altitude} object. We're only interested in altitude
     // sun altitude above the horizon in radians, e.g. 0 at the horizon and PI/2 at the zenith (straight over your head)
     // Azimuth: 0 is south and Math.PI * 3/4 is northwest
+    const round = (number, decimalPlaces) => {
+      if (isNaN(number)) return "NaN";
+      
+      const factorOfTen = Math.pow(10, decimalPlaces)
+      var retval = (Math.round(number * factorOfTen) / factorOfTen)
+      
+      return retval+"";
+  }
     var sun = SunCalc.getPosition(new Date(), CENTER[0], CENTER[1]);
 
     // ===================================================================================
     // To avoid inflating this code with comments, check the final project design document
     // for a more detailed description that explains the logic behind this.
     var cloudHeight;
-    if(this.state.apiResponse){
-      var dataPoint = this.apiResponse.data[0];
-      cloudHeight = (1000 * (dataPoint.airT_C, 3 - (dataPoint.airT_C, 3 - (((100 - dataPoint.rh, 3)/5)))))/4.4;
+    if(!(typeof(this.state.apiResponse) === 'undefined') && this.state.apiResponse != null && !(typeof(this.state.apiResponse.data) === 'undefined')){
+      console.log("if");
+      var dataPoint = this.state.apiResponse.data[0];
+      cloudHeight = round((1000 * (round(dataPoint.airT_C, 3) - (round(dataPoint.airT_C, 3) - (((100 - round(dataPoint.rh, 3))/5)))))/4.4, 3);
     } else{
-      cloudHeight = -1;
+      console.log("else");
+      cloudHeight = 2000;
     }
+    console.log(this.state.apiResponse);
+    console.log("cloudHeight " + cloudHeight + this.state.apiResponse + "!");
     
     var calibrationAngle = Math.atan(CALIB[0] / CALIB[1]);
 

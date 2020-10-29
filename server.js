@@ -104,11 +104,14 @@ function init() {
 
   //Copy and paste from previous team code
   socketio.on('connection', (client) => {
+    console.log('Client Connected');
     client.on('coverage', (frame) => {
+      console.log('coverage received');
       client.broadcast.emit('coverage', "data:image/png;base64,"+ frame.toString("base64"))
     })
 
     client.on('shadow', (frame) => {
+      console.log('shadow received');
       client.broadcast.emit('shadow', "data:image/png;base64,"+ frame.toString("base64"))
     })
 
