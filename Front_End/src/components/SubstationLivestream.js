@@ -13,6 +13,8 @@ const overlayOptions = {};
 // Set which server we are trying to connect livestream too using enviroment variables.
 const server = process.env.LS_Server || "localhost:3000";
 
+console.log("the result of enviroment variable " + process.env.LS_Server )
+
 // Class
 class SubstationLivestream extends Component {
   // Render the following html
