@@ -31,7 +31,7 @@ class Upcoming15MinutesLineGraph extends Component {
             dateTime: this.buildInitialDateTime(),
             startDateTime: this.buildInitialDateTime(),
 
-            
+
             predictionsColor:     this.props.predictionsColor     || "#8884d8",
             predictionsFillColor: this.props.predictionsFillColor || this.props.predictionsColor || "#8884d8",
             realDataColor:        this.props.realDataColor        || "#b5ad38",
@@ -54,7 +54,7 @@ class Upcoming15MinutesLineGraph extends Component {
             this.setState({dateTime: date, numRefreshes:(this.state.numRefreshes+1)});
             this.callAPI();
         }
-        
+
     }
 
     buildInitialDateTime() {
@@ -73,7 +73,7 @@ class Upcoming15MinutesLineGraph extends Component {
 
     callAPI() {
         this.setState({isLoading: true}); //might need to comment out
-        const server = process.env.Server || "http://localhost:3000"
+        const server = process.env.Server || require("./_apiRootAddress");
 
         const baseURI = server+"/powerPredictions/getNow/";
 
@@ -108,7 +108,7 @@ class Upcoming15MinutesLineGraph extends Component {
         }
         this.callAPI();
     }
-    
+
     componentWillUnmount() {
         // prevent memory leak
         if(this.props.realTimeUpdates)
@@ -137,7 +137,7 @@ class Upcoming15MinutesLineGraph extends Component {
 
         return this.renderGraph(displayData);
     }
-    
+
     createDisplayData() {
         var displayData = [];
 
@@ -158,7 +158,7 @@ class Upcoming15MinutesLineGraph extends Component {
 
         //const data = this.state.apiResponse.data[0];
         const predictions = this.state.predictions;
-        
+
         const hour = this.state.dateTime.getHours();
         const minute = this.state.dateTime.getMinutes();
 
@@ -172,23 +172,23 @@ class Upcoming15MinutesLineGraph extends Component {
             const thisName = thisHour + ":" + (thisMinute < 10? "0" : "") + thisMinute;
             displayData.push({time: thisName, "predicted":predictions[i]});
         }
-        
+
         return displayData;
     }
-    
+
     renderGraph(displayData) {
         return (
             <div className="PowerPredictionsLineGraph">
                 <AreaChart width={400} height={400} data={displayData}>
-                    
+
                     <defs>
                         {
                             this.GetLineGraphColors()
                         }
                     </defs>
-                    
+
                     {this.GetLines()}
-                    
+
                     <CartesianGrid stroke={this.state.gridLinesColor} strokeDasharray="5 5" />
                     <XAxis dataKey="time" stroke={this.state.xAxisColor}/>
                     <YAxis dataKey="predicted" stroke={this.state.yAxisColor}/>
@@ -197,37 +197,37 @@ class Upcoming15MinutesLineGraph extends Component {
             </div>
         );
     }
-    
+
     GetLineGraphColors() {
         var colors = [];
-        
+
         colors.push(
             <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={this.state.predictionsFillColor} stopOpacity={0.8}/>
                 <stop offset="95%" stopColor={this.state.predictionsFillColor} stopOpacity={0}/>
             </linearGradient>
         );
-        
+
         colors.push(
             <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={this.state.realDataFillColor} stopOpacity={0.8}/>
                 <stop offset="95%" stopColor={this.state.realDataFillColor} stopOpacity={0}/>
             </linearGradient>
         );
-        
+
         return colors;
     }
-    
+
     GetLines() {
         var lines = [];
-        
+
         lines.push(<Area type="monotone" dataKey="predicted" stroke={this.state.predictionsColor} fillOpacity={1} fill="url(#colorUv)"/>)
         lines.push(<Area type="monotone" dataKey="measured"  stroke={this.state.realDataColor}    fillOpacity={1} fill="url(#colorPv)"/>)
-        
+
         return lines;
-    
+
 //          <Line type="monotone" dataKey="pv" stroke="#82ca9d" fillOpacity={1} fill="url(#colorPv)" />
-                
+
     }
 }
 

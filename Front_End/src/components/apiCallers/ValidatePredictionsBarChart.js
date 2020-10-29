@@ -18,15 +18,15 @@ class ValidatePredictionsBarChart extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { 
-            apiResponse: "", 
+        this.state = {
+            apiResponse: "",
             isLoading:true,
             hasError: false,
             error: null,
-            
+
             dateTime: this.buildInitialDateTime()
         };
-        
+
         this.refreshData = () => {
             var date = new Date(this.state.dateTime.getTime()+60*1000);
             console.log("Refreshing! - old date: " + this.state.dateTime + " new date: " + date);
@@ -34,42 +34,42 @@ class ValidatePredictionsBarChart extends Component {
             this.callAPI();
         }
     }
-    
+
     buildInitialDateTime() {
         if (
             !this.props.year  ||
             !this.props.month ||
-            !this.props.day   || 
-            !this.props.hour  || 
-            !this.props.minute 
+            !this.props.day   ||
+            !this.props.hour  ||
+            !this.props.minute
         ) {
             return new Date();
         } else {
             return new Date(this.props.year, this.props.month, this.props.day, this.props.hour, this.props.minute);
         }
     }
-    
+
     callAPI() {
         //this.setState({isLoading: true});
-        
+
         const params = (!this.props.stationID ? "" : this.props.stationID);
         const baseURL = require("./_apiRootAddress");
-        
+
         var postReqParams = {
             stationID: this.props.stationID,
             overNMostRecent: this.props.overNMostRecent,
-            
+
             year:   this.state.dateTime.getFullYear(),
             month:  this.state.dateTime.getMonth(),
             day:    this.state.dateTime.getDate(),
             hour:   this.state.dateTime.getHours(),
             minute: this.state.dateTime.getMinutes()
         }
-        
+
         console.log(postReqParams);
-        
+
         var postReqURL = baseURL + "/powerPredictions/validate/" + params;
-            
+
         fetch(postReqURL, {
                 method: 'post',
                 headers: {
@@ -81,10 +81,10 @@ class ValidatePredictionsBarChart extends Component {
             .then (response => response.json()                                     )
             .then (res      => this.setState({apiResponse: res, isLoading: false}) )
             .catch(err      => this.setState({hasError:true, error:err})           );
-        
+
         //this.setState({hasSubmitted: true});
     }
-    
+
     componentDidMount() {
         if(this.props.realTimeUpdates)
         {
@@ -98,24 +98,24 @@ class ValidatePredictionsBarChart extends Component {
         if(this.props.realTimeUpdates)
             clearInterval(this.interval);
     }
-    
-    render() {    
+
+    render() {
         if (this.state.hasError) {
             return <p>Error: <p>{this.state.error.message}</p></p>;
         }
-        
+
         if (this.state.isLoading) {
             return <p>Loading Prediction Data...</p>;
         }
-        
+
         console.log(this.state.apiResponse)
-        
+
         if (!this.state.apiResponse.data) {
             return <p>Recieved bad response</p>;
         }
-        
+
         console.log(this.state.apiResponse.data.data)
-        
+
         const barData = [
             {"name": "1 Minute Out", "averagePercentError": this.state.apiResponse.data.data[0]},
             {"name": "2 Minutes Out", "averagePercentError": this.state.apiResponse.data.data[1]},
@@ -133,10 +133,10 @@ class ValidatePredictionsBarChart extends Component {
             {"name": "14 Minutes Out", "averagePercentError": this.state.apiResponse.data.data[13]},
             {"name": "15 Minutes Out", "averagePercentError": this.state.apiResponse.data.data[14]},
         ]
-        
+
         console.log(barData)
-        
-        
+
+
         //return (<div>nyi</div>)
         return (
             <div className="PowerPredictionsAveragePercentErrorBarGraph">
@@ -158,7 +158,7 @@ class ValidatePredictionsBarChart extends Component {
                 </BarChart>
             </div>
         )
-        
+
     }
 }
 

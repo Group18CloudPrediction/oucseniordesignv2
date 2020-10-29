@@ -9,7 +9,7 @@ class OfficialPredictionsLineGraph extends Component {
             isLoading:true,
             hasError: false,
             error: null,
-            
+
             width:  this.props.width  || 600,
             height: this.props.height || 200,
 
@@ -17,14 +17,14 @@ class OfficialPredictionsLineGraph extends Component {
             measuredValues: [],
 
             lookbackDepth: this.props.lookbackDepth || 1,
-            
+
             stationID: this.props.stationID,
-            
+
             toggle_realValues: true,
             toggle_worstDeviation: true,
             toggle_averageDeviation: true,
-            
-            
+
+
             //maxRealValueRecordings: this.props.maxRealValueRecordings || 2, //5,
             dateTime: this.buildInitialDateTime(),
             startDateTime: this.buildInitialDateTime(),
@@ -32,7 +32,7 @@ class OfficialPredictionsLineGraph extends Component {
             // base color: #8884d8
             widthPercent: this.props.widthPercent || 0.6,
             heightPercent: this.props.heightPercent || 0.8,
-            
+
             // colors
             predictionsColor:     this.props.predictionsColor     || "#dcd9fa",
             predictionsFillColor: this.props.predictionsFillColor || this.props.predictionsColor || "#9490f0",
@@ -42,7 +42,7 @@ class OfficialPredictionsLineGraph extends Component {
             averageExpectedDeviationColor:      this.props.averageExpectedDeviationColor     || "#6d6aad",//"#5f5c96",
             averageExpectedDeviationFillColor:  this.props.averageExpectedDeviationFillColor || this.props.averageExpectedDeviationColor || "#6d6aad",//"#5f5c96",
             worstExpectedDeviationColor:        this.props.worstExpectedDeviationColor       || "#4e4b7d",//"#2f2d4a",
-            worstExpectedDeviationFillColor:    this.props.worstExpectedDeviationFillColor   || this.props.worstExpectedDeviationColor   || "#4e4b7d",//"#2f2d4a",  
+            worstExpectedDeviationFillColor:    this.props.worstExpectedDeviationFillColor   || this.props.worstExpectedDeviationColor   || "#4e4b7d",//"#2f2d4a",
 
             textColor:      this.props.textColor      || '#dddddd',
             disabledColor:  this.props.disabledColor  || '#111111',
@@ -53,9 +53,9 @@ class OfficialPredictionsLineGraph extends Component {
 
             tooltipBackgroundColor: this.props.tooltipBackgroundColor || '#131b23',//'#2c3e50',
             tooltipBorderColor: this.props.tooltipBorderColor || '#8884d8',
-            
+
             buttonColor: this.props.buttonColor || '#2c3e50'
-            
+
         };
 
         if (!this.props.stationID)
@@ -68,14 +68,14 @@ class OfficialPredictionsLineGraph extends Component {
             this.setState({dateTime: date, numRefreshes:(this.state.numRefreshes+1)});
             this.callAPI();
         }
-        
+
         this.setSize = () => {
             const myWidth  = document.getElementsByClassName('LineGraphWrapper')[0].offsetWidth;
-            const myHeight = document.getElementsByClassName('LineGraphWrapper')[0].offsetHeight; 
-        
+            const myHeight = document.getElementsByClassName('LineGraphWrapper')[0].offsetHeight;
+
             this.setState({width: myWidth, height: myHeight});
         }
-        
+
         window.addEventListener('resize', this.setSize);
     }
 
@@ -94,16 +94,16 @@ class OfficialPredictionsLineGraph extends Component {
     }
 
     callAPI() {
-        const server = require("./_apiRootAddress");
+        const server = process.env.Server || require("./_apiRootAddress");
         const requestRootURI = "/powerPredictions/station/";
         const params = this.state.stationID;
-        
+
         var postReqParams = {
             lookbackDepth: this.state.lookbackDepth
         }
-        
+
         console.log(JSON.stringify(postReqParams));
-        
+
         fetch(server + requestRootURI + params, {
                 method: 'post',
                 headers: {
@@ -116,7 +116,7 @@ class OfficialPredictionsLineGraph extends Component {
             .then(res => {
                 console.log("official line graph");
                 console.log(res);
-                
+
                 if (res.data) {
                     this.setState({apiResponse: res, predictions: res.data.latest_power_predictions, isLoading: false});
                     this.state.measuredValues.push(res.data.latest_actualPowerValue);
@@ -129,7 +129,7 @@ class OfficialPredictionsLineGraph extends Component {
 //                     this.state.measuredValues.shift()
 //                     this.setState({startDateTime: new Date(this.state.startDateTime.getTime()+60000)});
 //                 }
-                
+
             })
             .catch(err => this.setState({hasError:true, error:err}));
     }
@@ -141,12 +141,12 @@ class OfficialPredictionsLineGraph extends Component {
             const updateEveryXSeconds = 60;
             this.interval = setInterval(this.refreshData, updateEveryXSeconds*1000);
         }
-        
+
         this.setSize();
-        
+
         this.callAPI();
     }
-    
+
     componentWillUnmount() {
         // prevent memory leak
         if(this.props.realTimeUpdates)
@@ -158,7 +158,7 @@ class OfficialPredictionsLineGraph extends Component {
             color: this.state.textColor,
             textAlign: "center"
         }
-        
+
         if (this.state.hasError) {
             return <div style={messageStyle}>Error: <p>{this.state.error.message}</p></div>;
         }
@@ -180,14 +180,14 @@ class OfficialPredictionsLineGraph extends Component {
 
         return this.renderGraph(displayData);
     }
-    
+
     createDisplayData() {
-        
+
         //
         // copy/pasted code from Upcoming15MinutesLineGraph, because I don't understand class inheritance in js
         //
-        
-        
+
+
         var displayData = [];
 
         if (this.state.toggle_realValues)
@@ -208,7 +208,7 @@ class OfficialPredictionsLineGraph extends Component {
 
         //const data = this.state.apiResponse.data[0];
         const predictions = this.state.predictions;
-        
+
         const hour = this.state.dateTime.getHours();
         const minute = this.state.dateTime.getMinutes();
 
@@ -223,39 +223,39 @@ class OfficialPredictionsLineGraph extends Component {
             const thisPredicted = this.props.clampAboveZero? Math.max(0, predictions[i]) : predictions[i];
             displayData.push({time: thisName, "predicted":thisPredicted});
         }
-        
+
         //
         // end copy/pasted code
         //
-        
-        
+
+
         const calcExpected = (value, percError) => {
             const val = value + value*percError/100.0;
             return this.props.clampAboveZero? Math.max(0, val) : val;
         }
-        
+
         const calcExpectedRange = (value, percError) => {
             if (value < 0) value *= -1;
-            
+
             return [calcExpected(value, -percError), calcExpected(value, percError)];
         }
-        
-        
+
+
         // for the last 15 elements of displayData, calculate expected max and expected min, and add them as emin and emax
         // for all other elements, add emin and emax = uv
-        
+
         var predictionsStart = displayData.length-15;
-        
+
         for (var i = 0; i < predictionsStart; i++) {
-            
+
             var val = (i == predictionsStart-1 ? [displayData[i].measured, displayData[i].measured] : null)
-            
+
             if (this.state.toggle_averageDeviation) displayData[i]["average deviation"] = val;//null;//[displayData[i].measured, displayData[i].measured];
             if (this.state.toggle_worstDeviation)   displayData[i]["worst deviation"]   = val;//null;//[displayData[i].measured, displayData[i].measured];
-            
+
             //displayData[i].eMinAverage = displayData[i].measured;
             //displayData[i].eMaxAverage = displayData[i].measured;
-            
+
             //displayData[i].eMinWorst = displayData[i].measured;
             //displayData[i].eMaxWorst = displayData[i].measured;
         }
@@ -265,27 +265,27 @@ class OfficialPredictionsLineGraph extends Component {
             const prediction = this.state.apiResponse.data.latest_power_predictions[minutesOut];
             const averagPerc = this.state.apiResponse.data.historical_averagePercentErrors[minutesOut];
             const worstPerc  = this.state.apiResponse.data.historical_worstPercentErrors[minutesOut];
-            
+
             const avgExpA = calcExpected(prediction, -averagPerc);
             const avgExpB = calcExpected(prediction, averagPerc);
             const wstExpA = calcExpected(prediction, -worstPerc);
             const wstExpB = calcExpected(prediction, worstPerc);
-            
+
             if (this.state.toggle_averageDeviation) displayData[i]["average deviation"] = [Math.min(avgExpA, avgExpB), Math.max(avgExpA, avgExpB)];
             if (this.state.toggle_worstDeviation)   displayData[i]["worst deviation"]   = [Math.min(wstExpA, wstExpB), Math.max(wstExpA, wstExpB)];
-            
-            
+
+
 //             displayData[i].eMinAverage = calcExpected(prediction, -averagPerc);
 //             displayData[i].eMaxAverage = calcExpected(prediction, averagPerc);
-//             
+//
 //             displayData[i].eMinWorst = calcExpected(prediction, -worstPerc);
 //             displayData[i].eMaxWorst = calcExpected(prediction, worstPerc);
         }
-        
-        
+
+
         return displayData;
     }
-    
+
     militaryToStandardTime(s) {
         var arr = s.split(":");
         var hour = parseInt(arr[0], 10);
@@ -300,19 +300,19 @@ class OfficialPredictionsLineGraph extends Component {
         else
             return s+" AM";
     }
-    
+
     renderGraph(displayData) {
         const round = (number, decimalPlaces) => {
             if (isNaN(number)) {
                 return number;
             }
-            
+
             const factorOfTen = Math.pow(10, decimalPlaces)
             var retval = (Math.round(number * factorOfTen) / factorOfTen)
-            
+
             return retval+"";
         }
-        
+
         const formatLegendData = (value) => {
             if (value[0] != null)
                 return round(value[0], 2) + " - " + round(value[1], 2) + " kW";
@@ -323,7 +323,7 @@ class OfficialPredictionsLineGraph extends Component {
         const myWidth = document.getElementsByClassName('LineGraphWrapper')[0].offsetWidth;
         const myHeight = document.getElementsByClassName('LineGraphWrapper')[0].offsetHeight;
 
-        
+
         // CustomToolTip code modified from ericraq's code at
         // https://github.com/recharts/recharts/issues/1612#issuecomment-461898105
         const CustomToolTip = props => {
@@ -331,7 +331,7 @@ class OfficialPredictionsLineGraph extends Component {
             if (!active || !payload) {
                 return null;
             }
-            
+
             const tooltip = {
                 backgroundColor: this.state.tooltipBackgroundColor,//'#2c3e50',
                 opacity: '0.9',
@@ -340,26 +340,26 @@ class OfficialPredictionsLineGraph extends Component {
                 paddingLeft:'10px',
                 paddingRight:'10px'
             }
-            
+
             return (
-                <div> 
+                <div>
                     <div className="custom-tooltip" style={tooltip}>
                         <p style={{textAlign: 'center'}}>
                             <strong style={{color: this.state.textColor}}>{label}</strong>
                         </p>
-                        
+
                         <table> <tbody>
                             {payload.map((item, i, payload) => {
-                                
-                                
+
+
                                 //const itemColor = i == 1 ? (item.value > payload[0].value ? '#00A86B' :  '#FF2400') : item.color
 //                                 const itemColor = item.color;
-                                
-                                
+
+
                                 return(
                                     <tr key={i}>
                                         <th style={{color: item.color}} key={i+"tooltipDataName"}>
-                                            {item.name}:  
+                                            {item.name}:
                                         </th>
                                         <td key={i+"spacer"} style={{color: this.state.tooltipBackgroundColor}}>
                                           s
@@ -376,14 +376,14 @@ class OfficialPredictionsLineGraph extends Component {
                 </div>
             )
         }
-        
+
         //units : kW AC
         return (
             <div className="PowerPredictionsLineGraph" id="PowerPredictionsLineGraph">
                 <table style={{marginLeft:"auto", marginRight:"auto"}}> <tbody> <tr>
-                    
+
                     <td style={{color:"#00000000"}}> aaa</td>
-                    
+
                     <td>
                         <AreaChart width={this.state.width*this.state.widthPercent} height={this.state.height*this.state.heightPercent} data={displayData}>
 
@@ -392,9 +392,9 @@ class OfficialPredictionsLineGraph extends Component {
                                     this.GetLineGraphColors()
                                 }
                             </defs>
-                            
+
                             {this.GetLines()}
-                            
+
                             <CartesianGrid stroke={this.state.gridLinesColor} strokeDasharray="5 5" />
                             <XAxis dataKey="time" stroke={this.state.xAxisColor}/>
                             <YAxis dataKey="predicted" stroke={this.state.yAxisColor}>
@@ -409,26 +409,26 @@ class OfficialPredictionsLineGraph extends Component {
                             <Tooltip content={CustomToolTip}/>
                         </AreaChart>
                     </td>
-                
+
                     <td style={{color:"#00000000"}}> a</td>
-                
+
                     <td>
-                        
+
                         {this.GetLegend(2)}
-                        
+
                     </td>
-                    
+
                 </tr></tbody></table>
             </div>
         );
     }
-    
+
     GetLegend(style) {
         const worstExpToggle   = () => { this.setState({toggle_worstDeviation:   !this.state.toggle_worstDeviation});   }
         const averageExpToggle = () => { this.setState({toggle_averageDeviation: !this.state.toggle_averageDeviation}); }
         const realValToggle    = () => { this.setState({toggle_realValues:       !this.state.toggle_realValues});       }
-        
-        
+
+
         return (
             <table style={{color: this.state.textColor}}> <tbody>
                 <tr>
@@ -466,73 +466,73 @@ class OfficialPredictionsLineGraph extends Component {
             </tbody> </table>
         );
     }
-    
+
     GetLineGraphColors() {
         var colors = [];
-        
+
         colors.push(
             <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1" key="colorUv">
                 <stop offset="5%" stopColor={this.state.predictionsFillColor} stopOpacity={0.8}/>
                 <stop offset="95%" stopColor={this.state.predictionsFillColor} stopOpacity={0}/>
             </linearGradient>
         );
-        
+
         colors.push(
             <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1" key="colorPv">
                 <stop offset="5%" stopColor={this.state.realDataFillColor} stopOpacity={0.8}/>
                 <stop offset="95%" stopColor={this.state.realDataFillColor} stopOpacity={0}/>
             </linearGradient>
         );
-        
+
         colors.push(
             <linearGradient id="colorEAvg" x1="0" y1="0" x2="0" y2="1" key="colorEAvg">
                 <stop offset="5%" stopColor={this.state.averageExpectedDeviationFillColor} stopOpacity={0.8}/>
                 <stop offset="95%" stopColor={this.state.averageExpectedDeviationFillColor} stopOpacity={0}/>
             </linearGradient>
         );
-        
+
         colors.push(
             <linearGradient id="colorEWorst" x1="0" y1="0" x2="0" y2="1" key="colorEWorst">
                 <stop offset="5%" stopColor={this.state.worstExpectedDeviationFillColor} stopOpacity={0.8}/>
                 <stop offset="95%" stopColor={this.state.worstExpectedDeviationFillColor} stopOpacity={0}/>
             </linearGradient>
         );
-        
+
         return colors;
     }
-    
+
     GetLines() {
         var lines = [];
-        
-        
+
+
 //         lines.push(<Area type="monotone" dataKey="eMinWorst" stroke={this.state.worstExpectedDeviationColor} fillOpacity={1} fill="url(#colorEWorst)"/>)
 //         lines.push(<Area type="monotone" dataKey="eMaxWorst" stroke={this.state.worstExpectedDeviationColor} fillOpacity={1} fill="url(#colorEWorst)"/>)
-//         
+//
 //         lines.push(<Area type="monotone" dataKey="eMinAverage" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill="url(#colorEAvg)"/>)
 //         lines.push(<Area type="monotone" dataKey="eMaxAverage" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill="url(#colorEAvg)"/>)
-//         
-//         
+//
+//
 //         lines.push(<Area type="monotone" dataKey="predicted" stroke={this.state.predictionsColor} fillOpacity={1} fill="url(#colorUv)" />)
 //         lines.push(<Area type="monotone" dataKey="measured"  stroke={this.state.realDataColor}    fillOpacity={1} fill="url(#colorPv)" />)
-//         
-        
-        
+//
+
+
         //lines.push(<Area type="monotone" dataKey="eMinWorst" stroke={this.state.worstExpectedDeviationColor} fillOpacity={1} fill={this.state.worstExpectedDeviationFillColor}/>)
         //lines.push(<Area type="monotone" dataKey="eMaxWorst" stroke={this.state.worstExpectedDeviationColor} fillOpacity={1} fill={this.state.worstExpectedDeviationFillColor}/>)
         lines.push(<Area type="monotone" dataKey="worst deviation" key="worst deviation" stroke={this.state.worstExpectedDeviationColor} strokeWidth={7} fillOpacity={1} fill={this.state.worstExpectedDeviationFillColor}/>)
-        
+
         //lines.push(<Area type="monotone" dataKey="eMinAverage" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill={this.state.averageExpectedDeviationFillColor}/>)
         //lines.push(<Area type="monotone" dataKey="eMaxAverage" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill={this.state.averageExpectedDeviationFillColor}/>)
         lines.push(<Area type="monotone" dataKey="average deviation" key="average deviation" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill={this.state.averageExpectedDeviationFillColor}/>)
-        
+
         lines.push(<Area type="monotone" dataKey="predicted" key="predicted" stroke={this.state.predictionsColor} fillOpacity={0} strokeWidth={5} fill={this.state.predictionsFillColor} />)
         lines.push(<Area type="monotone" dataKey="measured"  key="measured"  stroke={this.state.realDataColor}    fillOpacity={0} strokeWidth={5} fill={this.state.predictionsFillColor} />)
-        
-        
+
+
         return lines;
-    
+
 //          <Line type="monotone" dataKey="pv" stroke="#82ca9d" fillOpacity={1} fill="url(#colorPv)" />
-                
+
     }
 }
 
