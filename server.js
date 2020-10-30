@@ -101,7 +101,7 @@ function init() {
       viewSrv.emit("connection", ws, req);
     });
   });
-/*
+
   //Copy and paste from previous team code
   socketio.on('connection', (client) => {
     console.log('Client Connected');
@@ -120,7 +120,8 @@ function init() {
       console.log(err)
     });
   });
-*/
+
+/*
   socketio.on("connection", (req, socket, head) => {
     const pathname = url.parse(req.url).pathname
     client = channels[pathname]
@@ -135,7 +136,7 @@ function init() {
       client.pushData.emit('shadow', "data:image/png;base64" + frame.toString("base64"))
     })
   })
-
+*/
 
   // Serve the static files from the React app
   app.use(express.static(path.join(__dirname, "Front_End/build")));
