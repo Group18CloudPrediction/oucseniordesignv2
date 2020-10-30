@@ -125,7 +125,19 @@ const getAverageAndWorst_AbsoluteValue_PercentErrors_AndLatestPredictions = (res
             {
                 var thisData = data[i];
                 
+                if (thisData == null || typeof(thisData) === "undefined" || thisData.verified_power_data == "" || thisData.verified_power_data == null)
+                {
+                    console.log("Error with thisData: " + thisData);
+                    continue;
+                }
+                
                 const temp = JSON.parse(thisData.verified_power_data);
+                
+                if (temp[0] == null || typeof(temp[0]) === "undefined")
+                {
+                    console.log("error with temp: " + temp);
+                    continue;
+                }
                 
                 if(processedData.latestActualPowerValue == null)
                     processedData.latestActualPowerValue = temp[0].actual_value;
