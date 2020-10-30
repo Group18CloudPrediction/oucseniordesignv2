@@ -1,5 +1,10 @@
 const mongoose = require('mongoose');
 
+
+// 
+// Each entry in the PowerVerificationData table of our database will look like this below.
+//
+// verified_power_data is a JSON string. Examples of what it may look like are listed at the end of this file.
 const PowerPredictionValidation = mongoose.Schema(
     {
         author: {type: String, required: false},
@@ -15,6 +20,7 @@ module.exports = mongoose.model('officialPowerPredictionValidations', PowerPredi
 
 
 /*
+ EXAMPLE 1:
  
  [
     {
@@ -34,6 +40,8 @@ module.exports = mongoose.model('officialPowerPredictionValidations', PowerPredi
     }
 ]
 
+
+EXAMPLE 2:
 
 [
     {

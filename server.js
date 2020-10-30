@@ -1,13 +1,15 @@
-var express = require("express"),
-  mongoose = require("mongoose"),
+var express  = require("express"),
+  mongoose   = require("mongoose"),
   bodyParser = require("body-parser"),
-  path = require("path"),
-  http = require("http"),
-  webSocket = require("ws"),
-  socketIO = require("socket.io"),
-  url = require("url"),
-  cors = require("cors");
-
+  path       = require("path"),
+  http       = require("http"),
+  webSocket  = require("ws"),
+  socketIO   = require("socket.io"),
+  url        = require("url"),
+  cors       = require("cors"), // cors is required for the api to be able to recieve and respond to requests from the frontend
+  //cron       = require("cron"), // for scheduling the emailer
+  nodemailer = require("nodemailer"); // for sending emails
+  
 var app = express(),
   streamServer = http.createServer(app),
   socketio = socketIO(streamServer),
@@ -53,6 +55,10 @@ function route() {
   return router;
 }
 
+// this function sets up the base URLs that the routers will expand on
+// for example if the backend is hosted on localhost, "https://localhost:3000/weatherData"
+// will be the base URL for requesting weather data, and "weatherDataRouter.js" will
+// expand on that URL for specific requests (eg "https://localhost:3000/weatherData/getall")
 function init_routes() {
   var testAPIRouter          = require("./api/routes/testAPIRouter");
   var weatherDataRouter      = require("./api/routes/weatherDataRouter");
@@ -70,6 +76,72 @@ function init_routes() {
   //app.use("/cloudMotion", legacyCloudMotionRouter);
 }
 
+async function initEmailer() {
+//   const toEmail = require("./config/emailAddressForAnomalyReports");
+//   
+//   // Generate test SMTP service account from ethereal.email
+//   // Only needed if you don't have a real mail account for testing
+//   let testAccount = await nodemailer.createTestAccount();
+// 
+//   // create reusable transporter object using the default SMTP transport
+//   let transporter = nodemailer.createTransport({
+//     host: "localhost:3000",
+//     port: 587,
+//     secure: false, // true for 465, false for other ports
+//     auth: {
+//       user: testAccount.user, // generated ethereal user
+//       pass: testAccount.pass, // generated ethereal password
+//     },
+//   });
+// 
+//   
+//   // send mail with defined transport object
+//   let info = await transporter.sendMail({
+//     from: '"Fred Foo 👻" <foo@example.com>', // sender address
+//     to: toEmail, // list of receivers
+//     subject: "Hello ✔", // Subject line
+//     text: "Hello world?", // plain text body
+//     html: "<b>Hello world?</b>", // html body
+//   });
+// 
+//   console.log("Message sent: %s", info.messageId);
+  
+  const toEmail = require("./config/emailAddressForAnomalyReports");
+  const mailOptions = {
+    from:    "ouc.sdproj.2019.2020@gmail.com",
+    to:      toEmail,
+    subject: 'test',
+    text:    'testing text'
+  };
+  
+//   const transporter = nodemailer.sendmail;
+//   const transporter = nodemailer.createTransport({
+//     service: 'SMTP',
+//     auth: {
+//       user: "ouc.sdproj.2019.2020@gmail.com",
+//       pass: "oucIsTheBestSponsor1!A"
+//     }
+//   });
+  
+  const transporter = nodemailer.createTransport({
+    port: 3000,
+    host: 'localhost',
+    tls: {
+      rejectUnauthorized: false
+    }
+  });
+  
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log("email error:");
+      console.log(error);
+      console.log(" ");
+    } else {
+      console.log("email sent: " + info.response);
+    }
+  });
+}
+
 function pushData (toWho, data) {
   if (!viewers[toWho]) {
     return
@@ -82,12 +154,14 @@ function pushData (toWho, data) {
 };
 
 function init() {
-  app.use(cors());
+  app.use(cors()); // as mentioned above, this line where cors is set up allows the backend to respond to the frontend
   app.use(bodyParser.json());
 
   require('./databaseConnection');
   initChannels();
-  init_routes();
+  init_routes(); // sets up API urls
+  initEmailer();
+  
   /// todo: viewers = { }
 
   // viewerServer.on("connection", function connection(ws, req) {
