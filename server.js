@@ -101,7 +101,7 @@ function init() {
       viewSrv.emit("connection", ws, req);
     });
   });
-
+/*
   //Copy and paste from previous team code
   socketio.on('connection', (client) => {
     console.log('Client Connected');
@@ -120,14 +120,10 @@ function init() {
       console.log(err)
     });
   });
-
-  /*
-  TODO: need create client channel and client array. maybe rename current
-  channels to lsChannel
-
-  socket.io.on("connection", (req, socket, head) => {
+*/
+  socketio.on("connection", (req, socket, head) => {
     const pathname = url.parse(req.url).pathname
-    client = client[pathname]
+    client = channels[pathname]
     if(!client){
       console.log("[error] client tried to access invalid client path" + pathname)
       return
@@ -139,7 +135,6 @@ function init() {
       client.pushData.emit('shadow', "data:image/png;base64" + frame.toString("base64"))
     })
   })
-  */
 
 
   // Serve the static files from the React app
