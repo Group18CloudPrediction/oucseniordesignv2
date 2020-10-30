@@ -6,9 +6,9 @@ import Map from './Map';
 import RetrieveTargetedWeatherData from "./apiCallers/RetrieveTargetedWeatherData"
 import SubstationLivestream from "./SubstationLivestream"
 import PowerPredictionsDashboard from "./PowerPredictionsDashboard.js";
+import { heroku } from "./apiCallers/_apiRootAddress"
 
-
-const IS_HEROKU_BUILD = process.env.IS_HEROKU_BUILD || false;
+const IS_HEROKU_BUILD = heroku;
 
 class SubstationHomepage extends Component {
     // constructor auto set to test mode

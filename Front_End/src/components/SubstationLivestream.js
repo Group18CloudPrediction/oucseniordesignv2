@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import JsmpegPlayer from "./LivestreamPlayer.js";
 import icon from "../media/cloud.png";
+import { url } from "./apiCallers/_apiRootAddress";
 
 // Set Video Options
 const videoOptions = {
@@ -11,7 +12,7 @@ const videoOptions = {
 // Set Overlay Options
 const overlayOptions = {};
 //Get which address we are calling from
-let server = require("./apiCallers/_apiRootAddress");
+let server = url;
 
 //edit server string to conform to livestream url needs => removes http(s)://
 let pos = server.lastIndexOf("/");

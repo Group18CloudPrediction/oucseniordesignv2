@@ -6,6 +6,7 @@
 // ...
 
 import React, {Component} from "react";
+import { url } from "./_apiRootAddress";
 
 // I had some great help making this component from these two links
 // https://www.robinwieruch.de/react-fetching-data
@@ -53,7 +54,7 @@ class ValidatePredictionsBarChart extends Component {
         //this.setState({isLoading: true});
 
         const params = (!this.props.stationID ? "" : this.props.stationID);
-        const baseURL = require("./_apiRootAddress");
+        const baseURL = url;
 
         var postReqParams = {
             stationID: this.props.stationID,

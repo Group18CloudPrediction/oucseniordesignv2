@@ -1,2 +1,4 @@
+var url = "http://localhost:3000";
+var heroku = false;
 
-module.exports = "http://localhost:3000";
+export { url , heroku };

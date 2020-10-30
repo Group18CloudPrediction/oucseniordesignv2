@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import { url } from "./_apiRootAddress";
 
 // I had some great help making this component from these two links
 // https://www.robinwieruch.de/react-fetching-data
@@ -73,7 +74,7 @@ class Upcoming15MinutesLineGraph extends Component {
 
     callAPI() {
         this.setState({isLoading: true}); //might need to comment out
-        const server = require("./_apiRootAddress");
+        const server = url
 
         const baseURI = server+"/powerPredictions/getNow/";
 

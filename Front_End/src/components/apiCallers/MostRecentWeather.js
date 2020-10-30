@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import { url } from "./_apiRootAddress";
 
 // I had some great help making this component from these two links
 // https://www.robinwieruch.de/react-fetching-data
@@ -26,7 +27,7 @@ class MostRecentWeather extends Component {
         this.setState({isLoading: true});
 
         // this component works whether a station id is passed or not
-        const baseURL = require("./_apiRootAddress");
+        const baseURL = url;
 
         var postReqParams = {
             stationID: this.props.stationID,

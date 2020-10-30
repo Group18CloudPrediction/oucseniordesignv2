@@ -1,5 +1,6 @@
 import React, {Component, useState, useEffect, useRef } from "react";
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, Label } from 'recharts';
+import { url } from "./_apiRootAddress";
 
 class OfficialPredictionsLineGraph extends Component {
     constructor(props) {
@@ -94,7 +95,7 @@ class OfficialPredictionsLineGraph extends Component {
     }
 
     callAPI() {
-        const server = require("./_apiRootAddress");
+        const server = url
         const requestRootURI = "/powerPredictions/station/";
         const params = this.state.stationID;
 

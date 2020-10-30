@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import { url } from "./_apiRootAddress";
 
 class TestAPICall extends Component {
     constructor(props) {
@@ -13,7 +14,7 @@ class TestAPICall extends Component {
 
     componentDidMount() {
         this.setState({isLoading: true});
-        const baseURL = require("./_apiRootAddress");
+        const baseURL = url
 
         fetch(baseURL+"/testAPI")
             .then(res => res.text())
