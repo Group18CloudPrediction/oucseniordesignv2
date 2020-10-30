@@ -1,4 +1,4 @@
-var url = "http://localhost:3000";
-var heroku = false;
+var url = "https://cloudtracking-v2.herokuapp.com";
+var heroku = true;
 
 export { url , heroku };
