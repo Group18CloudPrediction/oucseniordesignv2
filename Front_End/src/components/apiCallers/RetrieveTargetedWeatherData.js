@@ -85,7 +85,7 @@ class RetrieveTargetedWeatherData extends Component {
             this.setState({staionID: null});
 
         const params = (!this.state.request_stationID ? "" : this.state.request_stationID);
-        const baseURL = url
+        const baseURL = url;
 
         var postReqParams = {
             stationID: this.state.request_stationID,
