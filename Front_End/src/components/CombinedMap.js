@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import L from 'leaflet';
 import { subscribeToCoverage, subscribeToShadow } from '../api';
 import SunCalc from 'suncalc';
+import { useHistory } from "react-router-dom";
 
 // Calib is an array of the dimensions of whatever was used to calibrate the camera.
 // In our case, we used a square sheet of paper that's 210mmx210mm and was held at
@@ -120,33 +121,34 @@ class Map extends Component {
     // }
     // north.addTo(this.map);
     
-
+    const baseURL = process.env.Server || "http://localhost:3001";
     // Add substation markers to map
     var marker27 = L.marker(sub27,
       {
         draggable: false,        // Make the icon dragable
         title: 'Camera Position'
-      });
+      }).on('click', function(e) {window.location = baseURL + "/Sub/27"});
     marker27.addTo(this.map)
     var marker28 = L.marker(sub28,
       {
         draggable: false,        // Make the icon dragable
         title: 'Camera Position'
-      });
+      }).on('click', function(e) {window.location = baseURL + "/Sub/28"});
     marker28.addTo(this.map)
     var marker29 = L.marker(sub29,
       {
         draggable: false,        // Make the icon dragable
         title: 'Camera Position'
-      });
+      }).on('click', function(e) {window.location = baseURL + "/Sub/29"});
     marker29.addTo(this.map)
     var marker33 = L.marker(sub33,
       {
         draggable: false,        // Make the icon dragable
         title: 'Camera Position'
-      });
+      }).on('click', function(e) {window.location = baseURL + "/Sub/33"});
     marker33.addTo(this.map)
-  };
+    };
+    
 
   // Render the following HTML
   render (){

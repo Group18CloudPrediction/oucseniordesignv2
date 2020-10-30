@@ -16,8 +16,11 @@ const CALIB  = [0.6883333, 0.6883333, 1/6];
 
 // lat/long coordinates of the center of the image. i.e. wherever the camera is placed
 // In our case the center is the average of the long lats for the substations
-const CENTER = [28.2367025, -81.23375]
-
+let CENTER = [28.2367025, -81.23375]
+const sub28 = [28.29172, -81.19373]
+const sub27 = [28.24917, -81.28942]
+const sub29 = [28.22465, -81.17819]
+const sub33 = [28.18127, -81.27366]
 
 
 // Class
@@ -113,25 +116,42 @@ class Map extends Component {
     // var satellite = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
     //       { maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] }),
       var satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        //attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
       }),      
         // terrain   = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',
         //   { maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] })
         terrain =  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-          attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+          //attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
         })
 
       var baseMaps = {
           "Satellite": satellite,
           "Terrain": terrain,
       };
+      
+      // Set center of the map based on stationID
+      if(this.props.stationID == '27'){
+        CENTER = sub27;
+      } else if (this.props.stationID == '28') {
+        CENTER = sub28;
+      } else if (this.props.stationID == '29') {
+        CENTER = sub29;
+      } else if (this.props.stationID == '33') {
+        CENTER = sub33;
+      } else {
+        CENTER = [28.2367025, -81.23375];
+      }
 
       // Create Map Object
-      this.map = L.map('map', {
-        center: CENTER,
-        zoom: 13,
-        layers: [ satellite, terrain ]
-      });
+
+        this.map = L.map('map', {
+          center: CENTER,
+          zoom: 13,
+          layers: [ satellite, terrain ]
+        });
+
+      
+      
       
       // Create Image Overlay Options
       this.shadowOverlay = L.imageOverlay('', [[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]]);
@@ -189,12 +209,14 @@ class Map extends Component {
 
 
       // Add marker at center to map
-      var marker = L.marker(CENTER,
-        {
-          draggable: false,        // Make the icon dragable
-          title: 'Camera Position'
-        });
-      marker.addTo(this.map)
+
+        var marker = L.marker(CENTER,
+          {
+            draggable: false,        // Make the icon dragable
+            title: 'Camera Position'
+          });
+        marker.addTo(this.map)
+      
     };
 
     // Render the following HTML

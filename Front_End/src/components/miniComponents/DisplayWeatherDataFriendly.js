@@ -52,7 +52,7 @@ class DisplayWeatherDataFriendly extends Component {
                         </tr>
                         <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Dew Point:</th>
-                            <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.airT_C, 3) - (((100 - round(dataPoint.rh, 3))/5)) + " °C"}</td>
+                            <td className="friendlyDataTableCell friendlyDataTableData">{round(round(dataPoint.airT_C, 3) - (((100 - round(dataPoint.rh, 3))/5)), 3) + " °C"}</td>
                         </tr>
                         <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Cloud Height:</th>
