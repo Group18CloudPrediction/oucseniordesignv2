@@ -11,7 +11,7 @@ const videoOptions = {
 
 // Set Overlay Options
 const overlayOptions = {};
-//Get which address we are calling from
+//Get which address we are sending to
 let server = url;
 
 //edit server string to conform to livestream url needs => removes http(s)://
@@ -26,7 +26,7 @@ class SubstationLivestream extends Component {
     if (!this.props.stationID) return (<div id="Livestream">JSX / HTML Error: no stationID specified</div>);
 
     //const url = "ws://cloudtracking-v2.herokuapp.com/sub-"+this.props.stationID
-    const url = "wss://" + server + "/sub-" +this.props.stationID
+    const url = "wss://" + server + "/sub-" + this.props.stationID
     return (
       <div id="Livestream" >
         <h1> Substation {this.props.stationID}</h1>

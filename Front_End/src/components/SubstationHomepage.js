@@ -19,6 +19,9 @@ class SubstationHomepage extends Component {
             testMode: (this.props.stationID == "-1")
         };
     }
+    componentDidMount() {
+      this.setState({});
+    }
     // Render the following HTML
     render() {
 
