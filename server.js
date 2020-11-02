@@ -4,7 +4,7 @@ var express  = require("express"),
   path       = require("path"),
   http       = require("http"),
   webSocket  = require("ws"),
-  socketIO   = require("socket.io"),
+  io         = require("socket.io"),
   url        = require("url"),
   cors       = require("cors"), // cors is required for the api to be able to recieve and respond to requests from the frontend
   //cron       = require("cron"), // for scheduling the emailer
@@ -12,7 +12,7 @@ var express  = require("express"),
   
 var app = express(),
   streamServer = http.createServer(app),
-  socketio = socketIO(streamServer),
+  socketio = io(streamServer),
   channels = {},
   viewers = {},
   port = process.env.PORT || 3000;
@@ -117,7 +117,7 @@ async function initEmailer() {
 //   const transporter = nodemailer.sendmail;
 //   const transporter = nodemailer.createTransport({
 //     service: 'SMTP',
-//     auth: {
+//     auth2
 //       user: "ouc.sdproj.2019.2020@gmail.com",
 //       pass: "oucIsTheBestSponsor1!A"
 //     }
@@ -160,7 +160,7 @@ function init() {
   require('./databaseConnection');
   initChannels();
   init_routes(); // sets up API urls
-  initEmailer();
+  //initEmailer();
   
   /// todo: viewers = { }
 
@@ -184,59 +184,22 @@ function init() {
   //Copy and paste from previous team code
   socketio.on('connection', (client) => {
     console.log('Client Connected');
-    
-    client.on('coverage', (frame) => {
-      console.log('coverage received');
-      client.broadcast.emit('coverage', "data:image/png;base64,"+ frame.toString("base64"))
-    })
 
-    client.on('shadow', (frame) => {
-      console.log('shadow received');
-      client.broadcast.emit('shadow', "data:image/png;base64,"+ frame.toString("base64"))
-    })
+    client.on('substation', (substation) => {
+      console.log('client has connected to substation: ', substation);
+      client.join(substation);
+    });
 
-    client.on('coverage27', (frame) => {
-      console.log('coverage27 received');
-      client.broadcast.emit('coverage27', "data:image/png;base64,"+ frame.toString("base64"))
-    })
+    client.on('coverage', (data) => {
+      const [frame, substation] = data;
+      console.log('coverage received from substation: ', substation);
+      client.to(substation).broadcast.emit('coverage', "data:image/png;base64,"+ frame.toString("base64"));
+    });
 
-    client.on('shadow27', (frame) => {
-      console.log('shadow27 received');
-      client.broadcast.emit('shadow27', "data:image/png;base64,"+ frame.toString("base64"))
-    })
-
-    client.on('coverage28', (frame) => {
-      console.log('coverage28 received');
-      client.broadcast.emit('coverage28', "data:image/png;base64,"+ frame.toString("base64"))
-    })
-
-    client.on('shadow28', (frame) => {
-      console.log('shadow28 received');
-      client.broadcast.emit('shadow28', "data:image/png;base64,"+ frame.toString("base64"))
-    })
-
-    client.on('coverage29', (frame) => {
-      console.log('coverage29 received');
-      client.broadcast.emit('coverage29', "data:image/png;base64,"+ frame.toString("base64"))
-    })
-
-    client.on('shadow29', (frame) => {
-      console.log('shadow29 received');
-      client.broadcast.emit('shadow29', "data:image/png;base64,"+ frame.toString("base64"))
-    })
-
-    client.on('coverage33', (frame) => {
-      console.log('coverage33 received');
-      client.broadcast.emit('coverage33', "data:image/png;base64,"+ frame.toString("base64"))
-    })
-
-    client.on('shadow33', (frame) => {
-      console.log('shadow33 received');
-      client.broadcast.emit('shadow33', "data:image/png;base64,"+ frame.toString("base64"))
-    })
-    client.on('error', (err) => {
-      console.log("Error from client: ", client.id);
-      console.log(err)
+    client.on('shadow', (data) => {
+      const [frame, substation] = data;
+      console.log('shadow received from substation: ', substation);
+      client.to(substation).broadcast.emit('shadow', "data:image/png;base64,"+ frame.toString("base64"));
     });
   });
 
