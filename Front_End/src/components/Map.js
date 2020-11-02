@@ -1,7 +1,7 @@
 // Import
 import React, { Component } from 'react';
 import L from 'leaflet';
-import { subscribeToCoverage, subscribeToShadow, } from '../api';
+import { subscribeToCoverage, subscribeToShadow, subscribeToCoverage27, subscribeToShadow27, subscribeToCoverage28, subscribeToShadow28, subscribeToCoverage29, subscribeToShadow29, subscribeToCoverage33, subscribeToShadow33} from '../api';
 import SunCalc from 'suncalc';
 import { url } from "./apiCallers/_apiRootAddress";
 
@@ -17,8 +17,11 @@ const CALIB  = [0.6883333, 0.6883333, 1/6];
 
 // lat/long coordinates of the center of the image. i.e. wherever the camera is placed
 // In our case the center is the average of the long lats for the substations
-const CENTER = [28.2367025, -81.23375]
-
+let CENTER = [28.2367025, -81.23375]
+const sub28 = [28.29172, -81.19373]
+const sub27 = [28.24917, -81.28942]
+const sub29 = [28.22465, -81.17819]
+const sub33 = [28.18127, -81.27366]
 
 
 // Class
@@ -34,27 +37,150 @@ class Map extends Component {
     hasError: false,
     error: null}
     this.callAPI();
-    subscribeToCoverage((err, coverage_img) => {
-      // If already exists, update the coverage image
+    // if(this.props.stationID == '27') {
+    //   subscribeToCoverage27((err, coverage_img) => {
+    //     // If already exists, update the coverage image
 
-      // If Coverage Overlay is available, recompute the bounds given new CBH
-      if (!(this.coverageOverlay === undefined)) {
-        this.coverageOverlay.setUrl(coverage_img);
-      }
+    //     // If Coverage Overlay is available, recompute the bounds given new CBH
+    //     if (!(this.coverageOverlay === undefined)) {
+    //       this.coverageOverlay.setUrl(coverage_img);
+    //     }
 
 
-      console.log("cvg" + coverage_img);
-    });
+    //     console.log("cvg" + coverage_img);
+    //   });
 
-    subscribeToShadow((err, shadow_img) => {
-      // If already exists, update the shadow image
+    //   subscribeToShadow27((err, shadow_img) => {
+    //     // If already exists, update the shadow image
 
-      // If Shadow Overlay is available, recompute the bounds given new CBH
-      if (!(this.shadowOverlay === undefined)) {
-        this.shadowOverlay.setUrl(shadow_img);
-      }
-      console.log("shdw" + shadow_img);
-    });
+    //     // If Shadow Overlay is available, recompute the bounds given new CBH
+    //     if (!(this.shadowOverlay === undefined)) {
+    //       this.shadowOverlay.setUrl(shadow_img);
+    //     }
+    //     console.log("shdw" + shadow_img);
+    //   });
+    // }
+    if(this.props.stationID == '27'){
+      console.log("This is sub 27");
+      subscribeToCoverage27((err, coverage_img) => {
+
+        // If already exists, update the coverage image
+
+        // If Coverage Overlay is available, recompute the bounds given new CBH
+        console.log("subscribe to coverage 28");
+        if (!(this.coverageOverlay === undefined)) {
+          console.log("Set Coverage");
+          this.coverageOverlay.setUrl(coverage_img);
+        }
+
+
+        console.log("cvg" + coverage_img);
+      });
+
+      subscribeToShadow27((err, shadow_img) => {
+        // If already exists, update the shadow image
+
+        // If Shadow Overlay is available, recompute the bounds given new CBH
+        if (!(this.shadowOverlay === undefined)) {
+          this.shadowOverlay.setUrl(shadow_img);
+        }
+        console.log("shdw" + shadow_img);
+      });
+    } else if (this.props.stationID == '28') {
+      console.log("This is sub 28");
+      subscribeToCoverage28((err, coverage_img) => {
+        // If already exists, update the coverage image
+
+        // If Coverage Overlay is available, recompute the bounds given new CBH
+        console.log("subscribe to coverage 28");
+        if (!(this.coverageOverlay === undefined)) {
+
+          this.coverageOverlay.setUrl(coverage_img);
+        }
+
+
+        console.log("cvg" + coverage_img);
+      });
+
+      subscribeToShadow28((err, shadow_img) => {
+        // If already exists, update the shadow image
+
+        // If Shadow Overlay is available, recompute the bounds given new CBH
+        if (!(this.shadowOverlay === undefined)) {
+          this.shadowOverlay.setUrl(shadow_img);
+        }
+        console.log("shdw" + shadow_img);
+      });
+    } else if (this.props.stationID == '29') {
+      console.log("This is sub 29");
+      subscribeToCoverage29((err, coverage_img) => {
+        // If already exists, update the coverage image
+
+        // If Coverage Overlay is available, recompute the bounds given new CBH
+        if (!(this.coverageOverlay === undefined)) {
+          this.coverageOverlay.setUrl(coverage_img);
+        }
+
+
+        console.log("cvg" + coverage_img);
+      });
+
+      subscribeToShadow29((err, shadow_img) => {
+        // If already exists, update the shadow image
+
+        // If Shadow Overlay is available, recompute the bounds given new CBH
+        if (!(this.shadowOverlay === undefined)) {
+          this.shadowOverlay.setUrl(shadow_img);
+        }
+        console.log("shdw" + shadow_img);
+      });
+    } else if (this.props.stationID == '33') {
+      console.log("This is sub 33");
+      subscribeToCoverage33((err, coverage_img) => {
+        // If already exists, update the coverage image
+
+        // If Coverage Overlay is available, recompute the bounds given new CBH
+        if (!(this.coverageOverlay === undefined)) {
+          this.coverageOverlay.setUrl(coverage_img);
+        }
+
+
+        console.log("cvg" + coverage_img);
+      });
+
+      subscribeToShadow33((err, shadow_img) => {
+        // If already exists, update the shadow image
+
+        // If Shadow Overlay is available, recompute the bounds given new CBH
+        if (!(this.shadowOverlay === undefined)) {
+          this.shadowOverlay.setUrl(shadow_img);
+        }
+        console.log("shdw" + shadow_img);
+      });
+    } else {
+      subscribeToCoverage((err, coverage_img) => {
+        // If already exists, update the coverage image
+
+        // If Coverage Overlay is available, recompute the bounds given new CBH
+        if (!(this.coverageOverlay === undefined)) {
+          this.coverageOverlay.setUrl(coverage_img);
+        }
+
+
+        console.log("cvg" + coverage_img);
+      });
+
+      subscribeToShadow((err, shadow_img) => {
+        // If already exists, update the shadow image
+
+        // If Shadow Overlay is available, recompute the bounds given new CBH
+        if (!(this.shadowOverlay === undefined)) {
+          this.shadowOverlay.setUrl(shadow_img);
+        }
+        console.log("shdw" + shadow_img);
+      });
+    }
+
 
 
   }
@@ -114,18 +240,31 @@ class Map extends Component {
     // var satellite = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
     //       { maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] }),
       var satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        //attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
       }),
         // terrain   = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',
         //   { maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] })
         terrain =  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-          attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+          //attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
         })
 
       var baseMaps = {
           "Satellite": satellite,
           "Terrain": terrain,
       };
+
+      // Set center of the map based on stationID
+      if(this.props.stationID == '27'){
+        CENTER = sub27;
+      } else if (this.props.stationID == '28') {
+        CENTER = sub28;
+      } else if (this.props.stationID == '29') {
+        CENTER = sub29;
+      } else if (this.props.stationID == '33') {
+        CENTER = sub33;
+      } else {
+        CENTER = [28.2367025, -81.23375];
+      }
 
       // Create Map Object
       this.map = L.map('map', {
@@ -190,12 +329,14 @@ class Map extends Component {
 
 
       // Add marker at center to map
-      var marker = L.marker(CENTER,
-        {
-          draggable: false,        // Make the icon dragable
-          title: 'Camera Position'
-        });
-      marker.addTo(this.map)
+
+        var marker = L.marker(CENTER,
+          {
+            draggable: false,        // Make the icon dragable
+            title: 'Camera Position'
+          });
+        marker.addTo(this.map)
+
     };
 
     // Render the following HTML

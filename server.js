@@ -185,6 +185,7 @@ function init() {
   //Copy and paste from previous team code
   socketio.on('connection', (client) => {
     console.log('Client Connected');
+    
     client.on('coverage', (frame) => {
       console.log('coverage received');
       client.broadcast.emit('coverage', "data:image/png;base64,"+ frame.toString("base64"))
@@ -195,6 +196,45 @@ function init() {
       client.broadcast.emit('shadow', "data:image/png;base64,"+ frame.toString("base64"))
     })
 
+    client.on('coverage27', (frame) => {
+      console.log('coverage27 received');
+      client.broadcast.emit('coverage27', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('shadow27', (frame) => {
+      console.log('shadow27 received');
+      client.broadcast.emit('shadow27', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('coverage28', (frame) => {
+      console.log('coverage28 received');
+      client.broadcast.emit('coverage28', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('shadow28', (frame) => {
+      console.log('shadow28 received');
+      client.broadcast.emit('shadow28', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('coverage29', (frame) => {
+      console.log('coverage29 received');
+      client.broadcast.emit('coverage29', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('shadow29', (frame) => {
+      console.log('shadow29 received');
+      client.broadcast.emit('shadow29', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('coverage33', (frame) => {
+      console.log('coverage33 received');
+      client.broadcast.emit('coverage33', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('shadow33', (frame) => {
+      console.log('shadow33 received');
+      client.broadcast.emit('shadow33', "data:image/png;base64,"+ frame.toString("base64"))
+    })
     client.on('error', (err) => {
       console.log("Error from client: ", client.id);
       console.log(err)
