@@ -53,6 +53,10 @@ class CloudCoveragePercentage extends Component {
             return (<em>Recieved bad response</em>);
         }
         
+        if (!this.state.apiResponse.data[0]) {
+            return (<em>No data for this substation</em>);
+        }
+        
         return (<span> {this.state.apiResponse.data[0].cloud_coverage}% </span>);
     }
     
