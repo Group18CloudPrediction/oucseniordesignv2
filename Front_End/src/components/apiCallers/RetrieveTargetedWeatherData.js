@@ -228,7 +228,7 @@ class RetrieveTargetedWeatherData extends Component {
         if (this.state.friendlyDisplay)
         {
             return (
-                <DisplayWeatherDataFriendly apiResponseData={this.state.apiResponse.data}/>
+                <DisplayWeatherDataFriendly stationID={this.state.request_stationID} apiResponseData={this.state.apiResponse.data}/>
             );
         }
         else

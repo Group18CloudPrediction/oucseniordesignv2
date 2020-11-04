@@ -23,7 +23,9 @@ const WeatherDataModel = mongoose.Schema(
         
         date:           { type: Date, required: true },
         date_mins_only: { type: Date, required: true },
-        time_only:      { type: Date, required: true }
+        time_only:      { type: Date, required: true },
+        
+        system_num: { type: String, required: true }
     },
     { timestamps: true, collection: "WeatherData" },
 );

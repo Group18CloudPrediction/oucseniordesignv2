@@ -1,7 +1,7 @@
 // Import
 import React, { Component } from 'react';
 import L from 'leaflet';
-import { subscribeToCoverage, subscribeToShadow, subscribeToCoverage27, subscribeToShadow27, subscribeToCoverage28, subscribeToShadow28, subscribeToCoverage29, subscribeToShadow29, subscribeToCoverage33, subscribeToShadow33} from '../api';
+import { initializeSubstation, subscribeToCoverage, subscribeToShadow, } from '../api';
 import SunCalc from 'suncalc';
 import { url } from "./apiCallers/_apiRootAddress";
 
@@ -37,153 +37,31 @@ class Map extends Component {
     hasError: false,
     error: null}
     this.callAPI();
-    // if(this.props.stationID == '27') {
-    //   subscribeToCoverage27((err, coverage_img) => {
-    //     // If already exists, update the coverage image
 
-    //     // If Coverage Overlay is available, recompute the bounds given new CBH
-    //     if (!(this.coverageOverlay === undefined)) {
-    //       this.coverageOverlay.setUrl(coverage_img);
-    //     }
+    initializeSubstation(this.props.stationID);
 
+    subscribeToCoverage((err, coverage_img) => {
+      // If already exists, update the coverage image
 
-    //     console.log("cvg" + coverage_img);
-    //   });
+      // If Coverage Overlay is available, recompute the bounds given new CBH
+      if (!(this.coverageOverlay === undefined)) {
+        this.coverageOverlay.setUrl(coverage_img);
+      }
 
-    //   subscribeToShadow27((err, shadow_img) => {
-    //     // If already exists, update the shadow image
+      console.log("cvg" + coverage_img);
+    });
 
-    //     // If Shadow Overlay is available, recompute the bounds given new CBH
-    //     if (!(this.shadowOverlay === undefined)) {
-    //       this.shadowOverlay.setUrl(shadow_img);
-    //     }
-    //     console.log("shdw" + shadow_img);
-    //   });
-    // }
-    if(this.props.stationID == '27'){
-      console.log("This is sub 27");
-      subscribeToCoverage27((err, coverage_img) => {
+    subscribeToShadow((err, shadow_img) => {
+      // If already exists, update the shadow image
 
-        // If already exists, update the coverage image
-
-        // If Coverage Overlay is available, recompute the bounds given new CBH
-        console.log("subscribe to coverage 28");
-        if (!(this.coverageOverlay === undefined)) {
-          console.log("Set Coverage");
-          this.coverageOverlay.setUrl(coverage_img);
-        }
-
-
-        console.log("cvg" + coverage_img);
-      });
-
-      subscribeToShadow27((err, shadow_img) => {
-        // If already exists, update the shadow image
-
-        // If Shadow Overlay is available, recompute the bounds given new CBH
-        if (!(this.shadowOverlay === undefined)) {
-          this.shadowOverlay.setUrl(shadow_img);
-        }
-        console.log("shdw" + shadow_img);
-      });
-    } else if (this.props.stationID == '28') {
-      console.log("This is sub 28");
-      subscribeToCoverage28((err, coverage_img) => {
-        // If already exists, update the coverage image
-
-        // If Coverage Overlay is available, recompute the bounds given new CBH
-        console.log("subscribe to coverage 28");
-        if (!(this.coverageOverlay === undefined)) {
-
-          this.coverageOverlay.setUrl(coverage_img);
-        }
-
-
-        console.log("cvg" + coverage_img);
-      });
-
-      subscribeToShadow28((err, shadow_img) => {
-        // If already exists, update the shadow image
-
-        // If Shadow Overlay is available, recompute the bounds given new CBH
-        if (!(this.shadowOverlay === undefined)) {
-          this.shadowOverlay.setUrl(shadow_img);
-        }
-        console.log("shdw" + shadow_img);
-      });
-    } else if (this.props.stationID == '29') {
-      console.log("This is sub 29");
-      subscribeToCoverage29((err, coverage_img) => {
-        // If already exists, update the coverage image
-
-        // If Coverage Overlay is available, recompute the bounds given new CBH
-        if (!(this.coverageOverlay === undefined)) {
-          this.coverageOverlay.setUrl(coverage_img);
-        }
-
-
-        console.log("cvg" + coverage_img);
-      });
-
-      subscribeToShadow29((err, shadow_img) => {
-        // If already exists, update the shadow image
-
-        // If Shadow Overlay is available, recompute the bounds given new CBH
-        if (!(this.shadowOverlay === undefined)) {
-          this.shadowOverlay.setUrl(shadow_img);
-        }
-        console.log("shdw" + shadow_img);
-      });
-    } else if (this.props.stationID == '33') {
-      console.log("This is sub 33");
-      subscribeToCoverage33((err, coverage_img) => {
-        // If already exists, update the coverage image
-
-        // If Coverage Overlay is available, recompute the bounds given new CBH
-        if (!(this.coverageOverlay === undefined)) {
-          this.coverageOverlay.setUrl(coverage_img);
-        }
-
-
-        console.log("cvg" + coverage_img);
-      });
-
-      subscribeToShadow33((err, shadow_img) => {
-        // If already exists, update the shadow image
-
-        // If Shadow Overlay is available, recompute the bounds given new CBH
-        if (!(this.shadowOverlay === undefined)) {
-          this.shadowOverlay.setUrl(shadow_img);
-        }
-        console.log("shdw" + shadow_img);
-      });
-    } else {
-      subscribeToCoverage((err, coverage_img) => {
-        // If already exists, update the coverage image
-
-        // If Coverage Overlay is available, recompute the bounds given new CBH
-        if (!(this.coverageOverlay === undefined)) {
-          this.coverageOverlay.setUrl(coverage_img);
-        }
-
-
-        console.log("cvg" + coverage_img);
-      });
-
-      subscribeToShadow((err, shadow_img) => {
-        // If already exists, update the shadow image
-
-        // If Shadow Overlay is available, recompute the bounds given new CBH
-        if (!(this.shadowOverlay === undefined)) {
-          this.shadowOverlay.setUrl(shadow_img);
-        }
-        console.log("shdw" + shadow_img);
-      });
-    }
-
-
-
+      // If Shadow Overlay is available, recompute the bounds given new CBH
+      if (!(this.shadowOverlay === undefined)) {
+        this.shadowOverlay.setUrl(shadow_img);
+      }
+      console.log("shdw" + shadow_img);
+    });
   }
+
   // Call API to our mongoDB to fetch weather stats
   callAPI() {
     console.log("I love this API");
@@ -236,117 +114,84 @@ class Map extends Component {
 
 
     // The following is used to set parameters for our leaflet map
+    var satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+    }),
+    terrain =  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+    });
 
-    // var satellite = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
-    //       { maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] }),
-      var satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        //attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-      }),
-        // terrain   = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',
-        //   { maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] })
-        terrain =  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-          //attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
-        })
-
-      var baseMaps = {
-          "Satellite": satellite,
-          "Terrain": terrain,
-      };
-
-      // Set center of the map based on stationID
-      if(this.props.stationID == '27'){
-        CENTER = sub27;
-      } else if (this.props.stationID == '28') {
-        CENTER = sub28;
-      } else if (this.props.stationID == '29') {
-        CENTER = sub29;
-      } else if (this.props.stationID == '33') {
-        CENTER = sub33;
-      } else {
-        CENTER = [28.2367025, -81.23375];
-      }
-
-      // Create Map Object
-      this.map = L.map('map', {
-        center: CENTER,
-        zoom: 13,
-        layers: [ satellite, terrain ]
-      });
-
-      // Create Image Overlay Options
-      this.shadowOverlay = L.imageOverlay('', [[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]]);
-      this.shadowOverlay.addTo(this.map);
-
-      // Create Image Overlay Options
-      this.coverageOverlay = L.imageOverlay('', [[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]]);
-      this.coverageOverlay.addTo(this.map);
-
-      // Set Border Options for coverage
-      var coverageBorderOptions = {
-        "color": "#d35fb7",
-        "weight": 2,
-        "fill": false,
-        "fillOpacity": .1
-      };
-
-      // Set Border Options for shadow
-      var shadowBorderOptions = {
-        "color": "#fefe62",
-        "weight": 2,
-        "fill": false,
-        "fillOpacity": .1
-      };
-
-      // Set Coverage Border and add it to the map
-      this.coverageBorder = L.rectangle([[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]], coverageBorderOptions)
-      this.coverageBorder.addTo(this.map)
-
-      // Set Shadow Border and add it to the map
-      this.shadowBorder = L.rectangle([[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]], shadowBorderOptions)
-      this.shadowBorder.addTo(this.map)
-
-      var overlayMaps = {
-        "Shadow": this.shadowOverlay,
-        "Shadow Bounds": this.shadowBorder,
-        "Coverage": this.coverageOverlay,
-        "Coverage Bounds": this.coverageBorder
-      }
-
-      // Add controls to the map
-      L.control.layers(baseMaps, overlayMaps).addTo(this.map);
-
-
-      // The following is commented out code from the previous group to display the north star onto the map
-
-
-      // var north = L.control({position: "bottomright"});
-      // north.onAdd = function(map) {
-      //     var div = L.DomUtil.create("div", "info legend");
-      //     div.innerHTML = '<img src="north_arrow.png">';
-      //     return div;
-      // }
-      // north.addTo(this.map);
-
-
-      // Add marker at center to map
-
-        var marker = L.marker(CENTER,
-          {
-            draggable: false,        // Make the icon dragable
-            title: 'Camera Position'
-          });
-        marker.addTo(this.map)
-
+    var baseMaps = {
+        "Satellite": satellite,
+        "Terrain": terrain,
     };
 
-    // Render the following HTML
-    render (){
-      console.log("ERROR " + this.state.error);
-      return (
-        <div className="localDiv" style={{display:"flex", height:"100%", width: "100%"}}>
-          <div id="map" className="localMap"style={{display:"flex", height:"98%", width: "98%"}}></div>
-        </div>
-      );
+    // Create Map Object
+    this.map = L.map('map', {
+      center: CENTER,
+      zoom: 13,
+      layers: [ satellite, terrain ]
+    });
+
+    // Create Image Overlay Options
+    this.shadowOverlay = L.imageOverlay('', [[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]]);
+    this.shadowOverlay.addTo(this.map);
+
+    // Create Image Overlay Options
+    this.coverageOverlay = L.imageOverlay('', [[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]]);
+    this.coverageOverlay.addTo(this.map);
+
+    // Set Border Options for coverage
+    var coverageBorderOptions = {
+      "color": "#d35fb7",
+      "weight": 2,
+      "fill": false,
+      "fillOpacity": .1
+    };
+
+    // Set Border Options for shadow
+    var shadowBorderOptions = {
+      "color": "#fefe62",
+      "weight": 2,
+      "fill": false,
+      "fillOpacity": .1
+    };
+
+    // Set Coverage Border and add it to the map
+    this.coverageBorder = L.rectangle([[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]], coverageBorderOptions)
+    this.coverageBorder.addTo(this.map)
+
+    // Set Shadow Border and add it to the map
+    this.shadowBorder = L.rectangle([[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]], shadowBorderOptions)
+    this.shadowBorder.addTo(this.map)
+
+    var overlayMaps = {
+      "Shadow": this.shadowOverlay,
+      "Shadow Bounds": this.shadowBorder,
+      "Coverage": this.coverageOverlay,
+      "Coverage Bounds": this.coverageBorder
+    }
+
+    // Add controls to the map
+    L.control.layers(baseMaps, overlayMaps).addTo(this.map);
+
+    // Add marker at center to map
+    var marker = L.marker(CENTER,
+      {
+        draggable: false,        // Make the icon dragable
+        title: 'Camera Position'
+      });
+    marker.addTo(this.map)
+  };
+
+  // Render the following HTML
+  render (){
+    console.log("ERROR " + this.state.error);
+    return (
+      <div className="localDiv" style={{display:"flex", height:"100%", width: "100%"}}>
+        <div id="map" className="localMap"style={{display:"flex", height:"98%", width: "98%"}}></div>
+      </div>
+    );
   };
 
   // Input: Starting lat/long coordinate, North/South distance travlled, East/West distance.
@@ -378,7 +223,7 @@ class Map extends Component {
       var retval = (Math.round(number * factorOfTen) / factorOfTen)
 
       return retval+"";
-  }
+    }
     var sun = SunCalc.getPosition(new Date(), CENTER[0], CENTER[1]);
 
     // ===================================================================================
