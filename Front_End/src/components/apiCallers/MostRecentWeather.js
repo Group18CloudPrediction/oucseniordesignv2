@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import { url } from "./_apiRootAddress";
 
 // I had some great help making this component from these two links
 // https://www.robinwieruch.de/react-fetching-data
@@ -11,23 +12,23 @@ import DisplayWeatherDataFriendly from "../miniComponents/DisplayWeatherDataFrie
 class MostRecentWeather extends Component {
     constructor(props) {
         super(props);
-        this.state = { 
-            apiResponse: "", 
+        this.state = {
+            apiResponse: "",
             isLoading:true,
             hasError: false,
             error: null
         };
-        
+
         if (!this.props.stationID)
             this.setState({error: {message: "This component is missing a required prop: stationID"}});
     }
-    
+
     callAPI() {
         this.setState({isLoading: true});
-        
+
         // this component works whether a station id is passed or not
-        const baseURL = require("./_apiRootAddress");
-        
+        const baseURL = url;
+
         var postReqParams = {
             stationID: this.props.stationID,
             startDate: null,
@@ -36,9 +37,9 @@ class MostRecentWeather extends Component {
             endTime: null,
             onlyMostRecent: 1
         }
-        
+
         var postReqURL = baseURL + "/weatherData/" + this.props.stationID;
-            
+
         fetch(postReqURL, {
                 method: 'post',
                 headers: {
@@ -50,42 +51,42 @@ class MostRecentWeather extends Component {
             .then (response => response.json()                                     )
             .then (res      => this.setState({apiResponse: res, isLoading: false}) )
             .catch(err      => this.setState({hasError:true, error:err})           );
-        
+
     }
-    
+
     componentDidMount() {
         this.callAPI();
     }
-    
-    render() {    
+
+    render() {
         if (this.state.hasError) {
             return <div>Error: <p>{this.state.error.message}</p></div>;
         }
-        
+
         if (this.state.isLoading) {
             return <p>Loading Weather Data...</p>;
         }
-        
+
         if (!this.state.apiResponse.data) {
             return <p>Recieved bad response</p>;
         }
-        
+
         console.log(this.state.apiResponse.data);
-        
+
         if (this.props.displayFullData)
         {
-            return ( 
+            return (
                 <DisplayWeatherData apiResponseData={this.state.apiResponse.data}/>
             );
         }
         else
         {
-            return ( 
+            return (
                 <DisplayWeatherDataFriendly apiResponseData={this.state.apiResponse.data}/>
             );
         }
     }
-    
+
 }
 
 export default MostRecentWeather;

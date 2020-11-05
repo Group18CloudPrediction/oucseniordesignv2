@@ -9,13 +9,15 @@ var express  = require("express"),
   cors       = require("cors"), // cors is required for the api to be able to recieve and respond to requests from the frontend
   //cron       = require("cron"), // for scheduling the emailer
   nodemailer = require("nodemailer"); // for sending emails
-  
+
 var app = express(),
   streamServer = http.createServer(app),
   socketio = io(streamServer),
   channels = {},
   viewers = {},
   port = process.env.PORT || 3000;
+
+
 
 function addValueToList(map, key, value) {
   //if the list is already created for the "key", then uses it
@@ -73,7 +75,7 @@ function init_routes() {
   app.use("/weatherData", weatherDataRouter);
   app.use("/powerPredictions", powerPredictionsRouter);
   app.use("/cloudCoverageData", cloudCoverageDataRouter);
-  
+
   //app.use("/cloudData", cloudDataRouter);
   //app.use("/cloudCoverage", legacyCloudCoverageRouter);
   //app.use("/cloudMotion", legacyCloudMotionRouter);
@@ -81,11 +83,11 @@ function init_routes() {
 
 async function initEmailer() {
 //   const toEmail = require("./config/emailAddressForAnomalyReports");
-//   
+//
 //   // Generate test SMTP service account from ethereal.email
 //   // Only needed if you don't have a real mail account for testing
 //   let testAccount = await nodemailer.createTestAccount();
-// 
+//
 //   // create reusable transporter object using the default SMTP transport
 //   let transporter = nodemailer.createTransport({
 //     host: "localhost:3000",
@@ -96,8 +98,8 @@ async function initEmailer() {
 //       pass: testAccount.pass, // generated ethereal password
 //     },
 //   });
-// 
-//   
+//
+//
 //   // send mail with defined transport object
 //   let info = await transporter.sendMail({
 //     from: '"Fred Foo 👻" <foo@example.com>', // sender address
@@ -106,9 +108,9 @@ async function initEmailer() {
 //     text: "Hello world?", // plain text body
 //     html: "<b>Hello world?</b>", // html body
 //   });
-// 
+//
 //   console.log("Message sent: %s", info.messageId);
-  
+
   const toEmail = require("./config/emailAddressForAnomalyReports");
   const mailOptions = {
     from:    "ouc.sdproj.2019.2020@gmail.com",
@@ -116,7 +118,7 @@ async function initEmailer() {
     subject: 'test',
     text:    'testing text'
   };
-  
+
 //   const transporter = nodemailer.sendmail;
 //   const transporter = nodemailer.createTransport({
 //     service: 'SMTP',
@@ -125,7 +127,7 @@ async function initEmailer() {
 //       pass: "oucIsTheBestSponsor1!A"
 //     }
 //   });
-  
+
   const transporter = nodemailer.createTransport({
     port: 3000,
     host: 'localhost',
@@ -133,7 +135,7 @@ async function initEmailer() {
       rejectUnauthorized: false
     }
   });
-  
+
   transporter.sendMail(mailOptions, function(error, info){
     if (error) {
       console.log("email error:");
@@ -159,12 +161,11 @@ function pushData (toWho, data) {
 function init() {
   app.use(cors()); // as mentioned above, this line where cors is set up allows the backend to respond to the frontend
   app.use(bodyParser.json());
-
   require('./databaseConnection');
   initChannels();
   init_routes(); // sets up API urls
   //initEmailer();
-  
+
   /// todo: viewers = { }
 
   // viewerServer.on("connection", function connection(ws, req) {
@@ -206,6 +207,22 @@ function init() {
     });
   });
 
+/*
+  socketio.on("connection", (req, socket, head) => {
+    const pathname = url.parse(req.url).pathname
+    client = channels[pathname]
+    if(!client){
+      console.log("[error] client tried to access invalid client path" + pathname)
+      return
+    }
+    client.on('coverage', (frame) => {
+      client.pushData.emit('coverage', "data:image/png;base64," + frame.toString("base64"))
+    })
+    client.on('shadow', (frame) => {
+      client.pushData.emit('shadow', "data:image/png;base64" + frame.toString("base64"))
+    })
+  })
+*/
 
   // Serve the static files from the React app
   app.use(express.static(path.join(__dirname, "Front_End/build")));

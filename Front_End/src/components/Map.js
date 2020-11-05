@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import L from 'leaflet';
 import { initializeSubstation, subscribeToCoverage, subscribeToShadow, } from '../api';
 import SunCalc from 'suncalc';
+import { url } from "./apiCallers/_apiRootAddress";
 
 
 
@@ -28,7 +29,7 @@ class Map extends Component {
   constructor(props) {
     super(props);
     this.refreshData = () => {
-      this.callAPI(); 
+      this.callAPI();
     };
     this.state = {apiResponse: "",
     hasSubmitted: (this.props.skipForm? true : false),
@@ -38,7 +39,7 @@ class Map extends Component {
     this.callAPI();
 
     initializeSubstation(this.props.stationID);
-    
+
     subscribeToCoverage((err, coverage_img) => {
       // If already exists, update the coverage image
 
@@ -46,13 +47,13 @@ class Map extends Component {
       if (!(this.coverageOverlay === undefined)) {
         this.coverageOverlay.setUrl(coverage_img);
       }
-    
+
       console.log("cvg" + coverage_img);
     });
 
     subscribeToShadow((err, shadow_img) => {
       // If already exists, update the shadow image
-      
+
       // If Shadow Overlay is available, recompute the bounds given new CBH
       if (!(this.shadowOverlay === undefined)) {
         this.shadowOverlay.setUrl(shadow_img);
@@ -71,7 +72,7 @@ class Map extends Component {
         this.setState({staionID: null});
 
     const params = (!this.props.stationID ? "" : this.props.stationID);
-    const baseURL = process.env.Server || "http://localhost:3000"
+    const baseURL = url;
 
     var postReqParams = {
         stationID: this.props.stationID,
@@ -104,7 +105,7 @@ class Map extends Component {
 
   // On Mount
   componentDidMount() {
-    
+
     // Set an interval to refresh data
     this.interval = setInterval(this.refreshData, 60*1000);
 
@@ -131,15 +132,15 @@ class Map extends Component {
       zoom: 13,
       layers: [ satellite, terrain ]
     });
-    
+
     // Create Image Overlay Options
     this.shadowOverlay = L.imageOverlay('', [[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]]);
     this.shadowOverlay.addTo(this.map);
-    
+
     // Create Image Overlay Options
     this.coverageOverlay = L.imageOverlay('', [[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]]);
     this.coverageOverlay.addTo(this.map);
-    
+
     // Set Border Options for coverage
     var coverageBorderOptions = {
       "color": "#d35fb7",
@@ -147,7 +148,7 @@ class Map extends Component {
       "fill": false,
       "fillOpacity": .1
     };
-    
+
     // Set Border Options for shadow
     var shadowBorderOptions = {
       "color": "#fefe62",
@@ -155,7 +156,7 @@ class Map extends Component {
       "fill": false,
       "fillOpacity": .1
     };
-      
+
     // Set Coverage Border and add it to the map
     this.coverageBorder = L.rectangle([[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]], coverageBorderOptions)
     this.coverageBorder.addTo(this.map)
@@ -217,10 +218,10 @@ class Map extends Component {
     // Azimuth: 0 is south and Math.PI * 3/4 is northwest
     const round = (number, decimalPlaces) => {
       if (isNaN(number)) return "NaN";
-      
+
       const factorOfTen = Math.pow(10, decimalPlaces)
       var retval = (Math.round(number * factorOfTen) / factorOfTen)
-      
+
       return retval+"";
     }
     var sun = SunCalc.getPosition(new Date(), CENTER[0], CENTER[1]);
@@ -239,7 +240,7 @@ class Map extends Component {
     }
     console.log(this.state.apiResponse);
     console.log("cloudHeight " + cloudHeight + this.state.apiResponse + "!");
-    
+
     var calibrationAngle = Math.atan(CALIB[0] / CALIB[1]);
 
 

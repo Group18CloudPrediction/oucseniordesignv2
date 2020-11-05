@@ -6,10 +6,10 @@ import Map from './Map';
 import RetrieveTargetedWeatherData from "./apiCallers/RetrieveTargetedWeatherData"
 import SubstationLivestream from "./SubstationLivestream"
 import PowerPredictionsDashboard from "./PowerPredictionsDashboard.js";
+import { heroku } from "./apiCallers/_apiRootAddress"
 
+const IS_HEROKU_BUILD = heroku;
 
-const IS_HEROUKU_BUILD = false;
-// Class
 class SubstationHomepage extends Component {
     // constructor auto set to test mode
     constructor(props) {
@@ -18,6 +18,9 @@ class SubstationHomepage extends Component {
         this.state = {
             testMode: (this.props.stationID == "-1")
         };
+    }
+    componentDidMount() {
+      this.setState({});
     }
     // Render the following HTML
     render() {
@@ -35,7 +38,7 @@ class SubstationHomepage extends Component {
 
                     <div className="subMap" style= {{ height: '40vh', width: '640px' }}>
                         <Map stationID={this.state.testMode? "1" : this.props.stationID}/>
-                    </div> 
+                    </div>
                 </div>
                 {/* Right display has the power prediction graph component at the top and the weather statistics component at the bottom */}
                 <div className="rightdisplay">
@@ -43,7 +46,7 @@ class SubstationHomepage extends Component {
                     <div>
                         <h1>Weather Statistics</h1>
                         <RetrieveTargetedWeatherData friendlyDisplay={true} stationID={this.state.testMode? "1" : this.props.stationID} onlyMostRecent={1} skipForm={true}/>
-                    </div>  
+                    </div>
                 </div>
             </div>
         </div>
