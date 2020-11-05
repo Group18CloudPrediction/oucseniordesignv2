@@ -25,7 +25,8 @@ class CloudCoveragePercentage extends Component {
         const baseURL = require("./_apiRootAddress");
         
         var reqURL = baseURL + "/cloudCoverageData/" + this.props.stationID + "/mostrecent";
-            
+        
+        console.log("hi, I'm calling api from cloud coverage percentage");
         fetch(reqURL)
             .then (response => response.json()                                     )
             .then (res      => this.setState({apiResponse: res, isLoading: false}) )
@@ -49,7 +50,7 @@ class CloudCoveragePercentage extends Component {
             return (<em>Loading ...</em>);
         }
         
-        if (!this.state.apiResponse.data) {
+        if (!this.state.apiResponse || !this.state.apiResponse.data) {
             return (<em>Recieved bad response</em>);
         }
         

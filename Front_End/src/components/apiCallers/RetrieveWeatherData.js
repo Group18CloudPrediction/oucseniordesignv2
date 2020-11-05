@@ -23,7 +23,7 @@ class RetrieveWeatherData extends Component {
 
         // this component works whether a station id is passed or not
         const params = (!this.props.stationID ? "" : ":" + this.props.stationID + "/") + "getall";
-        const baseURL = process.env.Server || "http://localhost:3000"
+        const baseURL = require("./_apiRootAddress");
 
         fetch(baseURL + "/weatherData/" + params)
             .then(response => response.json())
