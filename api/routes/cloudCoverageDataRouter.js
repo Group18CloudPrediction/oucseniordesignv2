@@ -6,7 +6,7 @@ const cloudCoverageDataController = require("../controllers/cloudCoverageDataCon
 
 
 router.route("/:stationID/mostrecent")
-      .get(cloudCoverageDataController.getMostRecentForStation);
+      .get(cloudCoverageDataController.getMostRecentForStation)
       .post(cloudCoverageDataController.getMostRecentForStation);
 
       
