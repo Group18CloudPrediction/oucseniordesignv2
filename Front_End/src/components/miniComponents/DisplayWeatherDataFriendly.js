@@ -25,7 +25,11 @@ class DisplayWeatherDataFriendly extends Component {
                     <tbody className="friendlyDataTableBody">
                         <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Coverage Percentage:</th>
-                            <td className="friendlyDataTableCell friendlyDataTableData"> <CloudCoveragePercentage stationID={this.props.stationID}/></td>
+                            <td className="friendlyDataTableCell friendlyDataTableData"> <CloudCoveragePercentage stationID={this.props.stationID} postReq={false}/></td>
+                        </tr>
+                        <tr className="friendlyDataTableRow">
+                            <th className="friendlyDataTableCell friendlyDataTableLabel">Coverage Percentage:</th>
+                            <td className="friendlyDataTableCell friendlyDataTableData"> <CloudCoveragePercentage stationID={this.props.stationID} postReq={true}/></td>
                         </tr>
                         <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Solar Irradiance:</th>

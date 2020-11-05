@@ -26,11 +26,27 @@ class CloudCoveragePercentage extends Component {
         
         var reqURL = baseURL + "/cloudCoverageData/" + this.props.stationID + "/mostrecent";
         
-        console.log("hi, I'm calling api from cloud coverage percentage");
-        fetch(reqURL)
-            .then (response => response.json()                                     )
-            .then (res      => this.setState({apiResponse: res, isLoading: false}) )
-            .catch(err      => this.setState({hasError:true, error:err})           );
+        if (!this.props.postReq)
+        {
+            fetch(reqURL)
+                .then (response => response.json()                                     )
+                .then (res      => this.setState({apiResponse: res, isLoading: false}) )
+                .catch(err      => this.setState({hasError:true, error:err})           );
+        }
+        else
+        {
+            fetch(reqURL , {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: "{}"
+                })
+                .then (response => response.json()                                     )
+                .then (res      => this.setState({apiResponse: res, isLoading: false}) )
+                .catch(err      => this.setState({hasError:true, error:err})           );
+        }
     }
     
     componentDidMount() {
