@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import L from 'leaflet';
 import { subscribeToCoverage, subscribeToShadow } from '../api';
 import SunCalc from 'suncalc';
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
+import { url } from './apiCallers/_apiRootAddress';
 
 // Calib is an array of the dimensions of whatever was used to calibrate the camera.
 // In our case, we used a square sheet of paper that's 210mmx210mm and was held at
@@ -26,8 +27,8 @@ const sub33 = [28.18127, -81.27366]
 class Map extends Component {
   constructor(props) {
     super(props);
-    
-    // TODO 
+
+    // TODO
     subscribeToCoverage((err, coverage_img) => {
       // If already exists, update the coverage image
       if (!(this.coverageOverlay === undefined)) {
@@ -49,19 +50,19 @@ class Map extends Component {
   // TODO GET CLOUD BASE HEIGHT IN HERE LIKE IN OTHER MAP
   // TODO DISPLAY ALL COVERAGES AND SHADOWS TO THIS MAP
   componentDidMount() {
-    
+
     this.updateImageBounds();
     // var satellite = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
     //       { maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] }),
       var satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-      }),      
+      }),
         // terrain   = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',
         //   { maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] })
         terrain =  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
           attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
         })
-    
+
     var baseMaps = {
         "Satellite": satellite,
         "Terrain": terrain,
@@ -73,14 +74,14 @@ class Map extends Component {
       zoom: 13,
       layers: [ satellite, terrain ]
     });
-    
+
     // Add Clouds and Shadows to the map
     this.shadowOverlay = L.imageOverlay('', [[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]]);
     this.shadowOverlay.addTo(this.map);
-    
+
     this.coverageOverlay = L.imageOverlay('', [[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]]);
     this.coverageOverlay.addTo(this.map);
-    
+
     var coverageBorderOptions = {
       "color": "#d35fb7",
       "weight": 2,
@@ -94,7 +95,7 @@ class Map extends Component {
       "fill": false,
       "fillOpacity": .1
     };
-    
+
     // Add borders to the map
 
     this.coverageBorder = L.rectangle([[28.42000000001, -81.42000000001], [28.42000000002, -81.42000000002]], coverageBorderOptions)
@@ -109,7 +110,7 @@ class Map extends Component {
       "Coverage": this.coverageOverlay,
       "Coverage Bounds": this.coverageBorder
     }
-    
+
     // Add controls to map
     L.control.layers(baseMaps, overlayMaps).addTo(this.map);
 
@@ -120,8 +121,8 @@ class Map extends Component {
     //     return div;
     // }
     // north.addTo(this.map);
-    
-    const baseURL = process.env.Server || "http://localhost:3001";
+
+    const baseURL = url;
     // Add substation markers to map
     var marker27 = L.marker(sub27,
       {
@@ -148,7 +149,7 @@ class Map extends Component {
       }).on('click', function(e) {window.location = baseURL + "/Sub/33"});
     marker33.addTo(this.map)
     };
-    
+
 
   // Render the following HTML
   render (){
