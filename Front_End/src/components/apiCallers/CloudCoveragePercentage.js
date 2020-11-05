@@ -22,7 +22,7 @@ class CloudCoveragePercentage extends Component {
         this.setState({isLoading: true});
         
         // this component works whether a station id is passed or not
-        const baseURL = require("./_apiRootAddress");
+        const baseURL = require("./_apiRootAddress").url;
         
         var reqURL = baseURL + "/cloudCoverageData/" + this.props.stationID + "/mostrecent";
         

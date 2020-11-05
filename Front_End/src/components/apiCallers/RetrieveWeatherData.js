@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import { url } from "./_apiRootAddress";
 
 // I had some great help making this component from these two links
 // https://www.robinwieruch.de/react-fetching-data
@@ -23,7 +24,7 @@ class RetrieveWeatherData extends Component {
 
         // this component works whether a station id is passed or not
         const params = (!this.props.stationID ? "" : ":" + this.props.stationID + "/") + "getall";
-        const baseURL = require("./_apiRootAddress");
+        const baseURL = url;
 
         fetch(baseURL + "/weatherData/" + params)
             .then(response => response.json())

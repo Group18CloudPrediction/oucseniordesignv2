@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import { url } from "./_apiRootAddress";
 
 // I had some great help making this component from these two links
 // https://www.robinwieruch.de/react-fetching-data
@@ -84,24 +85,24 @@ class RetrieveTargetedWeatherData extends Component {
             this.setState({staionID: null});
 
         const params = (!this.state.request_stationID ? "" : this.state.request_stationID);
-        const baseURL = require("./_apiRootAddress");
+        const baseURL = url;
 
         var postReqParams = {
             stationID: this.state.request_stationID,
-            
+
             startDate: this.state.request_startDate,
             endDate: this.state.request_endDate,
-            
+
             endTime: this.state.request_endTime,
             startTime: this.state.request_startTime,
-            
+
             onlyMostRecent: this.props.onlyMostRecent,
 
             isEST: true
         }
 
         console.log(postReqParams);
-        
+
         // https://localhost:3000/weatherData/1
         var postReqURL = baseURL + "/weatherData/" + params;
 
@@ -219,7 +220,7 @@ class RetrieveTargetedWeatherData extends Component {
         if (!this.state.apiResponse.data) {
             return <p>Recieved bad response</p>;
         }
-        
+
         if (!this.state.apiResponse.data[0]) {
             return <p>No data found for station {this.state.request_stationID}</p>;
         }

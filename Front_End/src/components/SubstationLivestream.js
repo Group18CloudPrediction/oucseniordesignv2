@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import JsmpegPlayer from "./LivestreamPlayer.js";
 import icon from "../media/cloud.png";
+import { url } from "./apiCallers/_apiRootAddress";
 
 // Set Video Options
 const videoOptions = {
@@ -10,6 +11,12 @@ const videoOptions = {
 
 // Set Overlay Options
 const overlayOptions = {};
+//Get which address we are sending to
+let server = url;
+
+//edit server string to conform to livestream url needs => removes http(s)://
+let pos = server.lastIndexOf("/");
+server = server.slice(pos+1, server.length)
 
 // Class
 class SubstationLivestream extends Component {
@@ -17,11 +24,9 @@ class SubstationLivestream extends Component {
   render() {
     // If there is no stationID passed, returned error message
     if (!this.props.stationID) return (<div id="Livestream">JSX / HTML Error: no stationID specified</div>);
-    
-    // Set URL based on stationID
-    const url = "ws://cloudtracking-v2.herokuapp.com/sub-"+this.props.stationID
 
-    // Return Livestream from specified url
+    //const url = "ws://cloudtracking-v2.herokuapp.com/sub-"+this.props.stationID
+    const url = "wss://" + server + "/sub-" + this.props.stationID
     return (
       <div id="Livestream" >
         <h1> Substation {this.props.stationID}</h1>
