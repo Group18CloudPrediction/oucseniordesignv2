@@ -26,13 +26,13 @@ class SubstationLivestream extends Component {
     if (!this.props.stationID) return (<div id="Livestream">JSX / HTML Error: no stationID specified</div>);
 
     //const url = "ws://cloudtracking-v2.herokuapp.com/sub-"+this.props.stationID
-    const url = "wss://" + server + "/sub-" + this.props.stationID
+    const url_ = "wss://" + server + "/sub-" + this.props.stationID
     return (
-      <div id="Livestream" >
+      <div id="Livestream">
         <h1> Substation {this.props.stationID}</h1>
         <JsmpegPlayer
           wrapperClassName="video-wrapper"
-          videoUrl={url}
+          videoUrl={url_}
           options={videoOptions}
           overlayOptions={overlayOptions}
         />

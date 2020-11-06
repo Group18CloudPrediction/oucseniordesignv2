@@ -39,7 +39,6 @@ class Map extends Component {
     this.callAPI();
 
     initializeSubstation(this.props.stationID);
-
     subscribeToCoverage((err, coverage_img) => {
       // If already exists, update the coverage image
 
@@ -61,6 +60,7 @@ class Map extends Component {
       console.log("shdw" + shadow_img);
     });
   }
+
 
   // Call API to our mongoDB to fetch weather stats
   callAPI() {
@@ -105,7 +105,6 @@ class Map extends Component {
 
   // On Mount
   componentDidMount() {
-
     // Set an interval to refresh data
     this.interval = setInterval(this.refreshData, 60*1000);
 
@@ -125,6 +124,19 @@ class Map extends Component {
         "Satellite": satellite,
         "Terrain": terrain,
     };
+
+    //Update CENTER for current substation lat long
+    if(this.props.stationID == 27) {
+      CENTER = sub27
+    } else if (this.props.stationID == 28) {
+      CENTER = sub28
+    } else if (this.props.stationID == 29) {
+      CENTER = sub29
+    } else if (this.props.stationID == 33) {
+      CENTER = sub33
+    } else {
+      CENTER = [28.2367025, -81.23375];
+    }
 
     // Create Map Object
     this.map = L.map('map', {

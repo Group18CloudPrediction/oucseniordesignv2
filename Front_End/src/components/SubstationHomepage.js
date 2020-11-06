@@ -14,17 +14,14 @@ class SubstationHomepage extends Component {
     // constructor auto set to test mode
     constructor(props) {
         super(props);
-        
+
         this.state = {
             testMode: (this.props.stationID == "-1")
         };
     }
-    componentDidMount() {
-      this.setState({});
-    }
     // Render the following HTML
     render() {
-        
+      
         return (
         <div className="SubstationHomepage">
             {/* Divide the local page into left and right display */}
