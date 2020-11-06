@@ -21,9 +21,9 @@ class SubstationHomepage extends Component {
     }
     // Render the following HTML
     render() {
-      
+
         return (
-        <div className="SubstationHomepage">
+        <div className="SubstationHomepage" key={this.props.stationID}>
             {/* Divide the local page into left and right display */}
             <div className="topdisplay">
                 {/* Left display has the livestream component at the top and the map component at the bottom */}
@@ -33,7 +33,7 @@ class SubstationHomepage extends Component {
                         <SubstationLivestream stationID={this.props.stationID}/>
                     </div>
 
-                    <div className="subMap" style= {{ height: '40vh', width: '640px' }}>
+                    <div className="subMap" style= {{ height: '40vh', width: '640px' }} >
                         <Map stationID={this.state.testMode? "1" : this.props.stationID}/>
                     </div>
                 </div>
