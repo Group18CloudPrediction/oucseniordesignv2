@@ -1,7 +1,7 @@
 // Import
 import React, { Component } from 'react';
 import L from 'leaflet';
-import { initializeSubstation, subscribeToCoverage, subscribeToShadow, } from '../api';
+import { subscribeToCoverage, subscribeToShadow, subscribeToCoverage27, subscribeToShadow27, subscribeToCoverage28, subscribeToShadow28, subscribeToCoverage29, subscribeToShadow29, subscribeToCoverage33, subscribeToShadow33} from '../api';
 import SunCalc from 'suncalc';
 import { url } from "./apiCallers/_apiRootAddress";
 
@@ -37,28 +37,127 @@ class Map extends Component {
     hasError: false,
     error: null}
     this.callAPI();
+    if(this.props.stationID == '27'){
+      console.log("This is sub 27");
+      subscribeToCoverage27((err, coverage_img) => {
 
-    initializeSubstation(this.props.stationID);
-    subscribeToCoverage((err, coverage_img) => {
-      // If already exists, update the coverage image
+        // If already exists, update the coverage image
 
-      // If Coverage Overlay is available, recompute the bounds given new CBH
-      if (!(this.coverageOverlay === undefined)) {
-        this.coverageOverlay.setUrl(coverage_img);
-      }
+        // If Coverage Overlay is available, recompute the bounds given new CBH
+        console.log("subscribe to coverage 28");
+        if (!(this.coverageOverlay === undefined)) {
+          console.log("Set Coverage");
+          this.coverageOverlay.setUrl(coverage_img);
+        }
 
-      console.log("cvg" + coverage_img);
-    });
 
-    subscribeToShadow((err, shadow_img) => {
-      // If already exists, update the shadow image
+        console.log("cvg" + coverage_img);
+      });
 
-      // If Shadow Overlay is available, recompute the bounds given new CBH
-      if (!(this.shadowOverlay === undefined)) {
-        this.shadowOverlay.setUrl(shadow_img);
-      }
-      console.log("shdw" + shadow_img);
-    });
+      subscribeToShadow27((err, shadow_img) => {
+        // If already exists, update the shadow image
+
+        // If Shadow Overlay is available, recompute the bounds given new CBH
+        if (!(this.shadowOverlay === undefined)) {
+          this.shadowOverlay.setUrl(shadow_img);
+        }
+        console.log("shdw" + shadow_img);
+      });
+    } else if (this.props.stationID == '28') {
+      console.log("This is sub 28");
+      subscribeToCoverage28((err, coverage_img) => {
+        // If already exists, update the coverage image
+
+        // If Coverage Overlay is available, recompute the bounds given new CBH
+        console.log("subscribe to coverage 28");
+        if (!(this.coverageOverlay === undefined)) {
+
+          this.coverageOverlay.setUrl(coverage_img);
+        }
+
+
+        console.log("cvg" + coverage_img);
+      });
+
+      subscribeToShadow28((err, shadow_img) => {
+        // If already exists, update the shadow image
+
+        // If Shadow Overlay is available, recompute the bounds given new CBH
+        if (!(this.shadowOverlay === undefined)) {
+          this.shadowOverlay.setUrl(shadow_img);
+        }
+        console.log("shdw" + shadow_img);
+      });
+    } else if (this.props.stationID == '29') {
+      console.log("This is sub 29");
+      subscribeToCoverage29((err, coverage_img) => {
+        // If already exists, update the coverage image
+
+        // If Coverage Overlay is available, recompute the bounds given new CBH
+        if (!(this.coverageOverlay === undefined)) {
+          this.coverageOverlay.setUrl(coverage_img);
+        }
+
+
+        console.log("cvg" + coverage_img);
+      });
+
+      subscribeToShadow29((err, shadow_img) => {
+        // If already exists, update the shadow image
+
+        // If Shadow Overlay is available, recompute the bounds given new CBH
+        if (!(this.shadowOverlay === undefined)) {
+          this.shadowOverlay.setUrl(shadow_img);
+        }
+        console.log("shdw" + shadow_img);
+      });
+    } else if (this.props.stationID == '33') {
+      console.log("This is sub 33");
+      subscribeToCoverage33((err, coverage_img) => {
+        // If already exists, update the coverage image
+
+        // If Coverage Overlay is available, recompute the bounds given new CBH
+        if (!(this.coverageOverlay === undefined)) {
+          this.coverageOverlay.setUrl(coverage_img);
+        }
+
+
+        console.log("cvg" + coverage_img);
+      });
+
+      subscribeToShadow33((err, shadow_img) => {
+        // If already exists, update the shadow image
+
+        // If Shadow Overlay is available, recompute the bounds given new CBH
+        if (!(this.shadowOverlay === undefined)) {
+          this.shadowOverlay.setUrl(shadow_img);
+        }
+        console.log("shdw" + shadow_img);
+      });
+    } else {
+      subscribeToCoverage((err, coverage_img) => {
+        // If already exists, update the coverage image
+
+        // If Coverage Overlay is available, recompute the bounds given new CBH
+        if (!(this.coverageOverlay === undefined)) {
+          this.coverageOverlay.setUrl(coverage_img);
+        }
+
+
+        console.log("cvg" + coverage_img);
+      });
+
+      subscribeToShadow((err, shadow_img) => {
+        // If already exists, update the shadow image
+
+        // If Shadow Overlay is available, recompute the bounds given new CBH
+        if (!(this.shadowOverlay === undefined)) {
+          this.shadowOverlay.setUrl(shadow_img);
+        }
+        console.log("shdw" + shadow_img);
+      });
+    }
+
   }
 
 

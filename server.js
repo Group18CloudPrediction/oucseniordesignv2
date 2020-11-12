@@ -189,11 +189,6 @@ function init() {
   socketio.on('connection', (client) => {
     console.log('Client Connected');
 
-    client.on('substation', (substation) => {
-      console.log('client has connected to substation: ', substation);
-      client.join(substation);
-    });
-
     client.on('coverage', (data) => {
       const [frame, substation] = data;
       console.log('coverage received from substation: ', substation);
@@ -205,6 +200,56 @@ function init() {
       console.log('shadow received from substation: ', substation);
       client.to(substation).broadcast.emit('shadow', "data:image/png;base64,"+ frame.toString("base64"));
     });
+
+    
+    client.on('coverage', (frame) => {
+      console.log('coverage received');
+      client.broadcast.emit('coverage', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('shadow', (frame) => {
+      console.log('shadow received');
+      client.broadcast.emit('shadow', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('coverage27', (frame) => {
+      console.log('coverage27 received');
+      client.broadcast.emit('coverage27', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('shadow27', (frame) => {
+      console.log('shadow27 received');
+      client.broadcast.emit('shadow27', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('coverage28', (frame) => {
+      console.log('coverage28 received');
+      client.broadcast.emit('coverage28', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('shadow28', (frame) => {
+      console.log('shadow28 received');
+      client.broadcast.emit('shadow28', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('coverage29', (frame) => {
+      console.log('coverage29 received');
+      client.broadcast.emit('coverage29', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('shadow29', (frame) => {
+      console.log('shadow29 received');
+      client.broadcast.emit('shadow29', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('coverage33', (frame) => {
+      console.log('coverage33 received');
+      client.broadcast.emit('coverage33', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+    client.on('shadow33', (frame) => {
+      console.log('shadow33 received');
+      client.broadcast.emit('shadow33', "data:image/png;base64,"+ frame.toString("base64"))
+    })
   });
 
 /*
