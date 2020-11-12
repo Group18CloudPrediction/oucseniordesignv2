@@ -15,7 +15,7 @@ var app = express(),
   socketio = io(streamServer),
   channels = {},
   viewers = {},
-  port = process.env.PORT || 3000;
+  port = process.env.PORT || 80;
 
 
 
@@ -280,7 +280,9 @@ function init() {
   //app.listen(port);
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
-  streamServer.listen(port);
-  console.log("App is listening on port " + port);
+  streamServer.listen(port, function () {
+    console.log("App is listening on port " + port);
+  });
+  
 }
 init();

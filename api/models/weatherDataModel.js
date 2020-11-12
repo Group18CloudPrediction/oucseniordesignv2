@@ -1,20 +1,25 @@
 const mongoose = require('mongoose');
-
+// 
+// Each entry in the weatherData table of our database will look like this below.
+// Note: in MongoDB, tables are called "collections"
+//
+// these entries contain data pulled from the datalogger
+//
 const WeatherDataModel = mongoose.Schema(
     {
-        author: { type: String, required: false },
+        author: { type: String, required: false },    // not used
         
-        slrFD_W:    { type: Number, required: true },
-        rain_mm:    { type: Number, required: true },
-        strikes:    { type: Number, required: true },
-        dist_km:    { type: Number, required: true },
-        ws_ms:      { type: Number, required: true },
-        windDir:    { type: Number, required: true },
-        maxWS_ms:   { type: Number, required: true },
-        airT_C:     { type: Number, required: true },
-        vp_mmHg:    { type: Number, required: true },
-        bp_mmHg:    { type: Number, required: true },
-        rh:         { type: Number, required: true },
+        slrFD_W:    { type: Number, required: true }, // 
+        rain_mm:    { type: Number, required: true }, // amount of rain
+        strikes:    { type: Number, required: true }, // num lightning strikes
+        dist_km:    { type: Number, required: true }, // distance to lightning strikes
+        ws_ms:      { type: Number, required: true }, // wind speed in m/s
+        windDir:    { type: Number, required: true }, // wind direction
+        maxWS_ms:   { type: Number, required: true }, //
+        airT_C:     { type: Number, required: true }, //
+        vp_mmHg:    { type: Number, required: true }, //
+        bp_mmHg:    { type: Number, required: true }, //
+        rh:         { type: Number, required: true }, //
         rht_c:      { type: Number, required: true },
         tiltNS_deg: { type: Number, required: true },
         tiltWE_deg: { type: Number, required: true },
