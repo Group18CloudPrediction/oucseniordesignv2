@@ -1,3 +1,12 @@
+//
+// Sets up the routes for "http://[SERVER]:[PORT]/powerPredictions"
+// for a more full explanation, please see weatherDataRouter.js
+//
+// note: the .get() function sets up a response for when the given url 
+// recieves a GET request, while the post() function sets up a response
+// for when the given url recieves a POST request
+//
+
 var express = require("express");
 var router = express.Router();
 const mongoose = require("mongoose");

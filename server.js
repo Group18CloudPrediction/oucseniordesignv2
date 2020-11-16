@@ -15,7 +15,7 @@ var app = express(),
   socketio = io(streamServer),
   channels = {},
   viewers = {},
-  port = process.env.PORT || 80;
+  port = process.env.PORT || 3000;
 
 
 

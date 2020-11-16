@@ -5,7 +5,7 @@ const uri = process.env.DATABASE_URL || require("./credentials/mongodbCredential
 
 mongoose.connect(
     uri,
-    {  useNewUrlParser: true,  useUnifiedTopology: true}
+    {  useNewUrlParser: true,  useUnifiedTopology: true }
 )
 .then(
     () => {
