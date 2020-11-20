@@ -127,25 +127,25 @@ class Map extends Component {
     var marker27 = L.marker(sub27,
       {
         draggable: false,        // Make the icon dragable
-        title: 'Camera Position'
+        title: 'sub27'
       }).on('click', function(e) {window.location = baseURL + "/Sub/27"});
     marker27.addTo(this.map)
     var marker28 = L.marker(sub28,
       {
         draggable: false,        // Make the icon dragable
-        title: 'Camera Position'
+        title: 'sub28'
       }).on('click', function(e) {window.location = baseURL + "/Sub/28"});
     marker28.addTo(this.map)
     var marker29 = L.marker(sub29,
       {
         draggable: false,        // Make the icon dragable
-        title: 'Camera Position'
+        title: 'sub29'
       }).on('click', function(e) {window.location = baseURL + "/Sub/29"});
     marker29.addTo(this.map)
     var marker33 = L.marker(sub33,
       {
         draggable: false,        // Make the icon dragable
-        title: 'Camera Position'
+        title: 'sub33'
       }).on('click', function(e) {window.location = baseURL + "/Sub/33"});
     marker33.addTo(this.map)
     };

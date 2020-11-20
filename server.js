@@ -185,22 +185,8 @@ function init() {
     });
   });
 
-  //Copy and paste from previous team code
   socketio.on('connection', (client) => {
     console.log('Client Connected');
-
-    client.on('coverage', (data) => {
-      const [frame, substation] = data;
-      console.log('coverage received from substation: ', substation);
-      client.to(substation).broadcast.emit('coverage', "data:image/png;base64,"+ frame.toString("base64"));
-    });
-
-    client.on('shadow', (data) => {
-      const [frame, substation] = data;
-      console.log('shadow received from substation: ', substation);
-      client.to(substation).broadcast.emit('shadow', "data:image/png;base64,"+ frame.toString("base64"));
-    });
-
     
     client.on('coverage', (frame) => {
       console.log('coverage received');

@@ -25,7 +25,7 @@
     display: flex;
     justify-content: center;
 }
-
+/* Sets Components to constant box size with a nice border */
 .SubstationHomepage > div > div > div {
     display: flex;
     margin-top: 16px;
@@ -39,7 +39,7 @@
     width: 500px !important;
     height: 400px !important;
 }
-
+/* Sets Header styling with border bottom */
 .SubstationHomepage > div > div > div > div > h1 {
     color: #E9F1F7;
     display: flex;
