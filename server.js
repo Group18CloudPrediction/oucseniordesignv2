@@ -43,20 +43,6 @@ function initChannels() {
   createChannel("/sub-33");
 }
 
-//todo: Try to move route() back to livestreamRoutes.js
-function route() {
-  var router = express.Router();
-
-  router.route("/:id").post((request, response) => {
-    var locationID = request.params.id;
-    console.log("location " + locationID + " connected");
-    request.on("data", function (data) {
-      pushData("/" + locationID, data);
-    });
-  });
-  return router;
-}
-
 // this function sets up the base URLs that the routers will expand on
 // for example if the backend is hosted on localhost, "https://localhost:3000/weatherData"
 // will be the base URL for requesting weather data, and "weatherDataRouter.js" will
@@ -66,19 +52,13 @@ function init_routes() {
   var weatherDataRouter      = require("./api/routes/weatherDataRouter");
   var powerPredictionsRouter = require("./api/routes/powerPredictionsRouter");
   var cloudCoverageDataRouter = require("./api/routes/cloudCoverageDataRouter");
-  //var cloudDataRouter        = require("./api/routes/cloudDataRouter");
-  //var legacyCloudCoverageRouter = require("./api/routes/legacyCloudCoverageRouter");
-  //var legacyCloudMotionRouter   = require("./api/routes/legacyCloudMotionRouter");
+  var livestreamRoutes        = require("./api/routes/livestreamRoutes"); //test livestreamRoutes from api folder
 
-  viewer = route();
-  app.use("/cloudtrackinglivestream", viewer);
+  app.use("/cloudtrackinglivestream", livestreamRoutes);
   app.use("/weatherData", weatherDataRouter);
   app.use("/powerPredictions", powerPredictionsRouter);
   app.use("/cloudCoverageData", cloudCoverageDataRouter);
 
-  //app.use("/cloudData", cloudDataRouter);
-  //app.use("/cloudCoverage", legacyCloudCoverageRouter);
-  //app.use("/cloudMotion", legacyCloudMotionRouter);
 }
 
 async function initEmailer() {
@@ -166,13 +146,6 @@ function init() {
   init_routes(); // sets up API urls
   //initEmailer();
 
-  /// todo: viewers = { }
-
-  // viewerServer.on("connection", function connection(ws, req) {
-  //   const location = url.parse(req.url, true);
-  //   addValueToList(location.pathname.substring(1), ws);
-  // });
-
   streamServer.on("upgrade", (req, socket, head) => {
     const pathname = url.parse(req.url).pathname;
     viewSrv = channels[pathname]; // local scope pls
@@ -201,7 +174,7 @@ function init() {
       client.to(substation).broadcast.emit('shadow', "data:image/png;base64,"+ frame.toString("base64"));
     });
 
-    
+
     client.on('coverage', (frame) => {
       console.log('coverage received');
       client.broadcast.emit('coverage', "data:image/png;base64,"+ frame.toString("base64"))
@@ -252,23 +225,6 @@ function init() {
     })
   });
 
-/*
-  socketio.on("connection", (req, socket, head) => {
-    const pathname = url.parse(req.url).pathname
-    client = channels[pathname]
-    if(!client){
-      console.log("[error] client tried to access invalid client path" + pathname)
-      return
-    }
-    client.on('coverage', (frame) => {
-      client.pushData.emit('coverage', "data:image/png;base64," + frame.toString("base64"))
-    })
-    client.on('shadow', (frame) => {
-      client.pushData.emit('shadow', "data:image/png;base64" + frame.toString("base64"))
-    })
-  })
-*/
-
   // Serve the static files from the React app
   app.use(express.static(path.join(__dirname, "Front_End/build")));
   // Handles any requests that don't match the ones above
@@ -276,8 +232,6 @@ function init() {
     res.sendFile(path.join(__dirname + "/Front_End/build/index.html"));
   });
 
-  //const port = process.env.PORT || 3000;
-  //app.listen(port);
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   streamServer.listen(port);
