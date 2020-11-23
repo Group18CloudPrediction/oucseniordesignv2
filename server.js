@@ -41,6 +41,8 @@ function initChannels() {
   createChannel("/sub-28");
   createChannel("/sub-29");
   createChannel("/sub-33");
+  createChannel("/sub-38");
+  createChannel("/sub-40")
 }
 
 //todo: Try to move route() back to livestreamRoutes.js
@@ -235,6 +237,24 @@ function init() {
     client.on('shadow33', (frame) => {
       console.log('shadow33 received');
       client.broadcast.emit('shadow33', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('coverage38', (frame) => {
+      console.log('coverage38 received');
+      client.broadcast.emit('coverage38', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+    client.on('shadow38', (frame) => {
+      console.log('shadow38 received');
+      client.broadcast.emit('shadow38', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('coverage40', (frame) => {
+      console.log('coverage40 received');
+      client.broadcast.emit('coverage40', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+    client.on('shadow40', (frame) => {
+      console.log('shadow40 received');
+      client.broadcast.emit('shadow40', "data:image/png;base64,"+ frame.toString("base64"))
     })
   });
 

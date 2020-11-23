@@ -1,7 +1,7 @@
 // Import
 import React, { Component } from 'react';
 import L from 'leaflet';
-import { subscribeToCoverage, subscribeToShadow, subscribeToCoverage27, subscribeToShadow27, subscribeToCoverage28, subscribeToShadow28, subscribeToCoverage29, subscribeToShadow29, subscribeToCoverage33, subscribeToShadow33} from '../api';
+import { subscribeToCoverage, subscribeToShadow, subscribeToCoverage27, subscribeToShadow27, subscribeToCoverage28, subscribeToShadow28, subscribeToCoverage29, subscribeToShadow29, subscribeToCoverage33, subscribeToShadow33, subscribeToCoverage38, subscribeToShadow38, subscribeToCoverage40, subscribeToShadow40} from '../api';
 import SunCalc from 'suncalc';
 import { url } from "./apiCallers/_apiRootAddress";
 
@@ -22,7 +22,8 @@ const sub28 = [28.29172, -81.19373]
 const sub27 = [28.24917, -81.28942]
 const sub29 = [28.22465, -81.17819]
 const sub33 = [28.18127, -81.27366]
-
+const sub38 = [28.5027919, -81.0435609]
+const sub40 = [28.1564629, -81.1078959]
 
 // Class
 class Map extends Component {
@@ -134,6 +135,52 @@ class Map extends Component {
         }
         console.log("shdw" + shadow_img);
       });
+    } else if (this.props.stationID == '38') {
+      console.log("This is sub 38");
+      subscribeToCoverage38((err, coverage_img) => {
+        // If already exists, update the coverage image
+
+        // If Coverage Overlay is available, recompute the bounds given new CBH
+        if (!(this.coverageOverlay === undefined)) {
+          this.coverageOverlay.setUrl(coverage_img);
+        }
+
+
+        console.log("cvg" + coverage_img);
+      });
+
+      subscribeToShadow38((err, shadow_img) => {
+        // If already exists, update the shadow image
+
+        // If Shadow Overlay is available, recompute the bounds given new CBH
+        if (!(this.shadowOverlay === undefined)) {
+          this.shadowOverlay.setUrl(shadow_img);
+        }
+        console.log("shdw" + shadow_img);
+      });
+    } else if (this.props.stationID == '40') {
+      console.log("This is sub 40");
+      subscribeToCoverage40((err, coverage_img) => {
+        // If already exists, update the coverage image
+
+        // If Coverage Overlay is available, recompute the bounds given new CBH
+        if (!(this.coverageOverlay === undefined)) {
+          this.coverageOverlay.setUrl(coverage_img);
+        }
+
+
+        console.log("cvg" + coverage_img);
+      });
+
+      subscribeToShadow40((err, shadow_img) => {
+        // If already exists, update the shadow image
+
+        // If Shadow Overlay is available, recompute the bounds given new CBH
+        if (!(this.shadowOverlay === undefined)) {
+          this.shadowOverlay.setUrl(shadow_img);
+        }
+        console.log("shdw" + shadow_img);
+      });
     } else {
       subscribeToCoverage((err, coverage_img) => {
         // If already exists, update the coverage image
@@ -233,6 +280,10 @@ class Map extends Component {
       CENTER = sub29
     } else if (this.props.stationID == 33) {
       CENTER = sub33
+    } else if (this.props.stationID == 38) {
+      CENTER = sub38
+    } else if (this.props.stationID == 40) {
+      CENTER = sub40
     } else {
       CENTER = [28.2367025, -81.23375];
     }

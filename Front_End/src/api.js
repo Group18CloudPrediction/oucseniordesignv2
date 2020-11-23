@@ -49,4 +49,20 @@ function subscribeToShadow33(cb) {
   socket.on('shadow33', imagestr => cb(null, imagestr));
 }
 
-export { subscribeToCoverage, subscribeToShadow, subscribeToCoverage27, subscribeToShadow27, subscribeToCoverage28, subscribeToShadow28, subscribeToCoverage29, subscribeToShadow29, subscribeToCoverage33, subscribeToShadow33, API_URL };
+function subscribeToCoverage38(cb) {
+  socket.on('coverage38', imagestr => cb(null, imagestr));
+}
+
+function subscribeToShadow38(cb) {
+  socket.on('shadow38', imagestr => cb(null, imagestr));
+}
+
+function subscribeToCoverage40(cb) {
+  socket.on('coverage40', imagestr => cb(null, imagestr));
+}
+
+function subscribeToShadow40(cb) {
+  socket.on('shadow40', imagestr => cb(null, imagestr));
+}
+
+export { subscribeToCoverage, subscribeToShadow, subscribeToCoverage27, subscribeToShadow27, subscribeToCoverage28, subscribeToShadow28, subscribeToCoverage29, subscribeToShadow29, subscribeToCoverage33, subscribeToShadow33, subscribeToCoverage38, subscribeToShadow38, subscribeToCoverage40, subscribeToShadow40, API_URL };
