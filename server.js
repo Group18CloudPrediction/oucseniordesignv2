@@ -41,6 +41,8 @@ function initChannels() {
   createChannel("/sub-28");
   createChannel("/sub-29");
   createChannel("/sub-33");
+  createChannel("/sub-38");
+  createChannel("/sub-40")
 }
 
 // this function sets up the base URLs that the routers will expand on
@@ -158,22 +160,8 @@ function init() {
     });
   });
 
-  //Copy and paste from previous team code
   socketio.on('connection', (client) => {
     console.log('Client Connected');
-
-    client.on('coverage', (data) => {
-      const [frame, substation] = data;
-      console.log('coverage received from substation: ', substation);
-      client.to(substation).broadcast.emit('coverage', "data:image/png;base64,"+ frame.toString("base64"));
-    });
-
-    client.on('shadow', (data) => {
-      const [frame, substation] = data;
-      console.log('shadow received from substation: ', substation);
-      client.to(substation).broadcast.emit('shadow', "data:image/png;base64,"+ frame.toString("base64"));
-    });
-
 
     client.on('coverage', (frame) => {
       console.log('coverage received');
@@ -222,6 +210,24 @@ function init() {
     client.on('shadow33', (frame) => {
       console.log('shadow33 received');
       client.broadcast.emit('shadow33', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('coverage38', (frame) => {
+      console.log('coverage38 received');
+      client.broadcast.emit('coverage38', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+    client.on('shadow38', (frame) => {
+      console.log('shadow38 received');
+      client.broadcast.emit('shadow38', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+
+    client.on('coverage40', (frame) => {
+      console.log('coverage40 received');
+      client.broadcast.emit('coverage40', "data:image/png;base64,"+ frame.toString("base64"))
+    })
+    client.on('shadow40', (frame) => {
+      console.log('shadow40 received');
+      client.broadcast.emit('shadow40', "data:image/png;base64,"+ frame.toString("base64"))
     })
   });
 

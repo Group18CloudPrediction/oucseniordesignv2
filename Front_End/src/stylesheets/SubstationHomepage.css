@@ -9,7 +9,7 @@
 .SubstationHomepage > div {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
 .SubstationHomepage > div > div {
@@ -17,7 +17,7 @@
     flex-direction: column;
     margin-left: 16px;
     margin-right: 16px;
-    align-content: space-between;
+    align-items: center;
     width: 80%;
 }
 
@@ -25,7 +25,7 @@
     display: flex;
     justify-content: center;
 }
-
+/* Sets Components to constant box size with a nice border */
 .SubstationHomepage > div > div > div {
     display: flex;
     margin-top: 16px;
@@ -36,10 +36,10 @@
     border-radius: 8px;
     background-color: #2C3E50;
     flex-direction: column;
-    width: 80% !important;
-    height: 40vh;
+    width: 500px !important;
+    height: 400px !important;
 }
-
+/* Sets Header styling with border bottom */
 .SubstationHomepage > div > div > div > div > h1 {
     color: #E9F1F7;
     display: flex;
@@ -74,6 +74,7 @@
     width: 100%;
     height: 100%;
 }
+
 
 /*.SubstationHomepage > div >div > div > div > div > div > svg{
     height: 100%;
@@ -112,7 +113,7 @@
 }
 
 .topdisplay {
-    height: 100vh;
+    height: 1000px;
 }
 
 .video-wrapper {

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import L from 'leaflet';
 import { subscribeToCoverage, subscribeToShadow } from '../api';
 import SunCalc from 'suncalc';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import { url } from './apiCallers/_apiRootAddress';
 
 // Calib is an array of the dimensions of whatever was used to calibrate the camera.
@@ -22,6 +22,8 @@ const sub28 = [28.29172, -81.19373]
 const sub27 = [28.24917, -81.28942]
 const sub29 = [28.22465, -81.17819]
 const sub33 = [28.18127, -81.27366]
+const sub38 = [28.5027919, -81.0435609]
+const sub40 = [28.1564629, -81.1078959]
 
 // Class
 class Map extends Component {
@@ -71,7 +73,7 @@ class Map extends Component {
     // Create Map Object
     this.map = L.map('map', {
       center: CENTER,
-      zoom: 13,
+      zoom: 10,
       layers: [ satellite, terrain ]
     });
 
@@ -127,28 +129,42 @@ class Map extends Component {
     var marker27 = L.marker(sub27,
       {
         draggable: false,        // Make the icon dragable
-        title: 'Camera Position'
+        title: 'Sub 27'
       }).on('click', function(e) {window.location = baseURL + "/Sub/27"});
     marker27.addTo(this.map)
     var marker28 = L.marker(sub28,
       {
         draggable: false,        // Make the icon dragable
-        title: 'Camera Position'
+        title: 'Sub 28'
       }).on('click', function(e) {window.location = baseURL + "/Sub/28"});
     marker28.addTo(this.map)
     var marker29 = L.marker(sub29,
       {
         draggable: false,        // Make the icon dragable
-        title: 'Camera Position'
+        title: 'Sub 29'
       }).on('click', function(e) {window.location = baseURL + "/Sub/29"});
     marker29.addTo(this.map)
     var marker33 = L.marker(sub33,
       {
         draggable: false,        // Make the icon dragable
-        title: 'Camera Position'
+        title: 'Sub 33'
       }).on('click', function(e) {window.location = baseURL + "/Sub/33"});
     marker33.addTo(this.map)
+    var marker38 = L.marker(sub38,
+      {
+        draggable: false,        // Make the icon dragable
+        title: 'Sub 38'
+      }).on('click', function(e) {window.location = baseURL + "/Sub/38"});
+    marker38.addTo(this.map)
+    var marker40 = L.marker(sub40,
+      {
+        draggable: false,        // Make the icon dragable
+        title: 'Sub 40'
+      }).on('click', function(e) {window.location = baseURL + "/Sub/40"});
+    marker40.addTo(this.map)
     };
+    
+    
 
 
   // Render the following HTML
