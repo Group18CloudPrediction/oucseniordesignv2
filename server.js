@@ -45,6 +45,19 @@ function initChannels() {
   createChannel("/sub-40")
 }
 
+function route() {
+  var router = express.Router();
+
+  router.route("/:id").post((request, response) => {
+    var locationID = request.params.id;
+    console.log("location " + locationID + " connected");
+    request.on("data", function (data) {
+      pushData("/" + locationID, data);
+    });
+  });
+  return router;
+}
+
 // this function sets up the base URLs that the routers will expand on
 // for example if the backend is hosted on localhost, "https://localhost:3000/weatherData"
 // will be the base URL for requesting weather data, and "weatherDataRouter.js" will
@@ -56,7 +69,9 @@ function init_routes() {
   var cloudCoverageDataRouter = require("./api/routes/cloudCoverageDataRouter");
   var livestreamRoutes        = require("./api/routes/livestreamRoutes"); //test livestreamRoutes from api folder
 
-  app.use("/cloudtrackinglivestream", livestreamRoutes);
+  viewer = route();
+  app.use("/cloudtrackinglivestream", viewer);
+  //app.use("/cloudtrackinglivestream", livestreamRoutes);
   app.use("/weatherData", weatherDataRouter);
   app.use("/powerPredictions", powerPredictionsRouter);
   app.use("/cloudCoverageData", cloudCoverageDataRouter);
