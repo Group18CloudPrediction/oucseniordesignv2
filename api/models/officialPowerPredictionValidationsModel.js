@@ -69,5 +69,6 @@ EXAMPLE 2:
 
 the json for verified_power_data works like this:
 [verification for prediction from one minute ago, from 2 mins, from 3 mins, ...]
+max length is 15 entries
 
  */

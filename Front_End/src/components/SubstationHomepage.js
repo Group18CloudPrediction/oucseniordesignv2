@@ -1,3 +1,9 @@
+// 
+// This component is the main page for all substations.
+// Renders its components to display data specific to a
+// single substation.
+//
+
 // Import
 import React, {Component} from "react";
 import "../stylesheets/SubstationHomepage.css";
@@ -13,8 +19,11 @@ const IS_HEROKU_BUILD = heroku;
 class SubstationHomepage extends Component {
     // constructor auto set to test mode
     constructor(props) {
+        // recieves stationID as a prop
         super(props);
 
+        // this component will render all children components in a test mode if
+        // the passed in substation ID is -1
         this.state = {
             testMode: (this.props.stationID == "-1")
         };

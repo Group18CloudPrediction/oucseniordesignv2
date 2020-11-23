@@ -1,3 +1,16 @@
+//
+// Recieves a mongoDB query's results, obtained by the RetrieveTargetedWeatherData
+// component. 
+//
+// This component is a counterpart to DisplayWeatherDataFriendly. It is almost
+// exactly the same, except it displays data differently.
+//
+// This component expects to be a child of RetrieveTargetedWeatherData
+// and for that parent component to pass in its apiResponse variable
+// This component will cause an error if its apiResponseData prop isn't
+// properly set.
+//
+
 import React, {Component} from "react";
 
 import "../../stylesheets/dataTables.css";

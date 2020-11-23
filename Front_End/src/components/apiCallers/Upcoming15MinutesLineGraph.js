@@ -1,3 +1,9 @@
+//
+// This component is unused and probably safe to delete.
+// In fact, it may even rely on deprecated/removed api calls
+//
+
+
 import React, {Component} from "react";
 import { url } from "./_apiRootAddress";
 

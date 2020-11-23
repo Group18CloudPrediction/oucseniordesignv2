@@ -1,3 +1,9 @@
+//
+// I believe this component is not used and safe to delete. Its functionality
+// is replicable by RetrieveTargetedWeatherData like so:
+// <RetrieveTargetedWeatherData onlyMostRecent={1} friendlyDisplay={TRUE OR FALSE} stationID={STATION ID}>
+//
+
 import React, {Component} from "react";
 import { url } from "./_apiRootAddress";
 
