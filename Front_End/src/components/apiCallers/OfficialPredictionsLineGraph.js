@@ -1,3 +1,73 @@
+//
+// This component uses the Recharts library to plot a line graph of the solar panel
+// output predictions made for a particular substation. It also displays some expected
+// error / deviation information, and a history of actual power values.
+//
+// Aside from the actual power predictions, every component of this graph is toggleable
+// by using the legend - the colored rectangles double as buttons!
+//
+// note: this component uses only the most recent entry in the predictions database
+// this is because any other prediction will be outdated. For example, if it's currently
+// 1:08pm, the current most recent entry's prediction for 1:09pm is only one minute out,
+// which has a better predicted accuracy than the second most recent entry's prediction 
+// for 1:09pm. The second most recent entry was made at 1:07pm, and so the 1:09pm prediction
+// is a two-minute-out prediction.
+//
+// this component takes a ton of props that allow you to set the colors of the graph however you want
+//
+// we had to do something special to get the graph to change size when the page changes size
+// recharts requires a set pixel width and height. See the end of the constructor if you 
+// want to know how we did that.
+//
+// note: I made up the standards for API Caller stuff. API Caller is a term I use to refer to 
+// components in the apiCallers folder of our project
+//
+// ====
+// LIST OF PROPS
+// ====
+//
+// -- NOTE: even though width and height get overriden, widthPercent and heightPercent do not.
+// width    -- width of the line graph (in pixels)  -- NOTE: gets overriden when the graph automatically resizes itself
+// height   -- height of the line graph (in pixels) -- NOTE: gets overriden when the graph automatically resizes itself
+// widthPercent    -- really more of "widthScale", width is multiplied by this value before being passed in to the recharts component
+// heightPercent   -- see above
+//
+// 
+// lookbackDepth   -- how far back expected error calculations should consider
+// realTimeUpdates -- should this graph automatically update every minute?
+// clampAboveZero  -- should this graph display Max(data, 0) or just the straight data? if true, all data displayed will be >= 0
+// maxRealValueRecordings -- how many real values to present (max), currently unimplemented I believe
+//
+// stationID -- what stationID to present predictions for
+//
+// -- the below 5 props are best not specified / used
+// year      -- currently just sets the start date of the graph on the user end; doesn't affect what data is pulled from the db
+// month     -- see above
+// day       -- see above
+// hour      -- see above
+// minute    -- see above
+//
+//
+// COLOR PROPS
+//
+// predictionsColor 
+// predictionsFillColor
+// realDataColor
+// realDataFillColor
+// averageExpectedDeviationColor
+// averageExpectedDeviationFillColor
+// worstExpectedDeviationColor
+// worstExpectedDeviationFillColor
+// textColor
+// disabledColor
+// xAxisColor
+// yAxisColor
+// gridLinesColor
+// tooltipBackgroundColor
+// tooltipBorderColor
+// buttonColor
+//
+
 import React, {Component, useState, useEffect, useRef } from "react";
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, Label } from 'recharts';
 import { url } from "./_apiRootAddress";
@@ -5,6 +75,10 @@ import { url } from "./_apiRootAddress";
 class OfficialPredictionsLineGraph extends Component {
     constructor(props) {
         super(props);
+        
+        // set some default values 
+        // for almost every prop, I set up a state value and used that instead
+        // that allows me to set default values in case the prop isn't defined
         this.state = {
             apiResponse: "",
             isLoading:true,
@@ -21,6 +95,7 @@ class OfficialPredictionsLineGraph extends Component {
 
             stationID: this.props.stationID,
 
+            // allow for toggling different parts of the graph visible/not visible
             toggle_realValues: true,
             toggle_worstDeviation: true,
             toggle_averageDeviation: true,
@@ -30,11 +105,11 @@ class OfficialPredictionsLineGraph extends Component {
             dateTime: this.buildInitialDateTime(),
             startDateTime: this.buildInitialDateTime(),
 
-            // base color: #8884d8
             widthPercent: this.props.widthPercent || 0.6,
             heightPercent: this.props.heightPercent || 0.8,
 
             // colors
+            // base color: #8884d8
             predictionsColor:     this.props.predictionsColor     || "#dcd9fa",
             predictionsFillColor: this.props.predictionsFillColor || this.props.predictionsColor || "#9490f0",
             realDataColor:        this.props.realDataColor        || "#58ff4f",
@@ -62,7 +137,7 @@ class OfficialPredictionsLineGraph extends Component {
         if (!this.props.stationID)
             this.setState({error: {message: "No stationID provided. Unable to display predictions."}});
 
-
+        
         this.refreshData = () => {
             var date = new Date(this.state.dateTime.getTime()+60000);
             console.log("Refreshing! - old date: " + this.state.dateTime + " new date: " + date);
@@ -70,6 +145,9 @@ class OfficialPredictionsLineGraph extends Component {
             this.callAPI();
         }
 
+        
+        // here's the really cool stuff
+        // this is how we got the line graph to resize itself whenever the window / a parent component is resized
         this.setSize = () => {
             const myWidth  = document.getElementsByClassName('LineGraphWrapper')[0].offsetWidth;
             const myHeight = document.getElementsByClassName('LineGraphWrapper')[0].offsetHeight;
@@ -80,6 +158,9 @@ class OfficialPredictionsLineGraph extends Component {
         window.addEventListener('resize', this.setSize);
     }
 
+    // convenience function
+    // until someone implements the "request data from a particular time" feature
+    // this will basically only return new Date();
     buildInitialDateTime() {
         if (
             !this.props.year  ||
@@ -88,13 +169,18 @@ class OfficialPredictionsLineGraph extends Component {
             !this.props.hour  ||
             !this.props.minute
         ) {
-            return new Date();
+            return new Date(); // creates a date object representing the current date and time
         } else {
             return new Date(this.props.year, this.props.month, this.props.day, this.props.hour, this.props.minute);
         }
     }
 
+    // standard API Caller function, POST request flavor
+    // note: I made up the standards for API Caller stuff. API Caller is a term I use to refer to 
+    // components in the apiCallers folder of our project
     callAPI() {
+        // I don't know what the difference between a URI and a URL is
+        // I just kinda called them whatever I felt like at the time
         const server = url
         const requestRootURI = "/powerPredictions/station/";
         const params = this.state.stationID;
@@ -124,6 +210,9 @@ class OfficialPredictionsLineGraph extends Component {
                 } else {
                     this.setState({hasError: true, error : {message: res.message}})
                 }
+                
+                // the below commented code didn't work. I'm leaving it here though in case you want to add this feature
+                // it's not much but it will at least give you a place to start
 //                 if (this.state.measuredValues.length > this.state.maxRealValueRecordings)
 //                 {
 //                     // if we've already collected the max number of real values, delete the oldest one and update the graph's start time
@@ -135,6 +224,10 @@ class OfficialPredictionsLineGraph extends Component {
             .catch(err => this.setState({hasError:true, error:err}));
     }
 
+    // function is called by React when the page loads.
+    // sets up the "refresh data every minute" feature
+    // the initial call to the API
+    // and the initial size of the graph
     componentDidMount() {
         if(this.props.realTimeUpdates)
         {
@@ -143,7 +236,7 @@ class OfficialPredictionsLineGraph extends Component {
             this.interval = setInterval(this.refreshData, updateEveryXSeconds*1000);
         }
 
-        this.setSize();
+        this.setSize(); // set the size of the component on refresh
 
         this.callAPI();
     }
@@ -154,6 +247,7 @@ class OfficialPredictionsLineGraph extends Component {
             clearInterval(this.interval);
     }
 
+    // standard API Caller render function
     render() {
         const messageStyle = {
             color: this.state.textColor,
@@ -182,10 +276,11 @@ class OfficialPredictionsLineGraph extends Component {
         return this.renderGraph(displayData);
     }
 
+    
     createDisplayData() {
 
         //
-        // copy/pasted code from Upcoming15MinutesLineGraph, because I don't understand class inheritance in js
+        // copy/pasted code from Upcoming15MinutesLineGraph, because I don't understand class inheritance in js :(
         //
 
 
@@ -287,6 +382,7 @@ class OfficialPredictionsLineGraph extends Component {
         return displayData;
     }
 
+    // military time is easier to work with in code, but not as nice to present
     militaryToStandardTime(s) {
         var arr = s.split(":");
         var hour = parseInt(arr[0], 10);
@@ -302,7 +398,32 @@ class OfficialPredictionsLineGraph extends Component {
             return s+" AM";
     }
 
+    
+    
+    // 
+    // OUTLINE FOR THIS FUNCTION:
+    //
+    // 1. Define helper functions
+    // 2. Set up custom tooltip
+    // 3.
+    //
+    //
+    // this function is huge. It's dangerous to read this alone, take this:
+    //
+    //   /\
+    //  /  \
+    //  |  | 
+    //  |  | 
+    //  |  | 
+    //  |  |
+    // =++++=
+    //   ||
+    //   ++
+    //
     renderGraph(displayData) {
+        // ========================================================
+        // define some helper functions for formatting stuff
+        // ========================================================
         const round = (number, decimalPlaces) => {
             if (isNaN(number)) {
                 return number;
@@ -321,10 +442,15 @@ class OfficialPredictionsLineGraph extends Component {
                 return round(value, 2) + " kW"
         }
 
-        const myWidth = document.getElementsByClassName('LineGraphWrapper')[0].offsetWidth;
-        const myHeight = document.getElementsByClassName('LineGraphWrapper')[0].offsetHeight;
+        //const myWidth = document.getElementsByClassName('LineGraphWrapper')[0].offsetWidth;
+        //const myHeight = document.getElementsByClassName('LineGraphWrapper')[0].offsetHeight;
 
+        // ========================================================
+        // Create the custom tooltip
+        // ========================================================
 
+        // (the default tooltip is hard to read with the colors we chose, and doesn't match the site's style anyway)
+        
         // CustomToolTip code modified from ericraq's code at
         // https://github.com/recharts/recharts/issues/1612#issuecomment-461898105
         const CustomToolTip = props => {
@@ -424,12 +550,16 @@ class OfficialPredictionsLineGraph extends Component {
         );
     }
 
+    // builds the jsx that represents the legend
+    // once upon a time, I had multiple legend styles to choose from,
+    // but ultimately I decided this was the best
     GetLegend(style) {
         const worstExpToggle   = () => { this.setState({toggle_worstDeviation:   !this.state.toggle_worstDeviation});   }
         const averageExpToggle = () => { this.setState({toggle_averageDeviation: !this.state.toggle_averageDeviation}); }
         const realValToggle    = () => { this.setState({toggle_realValues:       !this.state.toggle_realValues});       }
 
-
+        // the buttons are tied to state values, eg this.state.toggle_worstDeviation
+        // when their respective data is disabled, the button goes partially transparent
         return (
             <table style={{color: this.state.textColor}}> <tbody>
                 <tr>
@@ -462,12 +592,14 @@ class OfficialPredictionsLineGraph extends Component {
                             ██
                         </button>
                     </td>
-                    <td> Actual Value </td>
+                    <td> Estimated Actual Value </td>
                 </tr>
             </tbody> </table>
         );
     }
 
+    // set up the components the graph will refer to when drawing
+    // these may be unused, but they provide an alternate style with a fade effect
     GetLineGraphColors() {
         var colors = [];
 
@@ -505,25 +637,7 @@ class OfficialPredictionsLineGraph extends Component {
     GetLines() {
         var lines = [];
 
-
-//         lines.push(<Area type="monotone" dataKey="eMinWorst" stroke={this.state.worstExpectedDeviationColor} fillOpacity={1} fill="url(#colorEWorst)"/>)
-//         lines.push(<Area type="monotone" dataKey="eMaxWorst" stroke={this.state.worstExpectedDeviationColor} fillOpacity={1} fill="url(#colorEWorst)"/>)
-//
-//         lines.push(<Area type="monotone" dataKey="eMinAverage" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill="url(#colorEAvg)"/>)
-//         lines.push(<Area type="monotone" dataKey="eMaxAverage" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill="url(#colorEAvg)"/>)
-//
-//
-//         lines.push(<Area type="monotone" dataKey="predicted" stroke={this.state.predictionsColor} fillOpacity={1} fill="url(#colorUv)" />)
-//         lines.push(<Area type="monotone" dataKey="measured"  stroke={this.state.realDataColor}    fillOpacity={1} fill="url(#colorPv)" />)
-//
-
-
-        //lines.push(<Area type="monotone" dataKey="eMinWorst" stroke={this.state.worstExpectedDeviationColor} fillOpacity={1} fill={this.state.worstExpectedDeviationFillColor}/>)
-        //lines.push(<Area type="monotone" dataKey="eMaxWorst" stroke={this.state.worstExpectedDeviationColor} fillOpacity={1} fill={this.state.worstExpectedDeviationFillColor}/>)
         lines.push(<Area type="monotone" dataKey="worst deviation" key="worst deviation" stroke={this.state.worstExpectedDeviationColor} strokeWidth={7} fillOpacity={1} fill={this.state.worstExpectedDeviationFillColor}/>)
-
-        //lines.push(<Area type="monotone" dataKey="eMinAverage" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill={this.state.averageExpectedDeviationFillColor}/>)
-        //lines.push(<Area type="monotone" dataKey="eMaxAverage" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill={this.state.averageExpectedDeviationFillColor}/>)
         lines.push(<Area type="monotone" dataKey="average deviation" key="average deviation" stroke={this.state.averageExpectedDeviationColor} fillOpacity={1} fill={this.state.averageExpectedDeviationFillColor}/>)
 
         lines.push(<Area type="monotone" dataKey="predicted" key="predicted" stroke={this.state.predictionsColor} fillOpacity={0} strokeWidth={5} fill={this.state.predictionsFillColor} />)
@@ -531,9 +645,6 @@ class OfficialPredictionsLineGraph extends Component {
 
 
         return lines;
-
-//          <Line type="monotone" dataKey="pv" stroke="#82ca9d" fillOpacity={1} fill="url(#colorPv)" />
-
     }
 }
 
