@@ -1,3 +1,10 @@
+//
+// This component is unused and probably safe to delete.
+// In fact, it may even rely on deprecated/removed api calls
+// However, it does make for a good example component. to see the 
+// overall structure the apiCaller components are built on
+//
+
 import React, {Component} from "react";
 import { url } from "./_apiRootAddress";
 

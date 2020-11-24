@@ -5,13 +5,14 @@ const mongoose = require('mongoose');
 // Each entry in the PowerVerificationData table of our database will look like this below.
 //
 // verified_power_data is a JSON string. Examples of what it may look like are listed at the end of this file.
+//
 const PowerPredictionValidation = mongoose.Schema(
     {
         author: {type: String, required: false},
         
         verified_power_data: {type: String, required: true},
-        verified_time: { type: Date, required: true},
-        system_num:    { type: String, required: true }
+        verified_time: { type: Date, required: true},       // the date and time this entry was calculated (not submitted)
+        system_num:    { type: String, required: true }     // the id of the jetson / substation that this information was recorded at
     },
     { timestamps: true, collection: "PowerVerificationData" },
 );
@@ -68,5 +69,6 @@ EXAMPLE 2:
 
 the json for verified_power_data works like this:
 [verification for prediction from one minute ago, from 2 mins, from 3 mins, ...]
+max length is 15 entries
 
  */

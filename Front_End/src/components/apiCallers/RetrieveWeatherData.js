@@ -1,3 +1,8 @@
+//
+// I believe this component is outdated and safe to delete
+// it simply displays all weather data in the database
+//
+
 import React, {Component} from "react";
 import { url } from "./_apiRootAddress";
 

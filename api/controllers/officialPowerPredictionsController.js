@@ -1,58 +1,154 @@
+//
+// This controller is really messy and I'm not happy with how I 
+// had to do certain things. I'm sorry to whoever needs to modify
+// or fix it! (Hopefully it doesn't need to be fixed though, I'm
+// pretty sure it's working fine.)
+//
+// We wanted power predictions and prediction verifications bundled 
+// together. There's no nice way to do that as far as I know. Hence
+// the spaghetti.
+//
+// Here's the idea: first, we get the validation data, and do all our
+// calculations on that (more on that later)
+// then, we get our predictions
+// finally, after we've gotten our predictions back from the db,
+// we can send everything we've gotten back as an HTTP response
+//
+// Now, notice our plan has us querying two different tables 
+// (PowerPredictions and PowerPredictionVerifications) for
+// a single api call. The only way I found to do this was to put
+// one query inside the other. So, I put the PowerPredictions query
+// inside the Validations query. This is peak spaghetti for our api
+// and I really do not like this solution, but I couldn't figure out
+// a better one.
+//
+
 const mongoose = require('mongoose')
 const PredictionsModel = require('../models/officialPowerPredictionsModel')
 const VerificationsModel = require('../models/officialPowerPredictionValidationsModel')
 
+// this is the base function that the API can call
+// ensures a valid lookbackDepth is used
+// calls the function that querys the Verifications table
+const getLatestForStation_predictionsAndVerification = (req, res) => {
+    var lookbackDepth = req.body.lookbackDepth || 1;
+    getAverageAndWorst_AbsoluteValue_PercentErrors_AndLatestPredictions(res, lookbackDepth, req.params.stationID);
+}
 
-// const getTest1 = (req, res) => {
-//     VerificationsModel
-//         .find()
-//         .sort("-date")
-//         .exec((error, data) => {
-//             if (error) {
-//                 return res.json({'success':false,'message':'Some Error'});
-//             }
-//             
-//             console.log(data[13]);
-//             data = data[13];
-//             console.log(data.verified_power_data);
-//             pickle.loads(data.verified_power_data, function(original)
-//             {
-//                 console.log("original:", original);
-//             });
-//             
-//             console.log(data);
-//             return res.json({'success':true,'message':'Data fetched successfully',data});
-//         })
-// }
 
-const getTest2 = (req, res) => {
+// OVERVIEW
+// querys the Verifications table
+// does some math on the results
+// passes the results (plus the latest actual power value) to a function that querys the power predictions table
+
+// MATH? WHAT KIND OF MATH?
+// This function first queries for the first `lookbackDepth` number of verification entries
+// then, for each prediction timestep, finds the average percent error and the worst percent error
+// it then takes the absolute value of everything (so all values returned by this function will
+// always be positive)
+//
+// this function will end with results that look something like this:
+// average percent errors: [5%,  10%, 11%, 12%, 11%, 15.3%, 16.5%, 16.8%, 19%,    18%, 21.58%, 22.38%, 25.65%, 28.6%,  30.56%]
+// worst percent errors:   [10%, 10%, 20%, 25%, 23%, 22.5%, 30%,   36%,   36.86%, 32%, 40.5%,  58%,    76%,    68.53%, 127.6%]
+//
+// note: when I say "for each prediction timestep", I mean: (predictions made for 1 minute out, predictions made
+// for 2 minutes out ... predictions made for 15 minutes out)
+// you can think of these as different prediction types. We just happen to be doing calculations on each type in 
+// parallel. So when I say "each prediction timestep", think "each type of prediction". As far as we're concerned, 
+// they're unrelated to eachother.
+//
+const getAverageAndWorst_AbsoluteValue_PercentErrors_AndLatestPredictions = (res, lookbackDepth, stationID /*, beforeDate*/) => {
     VerificationsModel
-        .find()
+        .find({"system_num": stationID})
+        //.find({"system_num": stationID, "verified_time": {"$lt": beforeDate}}) // future feature
         .sort("-verified_time")
-        .limit(1)
+        .limit(lookbackDepth)
         .exec((error, data) => {
+            // if we encounter an error or find no data, end EVERYTHING here
+            // don't even try to request prediction data
+            // tell the HTTP request what happened
             if (error) {
-                return res.json({'success':false,'message':'Some Error'});
+                return res.json({'success':false,'message':'failed to retrieve verification data', 'error':error});
             }
             
-            //console.log(data[0]);
-            data = data[0];
-            //console.log(data.verified_power_data);
-            const temp = JSON.parse(data.verified_power_data);
-            
-            console.log(temp);
-            
-            data = {
-                "verified_time": data.verified_time,
-                "system_num": data.system_num,
-                "verified_power_data": temp,
-                "author": data.author
+            if (!data || data.length <= 0){
+                return res.json({'success':false,'message':'failed to retrieve verification data, or no verification data available for station ' + stationID, 'error':error});
             }
             
-            return res.json({'success':true,'message':'Data fetched successfully',data});
+            // verification data has been requested and recieved as the array `data`
+            
+            // calculate the average and worst Math.abs(percentageError) values over the reqested period
+            var processedData = {
+                lookbackDepth: lookbackDepth,
+              
+                // [one minute out, two minutes out, three minutes out, ...] 
+                worstPercentErrors: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                averagePercentErrors: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+              
+                // hey, look, a bonus!
+                // the below is irrelevant to the math, but it's also data that we want to send
+                // back to the client
+                latestActualPowerValue: null, 
+                latestActualPowerValueTime: data[0].verified_time
+            };
+            
+            // find how many data points we have for each prediction "type" (each prediction timestep)
+            var numEntries = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            
+            // now might be a good time to review officialPowerPredictionValidations.js
+            // every element of data will look like what that file specifies.
+            for (var i = 0; i < data.length; i++)
+            {
+                var thisData = data[i];
+                
+                // handle some basic "bad data" errors
+                if (thisData == null || typeof(thisData) === "undefined" || thisData.verified_power_data == "" || thisData.verified_power_data == null)
+                {
+                    console.log("Error with thisData: " + thisData);
+                    continue;
+                }
+                
+                const temp = JSON.parse(thisData.verified_power_data);
+                
+                if (temp[0] == null || typeof(temp[0]) === "undefined")
+                {
+                    console.log("error with json data: " + temp);
+                    continue;
+                }
+                
+                // only keep the actual_value from the final element of the data array will
+                if(processedData.latestActualPowerValue == null)
+                    processedData.latestActualPowerValue = temp[0].actual_value;
+                    // every temp[k].actual_value has the same value
+                
+                // temp is a list of data like so:
+                // [data for some prediction made for 1 minute out, 2 minutes out, 3 minutes out, ... 15 minutes out]
+                // but may be less than 15 elements long.
+                for (var j = 0; j < temp.length; j++)
+                {
+                    numEntries[j]++; // found another entry for (j+1) minutes out
+                    processedData.averagePercentErrors[j] += Math.abs(temp[j].percentage);
+                    processedData.worstPercentErrors[j] = Math.max(Math.abs(temp[j].percentage), processedData.worstPercentErrors[j]);
+                }
+            }
+            
+            // calculate average percent error for each "type" of prediction
+            for (var i = 0; i < numEntries.length; i++)
+            {
+                processedData.averagePercentErrors[i] /= numEntries[i];
+            }
+            
+            // now get the latest predictions
+            // the result will be sent from in there.
+            
+            getLatestPredictions(res, stationID, processedData);
         })
 }
 
+
+// recieves results from the verifications query
+// queries the power predictions table
+// sends the results from both queries via HTTP
 const getLatestPredictions = (res, stationID, percentageErrorData/*, forTime*/) => {
     PredictionsModel
         .find({"system_num": stationID})
@@ -71,7 +167,10 @@ const getLatestPredictions = (res, stationID, percentageErrorData/*, forTime*/) 
             
             data = data[0];
             
-            // collate the data
+            // prepare the data, put it all into one package to send back
+            // note: this variable HAS to be called data.
+            // the HTML response will name this below JSON object whatever the below variable name is
+            // we want it to be "data"
             data = {
                 historicalCalculations_lookbackDepth : percentageErrorData.lookbackDepth,
                 historical_worstPercentErrors:   percentageErrorData.worstPercentErrors,
@@ -91,95 +190,6 @@ const getLatestPredictions = (res, stationID, percentageErrorData/*, forTime*/) 
         })
 }
 
-const getAverageAndWorst_AbsoluteValue_PercentErrors_AndLatestPredictions = (res, lookbackDepth, stationID /*, beforeDate*/) => {
-    VerificationsModel
-        .find({"system_num": stationID})
-        //.find({"system_num": stationID, "verified_time": {"$lt": beforeDate}}) // future feature
-        .sort("-verified_time")
-        .limit(lookbackDepth)
-        .exec((error, data) => {
-            if (error) {
-                return res.json({'success':false,'message':'failed to retrieve verification data', 'error':error});
-            }
-            
-            if (!data || data.length <= 0){
-                return res.json({'success':false,'message':'failed to retrieve verification data, or no verification data available for station ' + stationID, 'error':error});
-            }
-            
-            // verification data has been requested
-            
-            // calculate the average and worst Math.abs(percentageError) values over the reqested period
-            var processedData = {
-                // [one minute out, two minutes out, three minutes out, ...] 
-                lookbackDepth: lookbackDepth,
-              
-                worstPercentErrors: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                averagePercentErrors: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                latestActualPowerValue: null,
-                latestActualPowerValueTime: data[0].verified_time
-            };
-            
-            var numEntries = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-            
-            for (var i = 0; i < data.length; i++)
-            {
-                var thisData = data[i];
-                
-                if (thisData == null || typeof(thisData) === "undefined" || thisData.verified_power_data == "" || thisData.verified_power_data == null)
-                {
-                    console.log("Error with thisData: " + thisData);
-                    continue;
-                }
-                
-                const temp = JSON.parse(thisData.verified_power_data);
-                
-                if (temp[0] == null || typeof(temp[0]) === "undefined")
-                {
-                    console.log("error with temp: " + temp);
-                    continue;
-                }
-                
-                if(processedData.latestActualPowerValue == null)
-                    processedData.latestActualPowerValue = temp[0].actual_value;
-                    // every temp[k].actual_value has the same value
-                
-                for (var j = 0; j < temp.length; j++)
-                {
-                    numEntries[j]++; // found another entry for (j+1) minutes out
-                    processedData.averagePercentErrors[j] += Math.abs(temp[j].percentage);
-                    processedData.worstPercentErrors[j] = Math.max(Math.abs(temp[j].percentage), processedData.worstPercentErrors[j]);
-                }
-            }
-            
-            
-            for (var i = 0; i < numEntries.length; i++)
-            {
-                processedData.averagePercentErrors[i] /= numEntries[i];
-            }
-            
-            // now get the latest predictions
-            // the result will be sent from in there.
-            
-            getLatestPredictions(res, stationID, processedData);
-        })
-}
-
-const getTest3 = (req, res) => {
-    var percentageErrorData = getAverageAndWorst_AbsoluteValue_PercentErrors_AndLatestPredictions(res, 20, "1");
-//     var data = {
-//         "percentageErrorData": percentageErrorData
-//     }
-//     
-//     return res.json({'success':true,'message':'Data fetched successfully',data});
-}
-
-const getLatestForStation_predictionsAndVerification = (req, res) => {
-    var lookbackDepth = req.body.lookbackDepth || 1;
-    getAverageAndWorst_AbsoluteValue_PercentErrors_AndLatestPredictions(res, lookbackDepth, req.params.stationID);
-}
-
 module.exports = {
-    getTest2,
-    getTest3,
     getLatestForStation_predictionsAndVerification
 }

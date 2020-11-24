@@ -83,43 +83,20 @@ function init_routes() {
   //app.use("/cloudMotion", legacyCloudMotionRouter);
 }
 
-async function initEmailer() {
-//   const toEmail = require("./config/emailAddressForAnomalyReports");
-//
-//   // Generate test SMTP service account from ethereal.email
-//   // Only needed if you don't have a real mail account for testing
-//   let testAccount = await nodemailer.createTestAccount();
-//
-//   // create reusable transporter object using the default SMTP transport
-//   let transporter = nodemailer.createTransport({
-//     host: "localhost:3000",
-//     port: 587,
-//     secure: false, // true for 465, false for other ports
-//     auth: {
-//       user: testAccount.user, // generated ethereal user
-//       pass: testAccount.pass, // generated ethereal password
-//     },
-//   });
-//
-//
-//   // send mail with defined transport object
-//   let info = await transporter.sendMail({
-//     from: '"Fred Foo 👻" <foo@example.com>', // sender address
-//     to: toEmail, // list of receivers
-//     subject: "Hello ✔", // Subject line
-//     text: "Hello world?", // plain text body
-//     html: "<b>Hello world?</b>", // html body
-//   });
-//
-//   console.log("Message sent: %s", info.messageId);
 
-  const toEmail = require("./config/emailAddressForAnomalyReports");
-  const mailOptions = {
-    from:    "ouc.sdproj.2019.2020@gmail.com",
-    to:      toEmail,
-    subject: 'test',
-    text:    'testing text'
-  };
+// I couldn't figure out how to get this to work. The idea was to send an 
+// email alert to a specified email whenever an anomaly is detected in the
+// database. 
+// This is a good area for future work.
+async function initEmailer() {
+
+//   const toEmail = require("./config/emailAddressForAnomalyReports");
+//   const mailOptions = {
+//     from:    "ouc.sdproj.2019.2020@gmail.com",
+//     to:      toEmail,
+//     subject: 'test',
+//     text:    'testing text'
+//   };
 
 //   const transporter = nodemailer.sendmail;
 //   const transporter = nodemailer.createTransport({
@@ -130,23 +107,23 @@ async function initEmailer() {
 //     }
 //   });
 
-  const transporter = nodemailer.createTransport({
-    port: 3000,
-    host: 'localhost',
-    tls: {
-      rejectUnauthorized: false
-    }
-  });
-
-  transporter.sendMail(mailOptions, function(error, info){
-    if (error) {
-      console.log("email error:");
-      console.log(error);
-      console.log(" ");
-    } else {
-      console.log("email sent: " + info.response);
-    }
-  });
+//   const transporter = nodemailer.createTransport({
+//     port: 3000,
+//     host: 'localhost',
+//     tls: {
+//       rejectUnauthorized: false
+//     }
+//   });
+// 
+//   transporter.sendMail(mailOptions, function(error, info){
+//     if (error) {
+//       console.log("email error:");
+//       console.log(error);
+//       console.log(" ");
+//     } else {
+//       console.log("email sent: " + info.response);
+//     }
+//   });
 }
 
 function pushData (toWho, data) {
@@ -162,11 +139,11 @@ function pushData (toWho, data) {
 
 function init() {
   app.use(cors()); // as mentioned above, this line where cors is set up allows the backend to respond to the frontend
-  app.use(bodyParser.json());
-  require('./databaseConnection');
-  initChannels();
+  app.use(bodyParser.json()); // automatically parse POST bodies assuming they're JSON
+  require('./databaseConnection'); // run the database connection script
+  initChannels(); // sets up for livestreams
   init_routes(); // sets up API urls
-  //initEmailer();
+  //initEmailer(); // sets up anomaly-email-alert service
 
   /// todo: viewers = { }
 
@@ -286,7 +263,9 @@ function init() {
   //app.listen(port);
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
-  streamServer.listen(port);
-  console.log("App is listening on port " + port);
+  streamServer.listen(port, function () {
+    console.log("App is listening on port " + port);
+  });
+  
 }
 init();
