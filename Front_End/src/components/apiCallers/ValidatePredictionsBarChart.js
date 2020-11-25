@@ -1,4 +1,7 @@
-
+//
+// This component is unused and probably safe to delete.
+// In fact, it may even rely on deprecated/removed api calls
+//
 
 // prop for validate over the past N minutes
 // gives one bar for the average % error of 1 minute out predictions over the past N minutes

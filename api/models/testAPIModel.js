@@ -1,5 +1,12 @@
 const mongoose = require('mongoose');
 
+
+//
+// This file is old and no longer used.
+// We've kept it just in case, but it should be 
+// safe to delete.
+//
+
 const TestEntry = mongoose.Schema(
     {
         testfield1: { type: String, required: true },

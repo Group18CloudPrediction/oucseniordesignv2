@@ -1,9 +1,25 @@
+//
+// This component is a counterpart to DisplayWeatherData. It is almost
+// exactly the same, except it displays data differently.
+//
+// This component expects to be a child of RetrieveTargetedWeatherData
+// and for that parent component to pass in its apiResponse variable
+// This component will cause an error if its apiResponseData prop isn't
+// properly set.
+//
+// Displays a single row of weather data in a human-readable way. Also
+// displays cloud coverage percentage data as a bonus.
+// 
+
 import React, {Component} from "react";
 
 import CloudCoveragePercentage from "../apiCallers/CloudCoveragePercentage.js";
 
 class DisplayWeatherDataFriendly extends Component {
     render() {   
+        // set up a function for formatting our numbers
+        // rounds a given number to a given number of decimal places
+        // and returns the result as a string.
         const round = (number, decimalPlaces) => {
             if (isNaN(number)) return "NaN";
             
@@ -13,8 +29,11 @@ class DisplayWeatherDataFriendly extends Component {
             return retval+"";
         }
         
+        // this component will only ever display one entry / set of data at a time.
         var dataPoint = this.props.apiResponseData[0];
         
+        // Renders only the desired data in a table, along with units and labels
+        // also hosts the CloudCoveragePercentage component
         return ( 
             <div id="RetrievedWeatherData">
                 <table className="friendlyDataTable" id="weatherDataTable_friendly">
@@ -23,10 +42,10 @@ class DisplayWeatherDataFriendly extends Component {
                     </thead>
                     
                     <tbody className="friendlyDataTableBody">
-                        <tr className="friendlyDataTableRow">
+                        {/* <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Coverage Percentage:</th>
                             <td className="friendlyDataTableCell friendlyDataTableData"> <CloudCoveragePercentage stationID={this.props.stationID} postReq={true}/></td>
-                        </tr>
+                        </tr> */}
                         <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Solar Irradiance:</th>
                             <td className="friendlyDataTableCell friendlyDataTableData">{round(dataPoint.slrFD_W, 3) + " watts/meter^2"}</td>
@@ -66,32 +85,6 @@ class DisplayWeatherDataFriendly extends Component {
             </div>
         );
     }
-    
-//     renderTable(data) {
-//         
-//         
-//         return (
-//                 <td className="friendlyDataTableCell">{dataPoint.slrFD_W}</td>
-//                 <td className="friendlyDataTableCell">{dataPoint.rain_mm}</td>
-//                 <td className="friendlyDataTableCell">{dataPoint.strikes}</td>
-//                 <td className="friendlyDataTableCell">{dataPoint.dist_km}</td>
-//                 <td className="friendlyDataTableCell">{round(dataPoint.ws_ms, 3)}</td>
-//                 <td className="friendlyDataTableCell">{round(dataPoint.windDir, 3)}</td>
-//                 <td className="friendlyDataTableCell">{round(dataPoint.maxWS_ms, 3)}</td>
-//                 <td className="friendlyDataTableCell">{round(dataPoint.airT_C, 3)}</td>
-//                 <td className="friendlyDataTableCell">{round(dataPoint.vp_mmHg, 3)}</td>
-//                 <td className="friendlyDataTableCell">{round(dataPoint.bp_mmHg, 3)}</td>
-//                 <td className="friendlyDataTableCell">{round(dataPoint.rh, 3)}</td>
-//                 <td className="friendlyDataTableCell">{round(dataPoint.rht_c, 3)}</td>
-//                 <td className="friendlyDataTableCell">{round(dataPoint.tiltNS_deg, 3)}</td>
-//                 <td className="friendlyDataTableCell">{round(dataPoint.tiltWE_deg, 3)}</td>
-//                 <td className="friendlyDataTableCell">{dataPoint.date}</td>
-//                 <td className="friendlyDataTableCell">{dataPoint.date_mins_only}</td>
-//                 <td className="friendlyDataTableCell">{dataPoint.time_only}</td>
-//                 <td className="friendlyDataTableCell">{dataPoint._id}</td>
-//             </tr>
-//         )
-//     }
 }
 
 export default DisplayWeatherDataFriendly;

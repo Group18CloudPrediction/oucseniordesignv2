@@ -1,3 +1,6 @@
+// unused, safe to delete
+// created for the old format of the power predictions table
+
 const mongoose = require('mongoose')
 const PowerPredictionsModel = require('../models/powerPredictionsModel')
 

@@ -1,3 +1,11 @@
+
+//
+// This file is old and no longer used.
+// We've kept it just in case, but it should be 
+// safe to delete.
+//
+
+
 // const mongoose = require('mongoose');
 // 
 // const CloudData = mongoose.Schema(

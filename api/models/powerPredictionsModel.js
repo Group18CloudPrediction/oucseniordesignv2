@@ -1,5 +1,10 @@
 const mongoose = require('mongoose');
 
+//
+// This file is old and no longer used.
+// We've kept it just in case, but it should be 
+// safe to delete.
+//
 const PowerPrediction = mongoose.Schema(
     {
         date: {type: Date, required: true},
