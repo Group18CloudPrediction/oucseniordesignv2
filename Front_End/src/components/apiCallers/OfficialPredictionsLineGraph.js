@@ -22,6 +22,8 @@
 // note: I made up the standards for API Caller stuff. API Caller is a term I use to refer to 
 // components in the apiCallers folder of our project
 //
+// if things go bad with the expected error bounds display, check out line 381 `if (val == null) continue;` and remove it
+//
 // ====
 // LIST OF PROPS
 // ====
@@ -277,26 +279,44 @@ class OfficialPredictionsLineGraph extends Component {
     }
 
     
+    //
+    // Formats the data from the api call in a way that renderGraph can accept
+    //
     createDisplayData() {
 
         //
         // copy/pasted code from Upcoming15MinutesLineGraph, because I don't understand class inheritance in js :(
         //
 
-
+        // all data displayed by the graph must be put into this array
+        // every entry in display data must be an object (in js that basically 
+        // means a dictionary/hashmap/JSON)
+        // this object represents one vertical slice of the graph (one x value)
+        // and contains the values for each line we want to render on the graph 
+        // at that x value
+        // we also store the name of that x value, to make the tooltip and x axis 
+        // labels look nice
         var displayData = [];
 
+        // if we're displaying the past "real values" of solar panel output
+        // that we've collected
         if (this.state.toggle_realValues)
         {
+            // startDateTime contains the day and time that this graph
+            // was loaded (aka when the user opened the page)
             const startHour = this.state.startDateTime.getHours();
             const startMinute = this.state.startDateTime.getMinutes();
 
             for (var i = 0; i < this.state.numRefreshes; i++)
             {
+                // count up the time
+                // each refresh is worth 1 minute
                 var thisMinute = startMinute + i + 1;
                 var thisHour = (thisMinute >= 60? startHour+1 : startHour) % 24;
                 thisMinute = thisMinute % 60;
 
+                // measuredValues[i] was recorded at time "thisName"
+                // note: thisName is just thisHour and thisMinute formatted nicely
                 const thisName = this.militaryToStandardTime(thisHour + ":" + (thisMinute < 10? "0" : "") + thisMinute);
                 displayData.push({time: thisName, "measured": this.state.measuredValues[i], "predicted":(i == this.state.numRefreshes-1? this.state.measuredValues[i] : null)});
             }
@@ -305,10 +325,12 @@ class OfficialPredictionsLineGraph extends Component {
         //const data = this.state.apiResponse.data[0];
         const predictions = this.state.predictions;
 
+        // current hour and minute, maintained by adding 1 minute every refresh
+        // works because a refresh happens every minute
         const hour = this.state.dateTime.getHours();
         const minute = this.state.dateTime.getMinutes();
 
-
+        // put each prediction into the display data array
         for (var i = 0; i < predictions.length; i++)
         {
             var thisMinute = minute + i + 1;
@@ -324,7 +346,7 @@ class OfficialPredictionsLineGraph extends Component {
         // end copy/pasted code
         //
 
-
+        // functions to turn percentage error into expected value ranges
         const calcExpected = (value, percError) => {
             const val = value + value*percError/100.0;
             return this.props.clampAboveZero? Math.max(0, val) : val;
@@ -336,26 +358,35 @@ class OfficialPredictionsLineGraph extends Component {
             return [calcExpected(value, -percError), calcExpected(value, percError)];
         }
 
-
-        // for the last 15 elements of displayData, calculate expected max and expected min, and add them as emin and emax
-        // for all other elements, add emin and emax = uv
-
+        //
+        // for the last 15 elements of displayData (this is where the predictions live), calculate expected max and expected min, and add them as emin and emax
+        // for all other elements (this is where collected "real values" live), add emin and emax = null
+        //
+        
+        // after calculating the error bars (or lack thereof), add them into the displayData for the appropriate x value
+        
         var predictionsStart = displayData.length-15;
 
+        // add in placeholder vals to make sure the graph displays properly
+        // ideally, we wouldn't put any error bar data in these x values, but that's just the way these things have to be sometimes
         for (var i = 0; i < predictionsStart; i++) {
 
+            // the reason we have this ternary operator is so that the graph makes a smooth transition 
+            // from 0 to whatever value it's supposed to have
+            // if we didn't have this ternary here, it would smooth away the first element, effectively deleting it
             var val = (i == predictionsStart-1 ? [displayData[i].measured, displayData[i].measured] : null)
 
+            // this line is new, I'm trying out possibly NOT putting those placeholder nulls, see how this works out
+            // maybe it'll be nicer
+            if (val == null) continue;
+            
             if (this.state.toggle_averageDeviation) displayData[i]["average deviation"] = val;//null;//[displayData[i].measured, displayData[i].measured];
             if (this.state.toggle_worstDeviation)   displayData[i]["worst deviation"]   = val;//null;//[displayData[i].measured, displayData[i].measured];
 
-            //displayData[i].eMinAverage = displayData[i].measured;
-            //displayData[i].eMaxAverage = displayData[i].measured;
-
-            //displayData[i].eMinWorst = displayData[i].measured;
-            //displayData[i].eMaxWorst = displayData[i].measured;
         }
 
+        // take the percentage errors retrieved from the api
+        // and convert them into error bounds, based on the prediction values
         for (var i = predictionsStart; i < displayData.length; i++) {
             const minutesOut = i - predictionsStart;
             const prediction = this.state.apiResponse.data.latest_power_predictions[minutesOut];
@@ -369,20 +400,32 @@ class OfficialPredictionsLineGraph extends Component {
 
             if (this.state.toggle_averageDeviation) displayData[i]["average deviation"] = [Math.min(avgExpA, avgExpB), Math.max(avgExpA, avgExpB)];
             if (this.state.toggle_worstDeviation)   displayData[i]["worst deviation"]   = [Math.min(wstExpA, wstExpB), Math.max(wstExpA, wstExpB)];
-
-
-//             displayData[i].eMinAverage = calcExpected(prediction, -averagPerc);
-//             displayData[i].eMaxAverage = calcExpected(prediction, averagPerc);
-//
-//             displayData[i].eMinWorst = calcExpected(prediction, -worstPerc);
-//             displayData[i].eMaxWorst = calcExpected(prediction, worstPerc);
+        }
+        
+        // calculate what the maximum y value of the graph at each x value should be
+        // this allows recharts to make the y axis tall enough to fit everything
+        for (var i = 0; i < displayData.length; i++) {
+            var max = 0;
+            
+            var worstDev = displayData[i]["worst deviation"]; // worst deviation is a range, represented as an array {range min, range max}
+            var averageDev = displayData[i]["average deviation"]; // average deviation is a range, represented as an array {range min, range max}
+            var measured = displayData[i]["measured"];
+            var predicted = displayData[i]["predicted"];
+            
+            if (worstDev   && worstDev[1]   > max) max = worstDev[1];
+            if (averageDev && averageDev[1] > max) max = averageDev[1];
+            if (measured   && measured      > max) max = measured;
+            if (predicted  && predicted     > max) max = predicted;
+            
+            displayData[i]["max value for time"] = max;
         }
 
-
+        // finally, after over 100 lines, we're done
         return displayData;
     }
 
     // military time is easier to work with in code, but not as nice to present
+    // takes a string of the format 01:02 and outputs a string of format "1:02 AM"
     militaryToStandardTime(s) {
         var arr = s.split(":");
         var hour = parseInt(arr[0], 10);
@@ -405,7 +448,7 @@ class OfficialPredictionsLineGraph extends Component {
     //
     // 1. Define helper functions
     // 2. Set up custom tooltip
-    // 3.
+    // 3. Render the recharts graph
     //
     //
     // this function is huge. It's dangerous to read this alone, take this:
@@ -504,6 +547,11 @@ class OfficialPredictionsLineGraph extends Component {
             )
         }
 
+        
+        // ========================================================
+        // Render the recharts graph
+        // ========================================================
+        
         //units : kW AC
         return (
             <div className="PowerPredictionsLineGraph" id="PowerPredictionsLineGraph">
@@ -524,7 +572,7 @@ class OfficialPredictionsLineGraph extends Component {
 
                             <CartesianGrid stroke={this.state.gridLinesColor} strokeDasharray="5 5" />
                             <XAxis dataKey="time" stroke={this.state.xAxisColor}/>
-                            <YAxis dataKey="predicted" stroke={this.state.yAxisColor}>
+                            <YAxis dataKey="max value for time" stroke={this.state.yAxisColor}>
                                 <Label
                                     value="Power Generation (kW AC)"
                                     position="insideLeft"
@@ -634,6 +682,7 @@ class OfficialPredictionsLineGraph extends Component {
         return colors;
     }
 
+    // generates the jsx that the Recharts component uses to know what lines to render with what data and what color
     GetLines() {
         var lines = [];
 
