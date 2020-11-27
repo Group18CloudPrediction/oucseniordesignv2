@@ -76,7 +76,7 @@ class DisplayWeatherDataFriendly extends Component {
                         </tr>
                         <tr className="friendlyDataTableRow">
                             <th className="friendlyDataTableCell friendlyDataTableLabel">Cloud Height:</th>
-                            <td className="friendlyDataTableCell friendlyDataTableData cloudheight">{round((1000 * (round(dataPoint.airT_C, 3) - (round(dataPoint.airT_C, 3) - (((100 - round(dataPoint.rh, 3))/5)))))/4.4, 3) + " meters"}</td>
+                            <td className="friendlyDataTableCell friendlyDataTableData cloudheight">{round((1000 * (round(dataPoint.airT_C, 3) - (round(dataPoint.airT_C, 3) - (((100 - round(dataPoint.rh, 3))/5)))))/2.5, 3) + " meters"}</td>
                         </tr>
                         
                         
