@@ -8,6 +8,7 @@ If working with api and web user interface first go to /Front_End and type `npm 
 ### Resources
 
 Code overview and quick reference: CodeQuickReferenceGuide.html
+
 Installation: InstallationAndUserGuide.html
 
 ### How to set up MongoDB backend and frontend connections
