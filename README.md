@@ -5,11 +5,15 @@
 If working with purely web user interface type `npm start` in /Front_End to view any changes. To view type `localhost:3001` in web browser. <br/>
 If working with api and web user interface first go to /Front_End and type `npm run build` then in the main directory type `npm start`. To view type `localhost:3000` in web browser.
 
-### Resources
+# Resources
 
-Code overview and quick reference: CodeQuickReferenceGuide.html
+### Code overview and quick reference
 
-Installation: InstallationAndUserGuide.html
+CodeQuickReferenceGuide.html
+
+### Installation
+
+InstallationAndUserGuide.html
 
 ### How to set up MongoDB backend and frontend connections
 # Connect the backend
