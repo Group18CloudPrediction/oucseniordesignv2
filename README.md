@@ -1,10 +1,10 @@
 ### Installation
 
-InstallationAndUserGuide.html
+Documentation/User Setup Guide.pdf
 
 ### Code overview (for future development)
 
-CodeQuickReferenceGuide.html
+Documentation/Code Quick Reference Guide.pdf
 
 ### How to run in development:
 
