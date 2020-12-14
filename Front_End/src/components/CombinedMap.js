@@ -24,7 +24,7 @@ class Map extends Component {
             this.callAPI();
         };
         this.state = {
-            apiResponse: "",
+            apiResponse: {},
             hasSubmitted: (this.props.skipForm ? true : false),
             isLoading: true,
             hasError: false,
@@ -41,7 +41,11 @@ class Map extends Component {
 
         // TODO
         for (let stationID in latLongs) {
-            subscribeToCoverageN(stationID, (err, coverage_img) => {
+            if (stationID === "CENTER") continue; 
+            
+            console.log("subscribing to " + stationID);
+            
+            subscribeToCoverageN(stationID.substring(3), (err, coverage_img) => {
 
                 // If already exists, update the coverage image
 
@@ -56,7 +60,7 @@ class Map extends Component {
                 console.log("cvg" + coverage_img);
             });
 
-            subscribeToShadowN(stationID, (err, shadow_img) => {
+            subscribeToShadowN(stationID.substring(3), (err, shadow_img) => {
                 // If already exists, update the shadow image
 
                 // If Shadow Overlay is available, recompute the bounds given new CBH
@@ -70,54 +74,59 @@ class Map extends Component {
 
     // Call API to our mongoDB to fetch weather stats
     callAPI() {
-        console.log("I love this API");
-        this.setState({
-            isLoading: true
-        });
-
-        // this component works whether a station id is passed or not
-        if (this.state.stationID === "")
+        
+        for (let stationID in latLongs) {
+            if (stationID === "CENTER") continue; 
+            
+            console.log("I love this API");
             this.setState({
-                staionID: null
+                isLoading: true
             });
 
-        const params = (!this.props.stationID ? "" : this.props.stationID);
-        const baseURL = url;
-
-        var postReqParams = {
-            stationID: this.props.stationID,
-            onlyMostRecent: 1
-        }
-
-        console.log(postReqParams);
-
-        var postReqURL = baseURL + "/weatherData/" + params;
-
-        fetch(postReqURL, {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(postReqParams)
-            })
-            .then(response => response.json())
-            .then(res => {
+            // this component works whether a station id is passed or not
+            if (stationID === "")
                 this.setState({
-                    apiResponse: res,
-                    isLoading: false
+                    staionID: null
                 });
-                this.updateImageBounds();
-                console.log("Hello");
-            })
-            .catch(err => this.setState({
-                hasError: true,
-                error: err
-            }));
 
-        this.setState({
-            hasSubmitted: true
-        });
+            const params = (!stationID ? "" : stationID.substring(3));
+            const baseURL = url;
+
+            var postReqParams = {
+                stationID: stationID,
+                onlyMostRecent: 1
+            }
+
+            console.log(postReqParams);
+
+            var postReqURL = baseURL + "/weatherData/" + params;
+
+            fetch(postReqURL, {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(postReqParams)
+                })
+                .then(response => response.json())
+                .then(res => {
+                    this.state.apiResponse[stationID] = res;
+                    this.setState({
+                        isLoading: false
+                    });
+                    this.updateImageBounds();
+                    console.log("Hello");
+                })
+                .catch(err => this.setState({
+                    hasError: true,
+                    error: err
+                }));
+
+            this.setState({
+                hasSubmitted: true
+            });
+        }
     }
 
     // Set an interval to clear memory cache
@@ -160,6 +169,9 @@ class Map extends Component {
         this.shadowOverlayLayerGroup = L.layerGroup();
         
         for (let stationID in latLongs) {
+            if (stationID === "CENTER") continue; 
+            
+            
             this.shadowOverlays[stationID] = L.imageOverlay('', [
                 [28.42000000001, -81.42000000001],
                 [28.42000000002, -81.42000000002]
@@ -198,6 +210,10 @@ class Map extends Component {
         this.shadowBordersLayerGroup = L.layerGroup();
         
         for (let stationID in latLongs) {
+            if (stationID === "CENTER") continue; 
+            
+            console.log("setting up bounds for station " + stationID);
+            
             let ll = latLongs[stationID];
             
             this.coverageBorders[stationID] = L.rectangle([
@@ -241,6 +257,9 @@ class Map extends Component {
         
         // Add substation markers to map
         for (let stationID in latLongs) {
+            if (stationID === "CENTER") continue; 
+            
+            
             var stationMarker = L.marker(latLongs[stationID], {
                 draggable: false, // Make the icon dragable
                 title: 'Sub ' + stationID.substring(3)
@@ -289,7 +308,7 @@ class Map extends Component {
         return finalCoordinate;
     }
 
-    getImageBounds(isShadow, center) {
+    getImageBounds(isShadow, center, stationID) {
         // Returns a {azimuth, altitude} object. We're only interested in altitude
         // sun altitude above the horizon in radians, e.g. 0 at the horizon and PI/2 at the zenith (straight over your head)
         // Azimuth: 0 is south and Math.PI * 3/4 is northwest
@@ -307,16 +326,15 @@ class Map extends Component {
         // To avoid inflating this code with comments, check the final project design document
         // for a more detailed description that explains the logic behind this.
         var cloudHeight;
-        if (!(typeof(this.state.apiResponse) === 'undefined') && this.state.apiResponse != null && !(typeof(this.state.apiResponse.data) === 'undefined')) {
+        if (!(typeof(this.state.apiResponse) === 'undefined') && this.state.apiResponse != null && this.state.apiResponse[stationID] && !(typeof(this.state.apiResponse[stationID].data) === 'undefined')) {
             console.log("if");
-            var dataPoint = this.state.apiResponse.data[0];
+            var dataPoint = this.state.apiResponse[stationID].data[0];
             cloudHeight = round((1000 * (round(dataPoint.airT_C, 3) - (round(dataPoint.airT_C, 3) - (((100 - round(dataPoint.rh, 3)) / 5))))) / 4.4, 3);
         } else {
             console.log("else");
             cloudHeight = 2000;
         }
-        console.log(this.state.apiResponse);
-        console.log("cloudHeight " + cloudHeight + this.state.apiResponse + "!");
+        console.log("cloudHeight " + cloudHeight + "!");
 
         var calibrationAngle = Math.atan(CALIB[0] / CALIB[1]);
 
@@ -339,11 +357,13 @@ class Map extends Component {
 
     updateImageBounds() {
         for (let stationID in latLongs) {
+            if (stationID === "CENTER") continue; 
+            
             let ll = latLongs[stationID];
             
             // Zoom onto new bounds
-            const coverageBounds = this.getImageBounds(false, ll)
-            const shadowBounds = this.getImageBounds(true, ll)
+            const coverageBounds = this.getImageBounds(false, ll, stationID)
+            const shadowBounds = this.getImageBounds(true, ll, stationID)
 
             // If Coverage Overlay is available, recompute the bounds given new CBH
             if (!(this.coverageOverlays[stationID] === undefined)) {
