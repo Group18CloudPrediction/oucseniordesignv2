@@ -15,7 +15,8 @@ var app = express(),
   socketio = io(streamServer),
   channels = {},
   viewers = {},
-  port = process.env.PORT || 3000;
+  port = process.env.PORT || 3000,
+  maxConnectionsPerStreamChannel = 20;
 
 
 
@@ -23,14 +24,21 @@ function addValueToList(map, key, value) {
   //if the list is already created for the "key", then uses it
   //else creates new list for the "key" to store multiple values in it.
   map[key] = map[key] || [];
+  console.log("Length of listeners array for url " + key + " is : " + map[key].length);
+  
+  if (map[key].includes(value)) return;
+  
   map[key].push(value);
+  
+  if (map[key].length >= maxConnectionsPerStreamChannel) map[key].shift();
 }
 
 //sanity check
 
 function createChannel(path) {
   tmpServer = new webSocket.Server({ noServer: true });
-    tmpServer.on("connection", function connection(ws) {
+  tmpServer.on("connection", function connection(ws) {
+      console.log("connection to " + path);
       addValueToList(viewers, path, ws);
   });
   channels[path] = tmpServer

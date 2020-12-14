@@ -9,7 +9,7 @@
 // make the destinction anymore.
 //
 
-var url = "https://cloudtracking-v2.herokuapp.com";
+var url = "http://localhost:3000";//"https://cloudtracking-v2.herokuapp.com";
 var heroku = true;
 
 export { url , heroku };
