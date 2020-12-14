@@ -47,7 +47,7 @@ class Map extends Component {
 
                 // If Coverage Overlay is available, recompute the bounds given new CBH
                 console.log("subscribe to coverage " + stationID);
-                if (!(this.coverageOverlay === undefined)) {
+                if (this.coverageOverlays[stationID]) {
                     console.log("Set Coverage");
                     this.coverageOverlays[stationID].setUrl(coverage_img);
                 }
@@ -60,7 +60,7 @@ class Map extends Component {
                 // If already exists, update the shadow image
 
                 // If Shadow Overlay is available, recompute the bounds given new CBH
-                if (!(this.shadowOverlay === undefined)) {
+                if (this.shadowOverlays[stationID]) {
                     this.shadowOverlays[stationID].setUrl(shadow_img);
                 }
                 console.log("shdw" + shadow_img);
@@ -128,6 +128,8 @@ class Map extends Component {
     // TODO GET CLOUD BASE HEIGHT IN HERE LIKE IN OTHER MAP
     // TODO DISPLAY ALL COVERAGES AND SHADOWS TO THIS MAP
     componentDidMount() {
+        // Set an interval to refresh data
+        this.interval = setInterval(this.refreshData, 60 * 1000);
 
         this.updateImageBounds();
         // var satellite = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
