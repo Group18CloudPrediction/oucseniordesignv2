@@ -8,6 +8,16 @@ let socket;
 socket = openSocket(API_URL);
 
 
+const latLongs = {
+    "CENTER": [28.2367025, -81.23375],
+    "sub28": [28.29172, -81.19373],
+    "sub27": [28.24917, -81.28942],
+    "sub29": [28.22465, -81.17819],
+    "sub33": [28.18127, -81.27366],
+    "sub38": [28.5027919, -81.0435609],
+    "sub40": [28.1564629, -81.1078959]
+}
+
 
 function subscribeToCoverage(cb) {
   socket.on('coverage', imagestr => cb(null, imagestr));
@@ -17,52 +27,12 @@ function subscribeToShadow(cb) {
   socket.on('shadow', imagestr => cb(null, imagestr));
 }
 
-function subscribeToCoverage27(cb) {
-  socket.on('coverage27', imagestr => cb(null, imagestr));
+function subscribeToCoverageN(N, cb) {
+  socket.on('coverage'+N, imagestr => cb(null, imagestr));
 }
 
-function subscribeToShadow27(cb) {
-  socket.on('shadow27', imagestr => cb(null, imagestr));
+function subscribeToShadowN(N, cb) {
+  socket.on('shadow'+N, imagestr => cb(null, imagestr));
 }
 
-function subscribeToCoverage28(cb) {
-  socket.on('coverage28', imagestr => cb(null, imagestr));
-}
-
-function subscribeToShadow28(cb) {
-  socket.on('shadow28', imagestr => cb(null, imagestr));
-}
-
-function subscribeToCoverage29(cb) {
-  socket.on('coverage29', imagestr => cb(null, imagestr));
-}
-
-function subscribeToShadow29(cb) {
-  socket.on('shadow29', imagestr => cb(null, imagestr));
-}
-
-function subscribeToCoverage33(cb) {
-  socket.on('coverage33', imagestr => cb(null, imagestr));
-}
-
-function subscribeToShadow33(cb) {
-  socket.on('shadow33', imagestr => cb(null, imagestr));
-}
-
-function subscribeToCoverage38(cb) {
-  socket.on('coverage38', imagestr => cb(null, imagestr));
-}
-
-function subscribeToShadow38(cb) {
-  socket.on('shadow38', imagestr => cb(null, imagestr));
-}
-
-function subscribeToCoverage40(cb) {
-  socket.on('coverage40', imagestr => cb(null, imagestr));
-}
-
-function subscribeToShadow40(cb) {
-  socket.on('shadow40', imagestr => cb(null, imagestr));
-}
-
-export { subscribeToCoverage, subscribeToShadow, subscribeToCoverage27, subscribeToShadow27, subscribeToCoverage28, subscribeToShadow28, subscribeToCoverage29, subscribeToShadow29, subscribeToCoverage33, subscribeToShadow33, subscribeToCoverage38, subscribeToShadow38, subscribeToCoverage40, subscribeToShadow40, API_URL };
+export { latLongs, subscribeToCoverage, subscribeToShadow, subscribeToCoverageN, subscribeToShadowN, API_URL };
